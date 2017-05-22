@@ -1,8 +1,8 @@
 {
-	"name": "Forge Mod Builder - The Initial",
-	"version": "0.1.0.0",
+	"name": "Forge Mod Builder - The \"I want to update\"",
+	"version": "0.1.0.1",
 	"changelog": [
-		"+Ability to load a project", "+Ability to build a project", "+Ability to setup a project", "+Ability to update a project", "+Ability to refresh a project"
+		"+Added update checker"
 	],
-	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/tag/0.1.0.0"
+	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/tag/0.1.0.1"
 }

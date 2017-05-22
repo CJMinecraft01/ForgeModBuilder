@@ -27,7 +27,7 @@ namespace ForgeModBuilder
                 if(Application.ProductVersion != update.version)
                 {
                     Console.WriteLine("An update is available!");
-                    Program.INSTANCE.AddConsoleText("An update is available! \n");
+                    Program.INSTANCE.AddConsoleText("An update is available!\n");
                     string changelog = "";
                     foreach(string line in update.changelog)
                     {
@@ -37,6 +37,11 @@ namespace ForgeModBuilder
                     {
                         Process.Start(update.download);
                     }
+                }
+                else
+                {
+                    Console.WriteLine("No update found");
+                    Program.INSTANCE.AddConsoleText("No update found\n");
                 }
             }
             catch(Exception e)

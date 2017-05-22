@@ -6,8 +6,10 @@ using System.Windows.Forms;
 
 namespace ForgeModBuilder
 {
-    static class Program
+    public static class Program
     {
+
+        public static FMB INSTANCE;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -16,7 +18,8 @@ namespace ForgeModBuilder
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FMB());
+            INSTANCE = new FMB();
+            Application.Run(INSTANCE);
         }
     }
 }

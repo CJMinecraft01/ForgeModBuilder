@@ -33,6 +33,10 @@ namespace ForgeModBuilder
             UpdateProjects(false, true);
             UpdateOptions(false, true);
             FormClosed += FMBClosed;
+            Load += (sender, e) =>
+            {
+                UpdateChecker.CheckForUpdates(UpdateChecker.UpdateURL);
+            };
         }
 
         private void FMBClosed(object sender, FormClosedEventArgs e)
@@ -343,7 +347,7 @@ namespace ForgeModBuilder
 
         delegate void AddConsoleTextCallback(string text);
 
-        private void AddConsoleText(string text)
+        public void AddConsoleText(string text)
         {
             if(Console.InvokeRequired)
             {
@@ -422,6 +426,8 @@ namespace ForgeModBuilder
                 {
                     if(editor.ToLower() == "eclipse" || editor.ToLower() == "idea")
                     {
+                        System.Console.WriteLine("Setting editor to " + editor.ToLower());
+                        AddConsoleText("Setting editor to " + editor.ToLower() + "\n");
                         RunGradle("setupDecompWorkspace " + editor.ToLower() + args);
                     } else
                     {

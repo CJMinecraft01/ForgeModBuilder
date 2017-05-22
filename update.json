@@ -1,8 +1,8 @@
 {
-	"name": "Forge Mod Builder - The \"I want to update\"",
-	"version": "0.1.0.1",
+	"name": "Forge Mod Builder - The TheProgrammingHuskyMC Improvement",
+	"version": "0.1.0.2",
 	"changelog": [
-		"+Added update checker"
+		"=Improved download of update"
 	],
-	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/tag/0.1.0.1"
+	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.0.1/Forge.Mod.Builder.-.0.1.0.1.exe"
 }

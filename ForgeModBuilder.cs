@@ -501,7 +501,7 @@ namespace ForgeModBuilder
                                     catch (Exception e)
                                     {
                                         System.Console.WriteLine(e.Message);
-                                        AddConsoleText("An error occurred" + e.Message + "\n");
+                                        AddConsoleText("An error occurred\n" + e.Message + "\n");
                                         MessageBox.Show("An error occurred: " + e.Message, "An error occurred!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     }
                                 }

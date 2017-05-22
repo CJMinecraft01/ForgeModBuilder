@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -28,6 +29,7 @@ namespace ForgeModBuilder
                 {
                     Console.WriteLine("An update is available!");
                     Program.INSTANCE.AddConsoleText("An update is available!\n");
+                    Console.WriteLine("Current Version: " + Application.ProductVersion + ", Newest Version: " + update.version);
                     string changelog = "";
                     foreach(string line in update.changelog)
                     {
@@ -35,7 +37,16 @@ namespace ForgeModBuilder
                     }
                     if(MessageBox.Show("An update is available! \n" + update.name + "\n" + update.version + "\n" + changelog + "\nWould you like to update now?", "Update available", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                     {
-                        Process.Start(update.download);
+                        //Process.Start(update.download);
+                        SaveFileDialog sfd = new SaveFileDialog();
+                        sfd.FileName = "ForgeModBuilder.exe";
+                        sfd.InitialDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                        sfd.Filter = "Executable Files|*.exe";
+                        sfd.Title = "Select the download path";
+                        sfd.ShowDialog();
+                        client.DownloadFile(update.download, sfd.FileName);
+                        Process.Start(sfd.FileName);
+                        Application.Exit();
                     }
                 }
                 else
@@ -47,7 +58,7 @@ namespace ForgeModBuilder
             catch(Exception e)
             {
                 System.Console.WriteLine(e.Message);
-                ForgeModBuilder.Program.INSTANCE.AddConsoleText("An error occurred" + e.Message + "\n");
+                Program.INSTANCE.AddConsoleText("An error occurred\n" + e.Message + "\n");
                 MessageBox.Show("An error occurred: " + e.Message, "An error occurred!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

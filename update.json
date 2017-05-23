@@ -1,8 +1,8 @@
 {
-	"name": "Forge Mod Builder - The TheProgrammingHuskyMC Improvement",
-	"version": "0.1.0.2",
+	"name": "Forge Mod Builder - The \"I Forgot my projects\" fix",
+	"version": "0.1.0.3",
 	"changelog": [
-		"=Improved download of update"
+		"=Fixed issue where project data was not saved"
 	],
-	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.0.2/ForgeModBuilder-0.1.0.2.exe"
+	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.0.2/ForgeModBuilder-0.1.0.3.exe"
 }

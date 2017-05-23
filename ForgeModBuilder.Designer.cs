@@ -33,10 +33,12 @@ namespace ForgeModBuilder
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FMB));
             this.Menu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            //this.NewProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OpenProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BuildProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SetupProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UpdateProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RefreshProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ConsoleFontMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,7 +48,7 @@ namespace ForgeModBuilder
             this.UpdateProjectButton = new System.Windows.Forms.Button();
             this.SetupProjectButton = new System.Windows.Forms.Button();
             this.RefreshProjectButton = new System.Windows.Forms.Button();
-            this.RefreshProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            //this.NewProjectButton = new System.Windows.Forms.Button();
             this.Menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,6 +65,7 @@ namespace ForgeModBuilder
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            /*this.NewProjectMenuItem,*/
             this.OpenProjectMenuItem,
             this.BuildProjectMenuItem,
             this.SetupProjectMenuItem,
@@ -72,6 +75,13 @@ namespace ForgeModBuilder
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
+            // 
+            // NewProjectMenuItem
+            // 
+            /*
+            this.NewProjectMenuItem.Name = "NewProjectMenuItem";
+            this.NewProjectMenuItem.Size = new System.Drawing.Size(153, 22);
+            */
             // 
             // OpenProjectMenuItem
             // 
@@ -100,6 +110,13 @@ namespace ForgeModBuilder
             this.UpdateProjectMenuItem.Size = new System.Drawing.Size(153, 22);
             this.UpdateProjectMenuItem.Text = "Update Project";
             this.UpdateProjectMenuItem.Click += new System.EventHandler(this.UpdateProjectClick);
+            // 
+            // RefreshProjectMenuItem
+            // 
+            this.RefreshProjectMenuItem.Name = "RefreshProjectMenuItem";
+            this.RefreshProjectMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.RefreshProjectMenuItem.Text = "Refresh Project";
+            this.RefreshProjectMenuItem.Click += new System.EventHandler(this.RefreshProjectClick);
             // 
             // ExitMenuItem
             // 
@@ -141,7 +158,7 @@ namespace ForgeModBuilder
             // 
             this.OpenProjectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.OpenProjectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.OpenProjectButton.Location = new System.Drawing.Point(10, 493);
+            this.OpenProjectButton.Location = new System.Drawing.Point(131, 493);
             this.OpenProjectButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.OpenProjectButton.Name = "OpenProjectButton";
             this.OpenProjectButton.Size = new System.Drawing.Size(113, 59);
@@ -154,7 +171,7 @@ namespace ForgeModBuilder
             // 
             this.BuildProjectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.BuildProjectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.BuildProjectButton.Location = new System.Drawing.Point(129, 493);
+            this.BuildProjectButton.Location = new System.Drawing.Point(250, 493);
             this.BuildProjectButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.BuildProjectButton.Name = "BuildProjectButton";
             this.BuildProjectButton.Size = new System.Drawing.Size(113, 59);
@@ -167,7 +184,7 @@ namespace ForgeModBuilder
             // 
             this.UpdateProjectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.UpdateProjectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.UpdateProjectButton.Location = new System.Drawing.Point(367, 493);
+            this.UpdateProjectButton.Location = new System.Drawing.Point(488, 493);
             this.UpdateProjectButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.UpdateProjectButton.Name = "UpdateProjectButton";
             this.UpdateProjectButton.Size = new System.Drawing.Size(113, 59);
@@ -180,7 +197,7 @@ namespace ForgeModBuilder
             // 
             this.SetupProjectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.SetupProjectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.SetupProjectButton.Location = new System.Drawing.Point(248, 493);
+            this.SetupProjectButton.Location = new System.Drawing.Point(369, 493);
             this.SetupProjectButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.SetupProjectButton.Name = "SetupProjectButton";
             this.SetupProjectButton.Size = new System.Drawing.Size(113, 59);
@@ -193,7 +210,7 @@ namespace ForgeModBuilder
             // 
             this.RefreshProjectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RefreshProjectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.RefreshProjectButton.Location = new System.Drawing.Point(486, 493);
+            this.RefreshProjectButton.Location = new System.Drawing.Point(607, 493);
             this.RefreshProjectButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.RefreshProjectButton.Name = "RefreshProjectButton";
             this.RefreshProjectButton.Size = new System.Drawing.Size(113, 59);
@@ -202,18 +219,21 @@ namespace ForgeModBuilder
             this.RefreshProjectButton.UseVisualStyleBackColor = true;
             this.RefreshProjectButton.Click += new System.EventHandler(this.RefreshProjectClick);
             // 
-            // RefreshProjectMenuItem
+            // NewProjectButton
             // 
-            this.RefreshProjectMenuItem.Name = "RefreshProjectMenuItem";
-            this.RefreshProjectMenuItem.Size = new System.Drawing.Size(153, 22);
-            this.RefreshProjectMenuItem.Text = "Refresh Project";
-            this.RefreshProjectMenuItem.Click += new System.EventHandler(this.RefreshProjectClick);
+            /*
+            this.NewProjectButton.Location = new System.Drawing.Point(0, 0);
+            this.NewProjectButton.Name = "NewProjectButton";
+            this.NewProjectButton.Size = new System.Drawing.Size(75, 23);
+            this.NewProjectButton.TabIndex = 0;
+            */
             // 
             // FMB
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.NewProjectButton);
             this.Controls.Add(this.RefreshProjectButton);
             this.Controls.Add(this.SetupProjectButton);
             this.Controls.Add(this.UpdateProjectButton);
@@ -252,6 +272,8 @@ namespace ForgeModBuilder
         private ToolStripMenuItem ConsoleFontMenuItem;
         private Button RefreshProjectButton;
         private ToolStripMenuItem RefreshProjectMenuItem;
+        private Button NewProjectButton;
+        private ToolStripMenuItem NewProjectMenuItem;
     }
 }
 

@@ -20,7 +20,7 @@ namespace ForgeModBuilder
         {
             WebClient client = new WebClient();
             Console.WriteLine("Checking for updates at URL: " + url);
-            Program.INSTANCE.AddConsoleText("Checking for updates at URL: " + url + "\n");
+            Program.INSTANCE.AddConsoleText("Checking for updates at URL: " + url);
             try
             {
                 string data = client.DownloadString(url);
@@ -28,7 +28,7 @@ namespace ForgeModBuilder
                 if(Application.ProductVersion != update.version)
                 {
                     Console.WriteLine("An update is available!");
-                    Program.INSTANCE.AddConsoleText("An update is available!\n");
+                    Program.INSTANCE.AddConsoleText("An update is available!");
                     Console.WriteLine("Current Version: " + Application.ProductVersion + ", Newest Version: " + update.version);
                     string changelog = "";
                     foreach(string line in update.changelog)
@@ -52,13 +52,13 @@ namespace ForgeModBuilder
                 else
                 {
                     Console.WriteLine("No update found");
-                    Program.INSTANCE.AddConsoleText("No update found\n");
+                    Program.INSTANCE.AddConsoleText("No update found");
                 }
             }
             catch(Exception e)
             {
                 System.Console.WriteLine(e.Message);
-                Program.INSTANCE.AddConsoleText("An error occurred\n" + e.Message + "\n");
+                Program.INSTANCE.AddConsoleText("An error occurred\n" + e.Message);
                 MessageBox.Show("An error occurred: " + e.Message, "An error occurred!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

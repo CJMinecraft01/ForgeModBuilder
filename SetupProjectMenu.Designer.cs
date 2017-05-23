@@ -61,7 +61,7 @@
             this.OKButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.OKButton.Location = new System.Drawing.Point(11, 63);
             this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(82, 40);
+            this.OKButton.Size = new System.Drawing.Size(82, 31);
             this.OKButton.TabIndex = 2;
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
@@ -73,7 +73,7 @@
             this.CancelButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.CancelButton.Location = new System.Drawing.Point(105, 63);
             this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(82, 40);
+            this.CancelButton.Size = new System.Drawing.Size(82, 31);
             this.CancelButton.TabIndex = 3;
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
@@ -83,7 +83,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(204, 115);
+            this.ClientSize = new System.Drawing.Size(204, 104);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.Editor);

@@ -73,8 +73,6 @@ namespace ForgeModBuilder
             {
                 if (File.Exists(OptionsFilePath))
                 {
-                    Projects.Clear();
-
                     JsonSerializer js = new JsonSerializer();
                     js.NullValueHandling = NullValueHandling.Ignore;
                     using (StreamReader sr = new StreamReader(OptionsFilePath))
@@ -228,6 +226,8 @@ namespace ForgeModBuilder
         {
             int buttonWidth = ClientRectangle.Width / 5 - 7;
             int buttonY = Console.Height + 33;
+            //NewProjectButton.Width = buttonWidth;
+            //NewProjectButton.Location = new Point(8, buttonY);
             OpenProjectButton.Width = buttonWidth;
             OpenProjectButton.Location = new Point(8, buttonY);
             BuildProjectButton.Width = buttonWidth;
@@ -309,7 +309,7 @@ namespace ForgeModBuilder
                 UpdateProjects(true, false);
                 Console.Text = string.Empty;
                 System.Console.WriteLine("Loaded project: " + p);
-                AddConsoleText("Loaded project: " + p + "\n");
+                AddConsoleText("Loaded project: " + p);
                 MessageBox.Show("Successfully loaded project!", "Loaded Project!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
@@ -333,7 +333,7 @@ namespace ForgeModBuilder
         private void RunGradle(string command)
         {
             System.Console.WriteLine("Ran gradlew command: gradlew " + command);
-            AddConsoleText("Ran gradlew command: gradlew " + command + "\n");
+            AddConsoleText("Ran gradlew command: gradlew " + command);
             Process p = new Process();
             p.StartInfo = new ProcessStartInfo(CurrentProject.path + "/gradlew.bat", command);
             p.StartInfo.WorkingDirectory = CurrentProject.path;
@@ -361,14 +361,14 @@ namespace ForgeModBuilder
                 MatchCollection mc = rex.Matches(text);
                 if(mc.Count == 0)
                 {
-                    Console.AppendText(text);
+                    Console.AppendText(text + "\n");
                     Console.ScrollToCaret();
                     Console.DetectUrls = true;
                     return;
                 }
                 int startcursorposition = Console.SelectionStart;
                 int start = Console.TextLength;
-                Console.AppendText(text);
+                Console.AppendText(text + "\n");
                 int end = Console.TextLength; // now longer by length of appended text
                 foreach (Match m in mc)
                 {
@@ -393,10 +393,10 @@ namespace ForgeModBuilder
         {
             if(e.Data != null)
             {
-                AddConsoleText(e.Data + "\n");
+                AddConsoleText(e.Data);
             } else
             {
-                AddConsoleText("\n");
+                AddConsoleText("");
             }
         }
 
@@ -405,7 +405,7 @@ namespace ForgeModBuilder
             if(CurrentProject != null)
             {
                 System.Console.WriteLine("Building project: " + CurrentProject);
-                AddConsoleText("Building project: " + CurrentProject + "\n");
+                AddConsoleText("Building project: " + CurrentProject);
                 RunGradle("build");
             }
             else
@@ -419,7 +419,7 @@ namespace ForgeModBuilder
             if(CurrentProject != null)
             {
                 System.Console.WriteLine("Setting up project: " + CurrentProject);
-                AddConsoleText("Setting up project: " + CurrentProject + "\n");
+                AddConsoleText("Setting up project: " + CurrentProject);
                 string editor = SetupProjectMenu.Dialog.ShowDialog();
                 //string editor = Microsoft.VisualBasic.Interaction.InputBox("Enter either idea or eclipse", "What editor are you using?");
                 if(!string.IsNullOrEmpty(editor))
@@ -427,7 +427,7 @@ namespace ForgeModBuilder
                     if(editor.ToLower() == "eclipse" || editor.ToLower() == "idea")
                     {
                         System.Console.WriteLine("Setting editor to " + editor.ToLower());
-                        AddConsoleText("Setting editor to " + editor.ToLower() + "\n");
+                        AddConsoleText("Setting editor to " + editor.ToLower());
                         RunGradle("setupDecompWorkspace " + editor.ToLower() + args);
                     } else
                     {
@@ -449,7 +449,7 @@ namespace ForgeModBuilder
             if(CurrentProject != null)
             {
                 System.Console.WriteLine("Updating project: " + CurrentProject);
-                AddConsoleText("Updating project: " + CurrentProject + "\n");
+                AddConsoleText("Updating project: " + CurrentProject);
                 string[] files = Directory.GetFiles(CurrentProject.path);
                 foreach(string file in files)
                 {
@@ -469,7 +469,7 @@ namespace ForgeModBuilder
                                 {
                                     WebClient client = new WebClient();
                                     System.Console.WriteLine("Checking updates at address: " + "http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_" + CurrentProject.mcVersion + ".html");
-                                    AddConsoleText("Checking updates at address: " + "http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_" + CurrentProject.mcVersion + ".html" + "\n");
+                                    AddConsoleText("Checking updates at address: " + "http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_" + CurrentProject.mcVersion + ".html");
                                     try
                                     {
                                         string downloadString = client.DownloadString("http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_" + CurrentProject.mcVersion + ".html");
@@ -477,18 +477,18 @@ namespace ForgeModBuilder
                                         latest = latest.Substring(0, latest.IndexOf('<'));
                                         string latestforgeversion = latest.Split('-')[1].Substring(1);
                                         System.Console.WriteLine("Current Version: MC: " + CurrentProject.mcVersion + ", Forge: " + CurrentProject.forgeVersion);
-                                        AddConsoleText("Current Version: MC: " + CurrentProject.mcVersion + ", Forge: " + CurrentProject.forgeVersion + "\n");
+                                        AddConsoleText("Current Version: MC: " + CurrentProject.mcVersion + ", Forge: " + CurrentProject.forgeVersion);
                                         System.Console.WriteLine("Latest Version: MC: " + latest.Split('-')[0].Substring(0, latest.Split('-')[0].Length-1) + ", Forge: " + latestforgeversion);
-                                        AddConsoleText("Latest Version: MC: " + latest.Split('-')[0].Substring(0, latest.Split('-')[0].Length-1) + ", Forge: " + latestforgeversion + "\n");
+                                        AddConsoleText("Latest Version: MC: " + latest.Split('-')[0].Substring(0, latest.Split('-')[0].Length-1) + ", Forge: " + latestforgeversion);
                                         if (CurrentProject.forgeVersion.Contains(latestforgeversion))
                                         {
                                             newVersionLine = line;
-                                            AddConsoleText("No update available" + "\n");
+                                            AddConsoleText("No update available");
                                             MessageBox.Show("You are already up to date", "No update available", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                         }
                                         else
                                         {
-                                            AddConsoleText("Update available!" + "\n");
+                                            AddConsoleText("Update available!");
                                             if (MessageBox.Show("A new forge version is available. Would you like to update?", "Update available", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                                             {
                                                 update = true;
@@ -501,7 +501,7 @@ namespace ForgeModBuilder
                                     catch (Exception e)
                                     {
                                         System.Console.WriteLine(e.Message);
-                                        AddConsoleText("An error occurred\n" + e.Message + "\n");
+                                        AddConsoleText("An error occurred\n" + e.Message);
                                         MessageBox.Show("An error occurred: " + e.Message, "An error occurred!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     }
                                 }
@@ -541,7 +541,7 @@ namespace ForgeModBuilder
             if(CurrentProject != null)
             {
                 System.Console.WriteLine("Refreshing project: " + CurrentProject);
-                AddConsoleText("Refreshing project: " + CurrentProject + "\n");
+                AddConsoleText("Refreshing project: " + CurrentProject);
                 SetupProject(" --refresh-dependencies");
             }
             else
@@ -549,6 +549,15 @@ namespace ForgeModBuilder
                 MessageBox.Show("Please open a project!", "No open project", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        /*
+        public void NewProject()
+        {
+            System.Console.WriteLine("Creating a new project!");
+            AddConsoleText("Creating a new project!");
+            NewProjectMenu.Dialog.ShowDialog();
+        }
+        */
 
         private void OpenProjectClick(object sender, EventArgs e)
         {
@@ -574,6 +583,13 @@ namespace ForgeModBuilder
         {
             RefreshProject();
         }
+
+        /*
+        private void NewProjectClick(object sender, EventArgs e)
+        {
+            NewProject();
+        }
+        */
 
         private void ConsoleFontMenuItem_Click(object sender, EventArgs e)
         {

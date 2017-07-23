@@ -1,5 +1,5 @@
 {
-	"name": "Forge Mod Builder - And let the new project be born"
+	"name": "Forge Mod Builder - And let the new project be born",
 	"version": "0.1.0.4",
 	"changelog": [
 		"+Added ability to manually check for updates", "+Added ability to clear the projects cache", "+Added ability to create a new project", "+Added ability to sync with new versions of forge"

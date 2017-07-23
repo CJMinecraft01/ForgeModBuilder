@@ -17,161 +17,171 @@ namespace ForgeModBuilder
 {
     public partial class FMB : Form
     {
+        //The current project being used
         private Project CurrentProject;
 
+        //The path to the projects.json file 
         private static string ProjectsFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder/projects.json";
+        //The path to the options.json file
         private static string OptionsFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder/options.json";
 
+        //The available projects loaded from the projects.json file
         private List<Project> Projects = new List<Project>();
+        //The current options loaded from the options.json file
         private Dictionary<string, object> Options = new Dictionary<string, object>();
 
         public FMB()
         {
-            InitializeComponent();
-            Resize += ResizeWindow;
-            SetupLayout();
-            UpdateProjects(false, true);
-            UpdateOptions(false, true);
-            FormClosed += FMBClosed;
+            InitializeComponent(); //Create the default form stuff
+            Resize += ResizeWindow; //To allow for window resizing
+            SetupLayout(); //Setup the layout of the form
+            UpdateProjects(false, true); //Receive the projects from the projects.json file
+            UpdateOptions(false, true); //Receive the options from the options.json file
+            FormClosed += FMBClosed; //Handle when the form closes
             Load += (sender, e) =>
             {
-                UpdateChecker.CheckForUpdates(UpdateChecker.UpdateURL);
+                UpdateChecker.CheckForUpdates(UpdateChecker.UpdateURL); //When it loads the form, check for updates
             };
         }
 
+        //Save the projects.json and options.json file when closing
         private void FMBClosed(object sender, FormClosedEventArgs e)
         {
-            UpdateProjects(true, false);
-            UpdateOptions(true, false);
+            UpdateProjects(true, false); //Save the projects
+            UpdateOptions(true, false); //Save the user's settings
         }
 
+        #region Client Only Data
+        //Update the options in the file or in the variable
         public void UpdateOptions(bool saveFile, bool readFromFile)
         {
-            if(saveFile)
+            if(saveFile) //If you want to save
             {
-                if(File.Exists(OptionsFilePath))
+                if(File.Exists(OptionsFilePath)) //Make sure you have the options file
                 {
                     JsonSerializer js = new JsonSerializer();
                     js.NullValueHandling = NullValueHandling.Ignore;
                     using (StreamWriter sw = new StreamWriter(OptionsFilePath))
                     using (JsonWriter jw = new JsonTextWriter(sw))
                     {
-                        js.Serialize(jw, Options);
+                        js.Serialize(jw, Options); //Write the data in Options to the file
                     }
                 }
-                else
+                else //Create the options file
                 {
                     if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder"))
                     {
-                        Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder");
+                        Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder"); //Create the path if not found
                     }
                     File.Create(OptionsFilePath).Dispose();
-                    UpdateOptions(saveFile, readFromFile);
+                    UpdateOptions(saveFile, readFromFile); //Recall the method now that it has the file
                 }
             }
-            if (readFromFile)
+            if (readFromFile) //Read the variables from the file
             {
-                if (File.Exists(OptionsFilePath))
+                if (File.Exists(OptionsFilePath)) //If the options file exists
                 {
                     JsonSerializer js = new JsonSerializer();
                     js.NullValueHandling = NullValueHandling.Ignore;
                     using (StreamReader sr = new StreamReader(OptionsFilePath))
                     using (JsonReader jr = new JsonTextReader(sr))
                     {
-                        Options = js.Deserialize<Dictionary<string, object>>(jr);
+                        Options = js.Deserialize<Dictionary<string, object>>(jr); //Deserialise the file and place it in the options variable
                     }
-                    if (Options == null)
+                    if (Options == null) //If the file was empty
                     {
-                        Options = new Dictionary<string, object>();
+                        Options = new Dictionary<string, object>(); //Still initialise it but to a blank version
                     }
                 }
-                else
+                else //Create the options file
                 {
                     if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder"))
                     {
-                        Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder");
+                        Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder"); //Create the directory if it can't find it
                     }
                     File.Create(OptionsFilePath).Dispose();
-                    UpdateOptions(saveFile, readFromFile);
+                    UpdateOptions(saveFile, readFromFile); //Recall the method now that it has the file
                 }
             }
 
-            if (Options.ContainsKey("console_font"))
+            if (Options.ContainsKey("console_font")) //Deserialise the console font
             {
-                if (Options["console_font"] is string)
+                if (Options["console_font"] is string) //If it is a string
                 {
-                    Console.Font = JsonConvert.DeserializeObject<Font>("\"" + (string)Options["console_font"] + "\"");
+                    Console.Font = JsonConvert.DeserializeObject<Font>("\"" + (string)Options["console_font"] + "\""); //Load the console font as a string
                 }
                 else
                 {
-                    Console.Font = (Font)Options["console_font"];
+                    Console.Font = (Font)Options["console_font"]; //It must be a font so we can load it directly
                 }
             }
         }
 
+        //Update the projects in the file or in the variable
         public void UpdateProjects(bool saveFile, bool readFromFile)
         {
-            if(saveFile)
+            if(saveFile) //If you want to save
             {
-                if(File.Exists(ProjectsFilePath))
+                if(File.Exists(ProjectsFilePath)) //Make sure the file exists
                 {
                     JsonSerializer js = new JsonSerializer();
                     js.NullValueHandling = NullValueHandling.Ignore;
                     using (StreamWriter sw = new StreamWriter(ProjectsFilePath))
                     using (JsonWriter jw = new JsonTextWriter(sw))
                     {
-                        js.Serialize(jw, Projects);
+                        js.Serialize(jw, Projects); //Write all the data in Projects to the file
                     }
                 }
-                else {
-                    if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder"))
+                else //The file does not exist so create it
+                {
+                    if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder")) //Does the folder not exist?
                     {
-                        Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder");
+                        Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder"); //Create the folder
                     }
                     File.Create(ProjectsFilePath).Dispose();
-                    UpdateProjects(saveFile, readFromFile);
+                    UpdateProjects(saveFile, readFromFile); //Recall the method now that it can find the file
                 }
             }
-            if(readFromFile)
+            if(readFromFile) //If you want to read data from the file
             {
-                if(File.Exists(ProjectsFilePath))
+                if(File.Exists(ProjectsFilePath)) //Make srue the file exists
                 {
-                    Projects.Clear();
-
                     JsonSerializer js = new JsonSerializer();
                     js.NullValueHandling = NullValueHandling.Ignore;
                     using (StreamReader sr = new StreamReader(ProjectsFilePath))
                     using(JsonReader jr = new JsonTextReader(sr))
                     {
-                        Projects = js.Deserialize<List<Project>>(jr);
+                        Projects = js.Deserialize<List<Project>>(jr); //Read the projects
                     }
                     if(Projects == null)
                     {
-                        Projects = new List<Project>();
+                        Projects = new List<Project>(); //If the file was empty, initialise Projects to a blank list
                     }
-                } else
+                }
+                else //If the file did not exist
                 {
-                    if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder"))
+                    if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder")) //Does the folder not exist?
                     {
-                        Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder");
+                        Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder"); //Create the folder
                     }
                     File.Create(ProjectsFilePath).Dispose();
-                    UpdateProjects(saveFile, readFromFile);
+                    UpdateProjects(saveFile, readFromFile); //Recall the method now that it can find the file
                 }
             }
 
+            //Clear all the menu items which allow you to load that project and run the action as well
             OpenProjectMenuItem.DropDownItems.Clear();
             BuildProjectMenuItem.DropDownItems.Clear();
             SetupProjectMenuItem.DropDownItems.Clear();
             UpdateProjectMenuItem.DropDownItems.Clear();
             RefreshProjectMenuItem.DropDownItems.Clear();
-            foreach (Project p in Projects)
+            foreach (Project p in Projects) //Add a dropdown for each project
             {
                 ToolStripMenuItem i = new ToolStripMenuItem(p.path);
                 i.Click += (sender, e) =>
                 {
                     if(CurrentProject != p)
-                        OpenProject(p.path);
+                        OpenProject(p.path); //Make it open the current project if it is not already open
                 };
                 OpenProjectMenuItem.DropDownItems.Add(i);
                 i = new ToolStripMenuItem(p.path);
@@ -179,7 +189,7 @@ namespace ForgeModBuilder
                 {
                     if (CurrentProject != p)
                     {
-                        OpenProject(p.path);
+                        OpenProject(p.path); //Make it open the current project if it is not already open
                     }
                     BuildProject();
                 };
@@ -189,7 +199,7 @@ namespace ForgeModBuilder
                 {
                     if (CurrentProject != p)
                     {
-                        OpenProject(p.path);
+                        OpenProject(p.path); //Make it open the current project if it is not already open
                     }
                     SetupProject("");
                 };
@@ -199,7 +209,7 @@ namespace ForgeModBuilder
                 {
                     if (CurrentProject != p)
                     {
-                        OpenProject(p.path);
+                        OpenProject(p.path); //Make it open the current project if it is not already open
                     }
                     UpdateProject();
                 };
@@ -209,27 +219,31 @@ namespace ForgeModBuilder
                 {
                     if(CurrentProject != p)
                     {
-                        OpenProject(p.path);
-                        RefreshProject();
+                        OpenProject(p.path); //Make it open the current project if it is not already open
                     }
+                    RefreshProject();
                 };
                 RefreshProjectMenuItem.DropDownItems.Add(i);
             }
         }
+        #endregion
 
+        #region Form Layout
+        //Setup layout again when resizing
         private void ResizeWindow(object sender, EventArgs e)
         {
             SetupLayout();
         }
 
+        //Make the form look beautiful
         private void SetupLayout()
         {
-            int buttonWidth = ClientRectangle.Width / 5 - 7;
+            int buttonWidth = ClientRectangle.Width / 6 - 7;
             int buttonY = Console.Height + 33;
-            //NewProjectButton.Width = buttonWidth;
-            //NewProjectButton.Location = new Point(8, buttonY);
+            NewProjectButton.Width = buttonWidth;
+            NewProjectButton.Location = new Point(8, buttonY);
             OpenProjectButton.Width = buttonWidth;
-            OpenProjectButton.Location = new Point(8, buttonY);
+            OpenProjectButton.Location = new Point(NewProjectButton.Location.X + buttonWidth + 5, buttonY);
             BuildProjectButton.Width = buttonWidth;
             BuildProjectButton.Location = new Point(OpenProjectButton.Location.X + buttonWidth + 5, buttonY);
             SetupProjectButton.Width = buttonWidth;
@@ -245,7 +259,10 @@ namespace ForgeModBuilder
             if(!Options.ContainsKey("console_font"))
                 Options.Add("console_font", Console.Font);
         }
+        #endregion
 
+        #region Opening Projects
+        //Open a new project from the given path
         public void OpenProject(string path)
         {
             string[] files = Directory.GetFiles(path);
@@ -318,6 +335,7 @@ namespace ForgeModBuilder
             }
         }
 
+        //Open a project showing a folder browser dialog
         public void OpenProject()
         {
             using(var fbd = new FolderBrowserDialog())
@@ -329,7 +347,9 @@ namespace ForgeModBuilder
                 }
             }
         }
+        #endregion
 
+        //Running any gradle command
         private void RunGradle(string command)
         {
             System.Console.WriteLine("Ran gradlew command: gradlew " + command);
@@ -345,8 +365,11 @@ namespace ForgeModBuilder
             p.BeginOutputReadLine();
         }
 
+        #region Adding Console Text
+        //For multi-threading
         delegate void AddConsoleTextCallback(string text);
 
+        //Add actual text to the console
         public void AddConsoleText(string text)
         {
             if(Console.InvokeRequired)
@@ -389,6 +412,7 @@ namespace ForgeModBuilder
             }
         }
 
+        //Add all of gradle output to the console
         private void GradleOutputReceived(object sender, DataReceivedEventArgs e)
         {
             if(e.Data != null)
@@ -399,7 +423,10 @@ namespace ForgeModBuilder
                 AddConsoleText("");
             }
         }
+        #endregion
 
+        #region Button Actions
+        //Build the current project
         public void BuildProject()
         {
             if(CurrentProject != null)
@@ -414,6 +441,7 @@ namespace ForgeModBuilder
             }
         }
 
+        //Setup the current project with arguments
         public void SetupProject(string args)
         {
             if(CurrentProject != null)
@@ -444,6 +472,7 @@ namespace ForgeModBuilder
             }
         }
 
+        //Update the current project
         public void UpdateProject()
         {
             if(CurrentProject != null)
@@ -536,6 +565,7 @@ namespace ForgeModBuilder
             }
         }
 
+        //Reload the current project
         public void RefreshProject()
         {
             if(CurrentProject != null)
@@ -550,15 +580,16 @@ namespace ForgeModBuilder
             }
         }
 
-        /*
+        //Create a new project
         public void NewProject()
         {
             System.Console.WriteLine("Creating a new project!");
             AddConsoleText("Creating a new project!");
-            NewProjectMenu.Dialog.ShowDialog();
+            NewProjectMenu.ShowNewProjectMenu();
         }
-        */
+        #endregion
 
+        #region Menu Strip Buttons
         private void OpenProjectClick(object sender, EventArgs e)
         {
             OpenProject();
@@ -584,18 +615,16 @@ namespace ForgeModBuilder
             RefreshProject();
         }
 
-        /*
         private void NewProjectClick(object sender, EventArgs e)
         {
             NewProject();
         }
-        */
 
         private void ConsoleFontMenuItem_Click(object sender, EventArgs e)
         {
             FontDialog fd = new FontDialog();
             fd.Font = Console.Font;
-            if(fd.ShowDialog() == DialogResult.OK)
+            if (fd.ShowDialog() == DialogResult.OK)
             {
                 Console.Font = fd.Font;
             }
@@ -606,6 +635,40 @@ namespace ForgeModBuilder
             Console.DetectUrls = true;
         }
 
+        private void ClearConsoleMenuItem_Click(object sender, EventArgs e)
+        {
+            Console.Text = "";
+        }
+
+        private void ClearProjectCacheMenuItem_Click(object sender, EventArgs e)
+        {
+            Projects.Clear();
+            UpdateProjects(true, false);
+        }
+
+        private void ClearVersionsCacheMenuItem_Click(object sender, EventArgs e)
+        {
+            NewProjectMenu.Versions.Clear();
+            NewProjectMenu.UpdateVersions(true, false);
+            NewProjectMenu.Sync = true;
+        }
+
+        private void CheckForUpdatesMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateChecker.CheckForUpdates(UpdateChecker.UpdateURL);
+        }
+
+        private void CheckVersionsMenuItem_Click(object sender, EventArgs e)
+        {
+            NewProjectMenu.SyncVersions();
+            NewProjectMenu.UpdateVersions(true, false);
+            NewProjectMenu.Sync = false;
+        }
+
+        #endregion
+
+        #region Console Text Handling
+        //Handling console text
         private void ConsoleTextChanged(object sender, EventArgs e)
         {
             string tokens = "(UP-TO-DATE|SKIPPED|BUILD SUCCESSFUL)";
@@ -624,8 +687,14 @@ namespace ForgeModBuilder
             }
             Console.DetectUrls = false;
         }
-    }
 
+        private void ConsoleLinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            Process.Start(e.LinkText);
+        }
+        #endregion
+    }
+    //All the details needed for a project
     public class Project
     {
         public string path;

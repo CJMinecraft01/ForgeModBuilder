@@ -30,6 +30,7 @@ namespace ForgeModBuilder
                     Console.WriteLine("An update is available!");
                     Program.INSTANCE.AddConsoleText("An update is available!");
                     Console.WriteLine("Current Version: " + Application.ProductVersion + ", Newest Version: " + update.version);
+                    Program.INSTANCE.AddConsoleText("Current Version: " + Application.ProductVersion + ", Newest Version: " + update.version);
                     string changelog = "";
                     foreach(string line in update.changelog)
                     {

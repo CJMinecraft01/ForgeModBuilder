@@ -31,7 +31,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Editor = new System.Windows.Forms.ComboBox();
             this.OKButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this._CancelButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -67,24 +67,24 @@
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
-            // CancelButton
+            // _CancelButton
             // 
-            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.CancelButton.Location = new System.Drawing.Point(105, 63);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(82, 31);
-            this.CancelButton.TabIndex = 3;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this._CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this._CancelButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this._CancelButton.Location = new System.Drawing.Point(105, 63);
+            this._CancelButton.Name = "_CancelButton";
+            this._CancelButton.Size = new System.Drawing.Size(82, 31);
+            this._CancelButton.TabIndex = 3;
+            this._CancelButton.Text = "Cancel";
+            this._CancelButton.UseVisualStyleBackColor = true;
+            this._CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // SetupProjectMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(204, 104);
-            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this._CancelButton);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.Editor);
             this.Controls.Add(this.label1);
@@ -104,6 +104,6 @@
         private System.Windows.Forms.Label label1;
         public System.Windows.Forms.ComboBox Editor;
         private System.Windows.Forms.Button OKButton;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button _CancelButton;
     }
 }

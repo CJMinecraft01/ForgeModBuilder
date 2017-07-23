@@ -31,9 +31,9 @@ namespace ForgeModBuilder
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FMB));
-            this.Menu = new System.Windows.Forms.MenuStrip();
+            this.OptionsMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            //this.NewProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.NewProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OpenProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BuildProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SetupProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,30 +42,37 @@ namespace ForgeModBuilder
             this.ExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ConsoleFontMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ClearConsoleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ClearProjectCacheMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ClearVersionsCacheMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CheckForUpdatesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CheckVersionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Console = new System.Windows.Forms.RichTextBox();
             this.OpenProjectButton = new System.Windows.Forms.Button();
             this.BuildProjectButton = new System.Windows.Forms.Button();
             this.UpdateProjectButton = new System.Windows.Forms.Button();
             this.SetupProjectButton = new System.Windows.Forms.Button();
             this.RefreshProjectButton = new System.Windows.Forms.Button();
-            //this.NewProjectButton = new System.Windows.Forms.Button();
-            this.Menu.SuspendLayout();
+            this.NewProjectButton = new System.Windows.Forms.Button();
+            this.OptionsMenu.SuspendLayout();
             this.SuspendLayout();
             // 
-            // Menu
+            // OptionsMenu
             // 
-            this.Menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.OptionsMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.optionsToolStripMenuItem});
-            this.Menu.Location = new System.Drawing.Point(0, 0);
-            this.Menu.Name = "Menu";
-            this.Menu.Size = new System.Drawing.Size(784, 24);
-            this.Menu.TabIndex = 0;
+            this.optionsToolStripMenuItem,
+            this.helpToolStripMenuItem});
+            this.OptionsMenu.Location = new System.Drawing.Point(0, 0);
+            this.OptionsMenu.Name = "OptionsMenu";
+            this.OptionsMenu.Size = new System.Drawing.Size(784, 24);
+            this.OptionsMenu.TabIndex = 0;
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            /*this.NewProjectMenuItem,*/
+            this.NewProjectMenuItem,
             this.OpenProjectMenuItem,
             this.BuildProjectMenuItem,
             this.SetupProjectMenuItem,
@@ -78,10 +85,10 @@ namespace ForgeModBuilder
             // 
             // NewProjectMenuItem
             // 
-            /*
             this.NewProjectMenuItem.Name = "NewProjectMenuItem";
             this.NewProjectMenuItem.Size = new System.Drawing.Size(153, 22);
-            */
+            this.NewProjectMenuItem.Text = "New Project";
+            this.NewProjectMenuItem.Click += new System.EventHandler(this.NewProjectClick);
             // 
             // OpenProjectMenuItem
             // 
@@ -127,7 +134,10 @@ namespace ForgeModBuilder
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ConsoleFontMenuItem});
+            this.ConsoleFontMenuItem,
+            this.ClearConsoleMenuItem,
+            this.ClearProjectCacheMenuItem,
+            this.ClearVersionsCacheMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
@@ -135,9 +145,53 @@ namespace ForgeModBuilder
             // ConsoleFontMenuItem
             // 
             this.ConsoleFontMenuItem.Name = "ConsoleFontMenuItem";
-            this.ConsoleFontMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.ConsoleFontMenuItem.Size = new System.Drawing.Size(183, 22);
             this.ConsoleFontMenuItem.Text = "Console Font";
             this.ConsoleFontMenuItem.Click += new System.EventHandler(this.ConsoleFontMenuItem_Click);
+            // 
+            // ClearConsoleMenuItem
+            // 
+            this.ClearConsoleMenuItem.Name = "ClearConsoleMenuItem";
+            this.ClearConsoleMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.ClearConsoleMenuItem.Text = "Clear Console";
+            this.ClearConsoleMenuItem.Click += new System.EventHandler(this.ClearConsoleMenuItem_Click);
+            // 
+            // ClearProjectCacheMenuItem
+            // 
+            this.ClearProjectCacheMenuItem.Name = "ClearProjectCacheMenuItem";
+            this.ClearProjectCacheMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.ClearProjectCacheMenuItem.Text = "Clear Project Cache";
+            this.ClearProjectCacheMenuItem.Click += new System.EventHandler(this.ClearProjectCacheMenuItem_Click);
+            // 
+            // ClearVersionsCacheMenuItem
+            // 
+            this.ClearVersionsCacheMenuItem.Name = "ClearVersionsCacheMenuItem";
+            this.ClearVersionsCacheMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.ClearVersionsCacheMenuItem.Text = "Clear Versions Cache";
+            this.ClearVersionsCacheMenuItem.Click += new System.EventHandler(this.ClearVersionsCacheMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CheckForUpdatesMenuItem,
+            this.CheckVersionsMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // CheckForUpdatesMenuItem
+            // 
+            this.CheckForUpdatesMenuItem.Name = "CheckForUpdatesMenuItem";
+            this.CheckForUpdatesMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.CheckForUpdatesMenuItem.Text = "Check for updates";
+            this.CheckForUpdatesMenuItem.Click += new System.EventHandler(this.CheckForUpdatesMenuItem_Click);
+            // 
+            // CheckVersionsMenuItem
+            // 
+            this.CheckVersionsMenuItem.Name = "CheckVersionsMenuItem";
+            this.CheckVersionsMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.CheckVersionsMenuItem.Text = "Check Versions";
+            this.CheckVersionsMenuItem.Click += new System.EventHandler(this.CheckVersionsMenuItem_Click);
             // 
             // Console
             // 
@@ -221,12 +275,16 @@ namespace ForgeModBuilder
             // 
             // NewProjectButton
             // 
-            /*
-            this.NewProjectButton.Location = new System.Drawing.Point(0, 0);
+            this.NewProjectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.NewProjectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.NewProjectButton.Location = new System.Drawing.Point(12, 493);
+            this.NewProjectButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.NewProjectButton.Name = "NewProjectButton";
-            this.NewProjectButton.Size = new System.Drawing.Size(75, 23);
-            this.NewProjectButton.TabIndex = 0;
-            */
+            this.NewProjectButton.Size = new System.Drawing.Size(113, 59);
+            this.NewProjectButton.TabIndex = 7;
+            this.NewProjectButton.Text = "New Project";
+            this.NewProjectButton.UseVisualStyleBackColor = true;
+            this.NewProjectButton.Click += new System.EventHandler(this.NewProjectClick);
             // 
             // FMB
             // 
@@ -240,15 +298,15 @@ namespace ForgeModBuilder
             this.Controls.Add(this.BuildProjectButton);
             this.Controls.Add(this.OpenProjectButton);
             this.Controls.Add(this.Console);
-            this.Controls.Add(this.Menu);
+            this.Controls.Add(this.OptionsMenu);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.Menu;
+            this.MainMenuStrip = this.OptionsMenu;
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "FMB";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Forge Mod Builder";
-            this.Menu.ResumeLayout(false);
-            this.Menu.PerformLayout();
+            this.OptionsMenu.ResumeLayout(false);
+            this.OptionsMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -256,7 +314,7 @@ namespace ForgeModBuilder
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip Menu;
+        private System.Windows.Forms.MenuStrip OptionsMenu;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem BuildProjectMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SetupProjectMenuItem;
@@ -272,8 +330,14 @@ namespace ForgeModBuilder
         private ToolStripMenuItem ConsoleFontMenuItem;
         private Button RefreshProjectButton;
         private ToolStripMenuItem RefreshProjectMenuItem;
-        private Button NewProjectButton;
         private ToolStripMenuItem NewProjectMenuItem;
+        private Button NewProjectButton;
+        private ToolStripMenuItem ClearConsoleMenuItem;
+        private ToolStripMenuItem ClearProjectCacheMenuItem;
+        private ToolStripMenuItem ClearVersionsCacheMenuItem;
+        private ToolStripMenuItem helpToolStripMenuItem;
+        private ToolStripMenuItem CheckForUpdatesMenuItem;
+        private ToolStripMenuItem CheckVersionsMenuItem;
     }
 }
 

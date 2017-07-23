@@ -4,5 +4,5 @@
 	"changelog": [
 		"+Added ability to manually check for updates", "+Added ability to clear the projects cache", "+Added ability to create a new project", "+Added ability to sync with new versions of forge"
 	],
-	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.0.2/ForgeModBuilder-0.1.0.3.exe"
+	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.0.4/ForgeModBuilder-0.1.0.4.exe"
 }

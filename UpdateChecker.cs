@@ -14,8 +14,10 @@ namespace ForgeModBuilder
 {
     public static class UpdateChecker
     {
+        //The url where the update file is found
         public static string UpdateURL = "https://raw.githubusercontent.com/CJMinecraft01/ForgeModBuilder/master/update.json";
 
+        //Print out whether there is an update and if there is, ask the user if they want to download
         public static void CheckForUpdates(string url)
         {
             WebClient client = new WebClient();
@@ -23,24 +25,25 @@ namespace ForgeModBuilder
             Program.INSTANCE.AddConsoleText("Checking for updates at URL: " + url);
             try
             {
-                string data = client.DownloadString(url);
-                Update update = JsonConvert.DeserializeObject<Update>(data);
-                if(Application.ProductVersion != update.version)
+                string data = client.DownloadString(url); //Get the data from the url
+                Update update = JsonConvert.DeserializeObject<Update>(data); //Convert the data to the Update object
+                if(Application.ProductVersion != update.version) //If there is an update
                 {
                     Console.WriteLine("An update is available!");
                     Program.INSTANCE.AddConsoleText("An update is available!");
+                    //Say there is an update
                     Console.WriteLine("Current Version: " + Application.ProductVersion + ", Newest Version: " + update.version);
                     Program.INSTANCE.AddConsoleText("Current Version: " + Application.ProductVersion + ", Newest Version: " + update.version);
-                    string changelog = "";
+                    string changelog = ""; //Get the changelog
                     foreach(string line in update.changelog)
                     {
-                        changelog += line + "\n";
+                        changelog += line + "\n"; //Add the changelog
                     }
                     if(MessageBox.Show("An update is available! \n" + update.name + "\n" + update.version + "\n" + changelog + "\nWould you like to update now?", "Update available", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                     {
-                        //Process.Start(update.download);
+                        //Download the update
                         SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.FileName = "ForgeModBuilder.exe";
+                        sfd.FileName = "ForgeModBuilder-" + update.version + ".exe";
                         sfd.InitialDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                         sfd.Filter = "Executable Files|*.exe";
                         sfd.Title = "Select the download path";

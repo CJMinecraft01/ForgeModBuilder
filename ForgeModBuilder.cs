@@ -433,7 +433,14 @@ namespace ForgeModBuilder
             {
                 System.Console.WriteLine("Building project: " + CurrentProject);
                 AddConsoleText("Building project: " + CurrentProject);
-                RunGradle("build");
+                if(MessageBox.Show("Would you like to make the built file deobfuscated?", "Deobfuscate?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    RunGradle("jar");
+                }
+                else
+                {
+                    RunGradle("build");
+                }
             }
             else
             {

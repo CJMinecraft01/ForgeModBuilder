@@ -1,8 +1,8 @@
 {
-	"name": "Forge Mod Builder - And let the new project be born",
-	"version": "0.1.0.4",
+	"name": "Forge Mod Builder - The \"I can't read you\" update",
+	"version": "0.1.0.5",
 	"changelog": [
-		"+Added ability to manually check for updates", "+Added ability to clear the projects cache", "+Added ability to create a new project", "+Added ability to sync with new versions of forge"
+		"+Added ability to make deobfuscted jars when building"
 	],
-	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.0.4/ForgeModBuilder-0.1.0.4.exe"
+	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.0.5/ForgeModBuilder-0.1.0.5.exe"
 }

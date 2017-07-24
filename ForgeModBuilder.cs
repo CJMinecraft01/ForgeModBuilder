@@ -18,7 +18,7 @@ namespace ForgeModBuilder
     public partial class FMB : Form
     {
         //The current project being used
-        private Project CurrentProject;
+        public Project CurrentProject;
 
         //The path to the projects.json file 
         private static string ProjectsFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ForgeModBuilder/projects.json";
@@ -174,6 +174,7 @@ namespace ForgeModBuilder
             BuildProjectMenuItem.DropDownItems.Clear();
             SetupProjectMenuItem.DropDownItems.Clear();
             UpdateProjectMenuItem.DropDownItems.Clear();
+            ChangeProjectVersionMenuItem.DropDownItems.Clear();
             RefreshProjectMenuItem.DropDownItems.Clear();
             foreach (Project p in Projects) //Add a dropdown for each project
             {
@@ -211,9 +212,20 @@ namespace ForgeModBuilder
                     {
                         OpenProject(p.path); //Make it open the current project if it is not already open
                     }
-                    UpdateProject();
+                    NewProjectMenu.SetupVersions();
+                    UpdateProject(NewProjectMenu.Versions[CurrentProject.mcVersion].First(), true);
                 };
                 UpdateProjectMenuItem.DropDownItems.Add(i);
+                i = new ToolStripMenuItem(p.path);
+                i.Click += (sender, e) =>
+                {
+                    if (CurrentProject != p)
+                    {
+                        OpenProject(p.path); //Make it open the current project if it is not already open
+                    }
+                    ChangeProjectVersionMenu.ShowChangeProjectVersionMenu();
+                };
+                ChangeProjectVersionMenuItem.DropDownItems.Add(i);
                 i = new ToolStripMenuItem(p.path);
                 i.Click += (sender, e) =>
                 {
@@ -238,20 +250,23 @@ namespace ForgeModBuilder
         //Make the form look beautiful
         private void SetupLayout()
         {
-            int buttonWidth = ClientRectangle.Width / 6 - 7;
+            int buttonWidth = ClientRectangle.Width / 7 - 9;
             int buttonY = Console.Height + 33;
+            int buttonOffset = 9;
             NewProjectButton.Width = buttonWidth;
-            NewProjectButton.Location = new Point(8, buttonY);
+            NewProjectButton.Location = new Point(5, buttonY);
             OpenProjectButton.Width = buttonWidth;
-            OpenProjectButton.Location = new Point(NewProjectButton.Location.X + buttonWidth + 5, buttonY);
+            OpenProjectButton.Location = new Point(NewProjectButton.Location.X + buttonWidth + buttonOffset, buttonY);
             BuildProjectButton.Width = buttonWidth;
-            BuildProjectButton.Location = new Point(OpenProjectButton.Location.X + buttonWidth + 5, buttonY);
+            BuildProjectButton.Location = new Point(OpenProjectButton.Location.X + buttonWidth + buttonOffset, buttonY);
             SetupProjectButton.Width = buttonWidth;
-            SetupProjectButton.Location = new Point(BuildProjectButton.Location.X + buttonWidth + 5, buttonY);
+            SetupProjectButton.Location = new Point(BuildProjectButton.Location.X + buttonWidth + buttonOffset, buttonY);
             UpdateProjectButton.Width = buttonWidth;
-            UpdateProjectButton.Location = new Point(SetupProjectButton.Location.X + buttonWidth + 5, buttonY);
+            UpdateProjectButton.Location = new Point(SetupProjectButton.Location.X + buttonWidth + buttonOffset, buttonY);
+            ChangeProjectVersionButton.Width = buttonWidth;
+            ChangeProjectVersionButton.Location = new Point(UpdateProjectButton.Location.X + buttonWidth + buttonOffset, buttonY);
             RefreshProjectButton.Width = buttonWidth;
-            RefreshProjectButton.Location = new Point(UpdateProjectButton.Location.X + buttonWidth + 5, buttonY);
+            RefreshProjectButton.Location = new Point(ChangeProjectVersionButton.Location.X + buttonWidth + buttonOffset, buttonY);
             ExitMenuItem.Click += (sender, args) => {
                 Application.Exit();
             };
@@ -382,13 +397,6 @@ namespace ForgeModBuilder
                 string tokens = "(UP-TO-DATE|SKIPPED|BUILD SUCCESSFUL)";
                 Regex rex = new Regex(tokens);
                 MatchCollection mc = rex.Matches(text);
-                if(mc.Count == 0)
-                {
-                    Console.AppendText(text + "\n");
-                    Console.ScrollToCaret();
-                    Console.DetectUrls = true;
-                    return;
-                }
                 int startcursorposition = Console.SelectionStart;
                 int start = Console.TextLength;
                 Console.AppendText(text + "\n");
@@ -399,6 +407,24 @@ namespace ForgeModBuilder
                     Console.Select(start + m.Index, end - start);
 
                     Console.SelectionColor = Color.YellowGreen;
+                    Console.SelectionFont = new Font(Console.Font, FontStyle.Bold);
+
+                    // Unselect text
+                    Console.SelectionLength = startcursorposition;
+                    Console.SelectionStart = Console.Text.Length;
+                    Console.SelectionColor = Color.Black;
+                    Console.SelectionFont = new Font(Console.Font, FontStyle.Regular);
+                }
+
+                tokens = "(FAILED|BUILD FAILED)";
+                rex = new Regex(tokens);
+                mc = rex.Matches(text);
+                foreach (Match m in mc)
+                {
+                    // Select text that was appended
+                    Console.Select(start + m.Index, end - start);
+
+                    Console.SelectionColor = Color.Red;
                     Console.SelectionFont = new Font(Console.Font, FontStyle.Bold);
 
                     // Unselect text
@@ -480,7 +506,7 @@ namespace ForgeModBuilder
         }
 
         //Update the current project
-        public void UpdateProject()
+        public void UpdateProject(string forgeVersion, bool showDialog)
         {
             if(CurrentProject != null)
             {
@@ -506,39 +532,36 @@ namespace ForgeModBuilder
                                     WebClient client = new WebClient();
                                     System.Console.WriteLine("Checking updates at address: " + "http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_" + CurrentProject.mcVersion + ".html");
                                     AddConsoleText("Checking updates at address: " + "http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_" + CurrentProject.mcVersion + ".html");
-                                    try
+                                    System.Console.WriteLine("Current Version: MC: " + CurrentProject.mcVersion + ", Forge: " + CurrentProject.forgeVersion);
+                                    AddConsoleText("Current Version: MC: " + CurrentProject.mcVersion + ", Forge: " + CurrentProject.forgeVersion);
+                                    System.Console.WriteLine("New Version: MC: " + CurrentProject.mcVersion + ", Forge: " + forgeVersion);
+                                    AddConsoleText("New Version: MC: " + CurrentProject.mcVersion + ", Forge: " + forgeVersion);
+                                    if (CurrentProject.forgeVersion.Contains(forgeVersion))
                                     {
-                                        string downloadString = client.DownloadString("http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_" + CurrentProject.mcVersion + ".html");
-                                        string latest = downloadString.Substring(downloadString.IndexOf("<small>") + 7, downloadString.IndexOf("</small>") - downloadString.IndexOf("<small>") - 7);
-                                        latest = latest.Substring(0, latest.IndexOf('<'));
-                                        string latestforgeversion = latest.Split('-')[1].Substring(1);
-                                        System.Console.WriteLine("Current Version: MC: " + CurrentProject.mcVersion + ", Forge: " + CurrentProject.forgeVersion);
-                                        AddConsoleText("Current Version: MC: " + CurrentProject.mcVersion + ", Forge: " + CurrentProject.forgeVersion);
-                                        System.Console.WriteLine("Latest Version: MC: " + latest.Split('-')[0].Substring(0, latest.Split('-')[0].Length-1) + ", Forge: " + latestforgeversion);
-                                        AddConsoleText("Latest Version: MC: " + latest.Split('-')[0].Substring(0, latest.Split('-')[0].Length-1) + ", Forge: " + latestforgeversion);
-                                        if (CurrentProject.forgeVersion.Contains(latestforgeversion))
+                                        newVersionLine = line;
+                                        AddConsoleText("No update available");
+                                        MessageBox.Show("You are already up to date", "No update available", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    }
+                                    else
+                                    {
+                                        AddConsoleText("Update available!");
+                                        if(showDialog)
                                         {
-                                            newVersionLine = line;
-                                            AddConsoleText("No update available");
-                                            MessageBox.Show("You are already up to date", "No update available", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                        }
-                                        else
-                                        {
-                                            AddConsoleText("Update available!");
                                             if (MessageBox.Show("A new forge version is available. Would you like to update?", "Update available", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                                             {
                                                 update = true;
-                                                newData[index] = "    version = \"" + CurrentProject.mcVersion + "-" + latestforgeversion + "\"";
+                                                newData[index] = "    version = \"" + CurrentProject.mcVersion + "-" + forgeVersion + "\"";
                                                 index++;
                                                 continue;
                                             }
                                         }
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        System.Console.WriteLine(e.Message);
-                                        AddConsoleText("An error occurred\n" + e.Message);
-                                        MessageBox.Show("An error occurred: " + e.Message, "An error occurred!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        else
+                                        {
+                                            update = true;
+                                            newData[index] = "    version = \"" + CurrentProject.mcVersion + "-" + forgeVersion + "\"";
+                                            index++;
+                                            continue;
+                                        }
                                     }
                                 }
                             }
@@ -614,7 +637,13 @@ namespace ForgeModBuilder
 
         private void UpdateProjectClick(object sender, EventArgs e)
         {
-            UpdateProject();
+            NewProjectMenu.SetupVersions();
+            UpdateProject(NewProjectMenu.Versions[CurrentProject.mcVersion].First(), true);
+        }
+
+        private void ChangeProjectVersionClick(object sender, EventArgs e)
+        {
+            ChangeProjectVersionMenu.ShowChangeProjectVersionMenu();
         }
 
         private void RefreshProjectClick(object sender, EventArgs e)

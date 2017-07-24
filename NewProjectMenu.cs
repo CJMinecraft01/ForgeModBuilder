@@ -42,11 +42,12 @@ namespace ForgeModBuilder
         {
             InitializeComponent();
             SetupVersions();
+            LoadVersions();
             CancelButton = CancelSetupButton;
             AcceptButton = CreateProjectButton;
         }
 
-        public void SetupVersions()
+        public static void SetupVersions()
         {
             if (Sync)
             {
@@ -63,10 +64,10 @@ namespace ForgeModBuilder
                     if (Versions[Versions.Keys.First()].First() != Regex.Replace(document.DocumentNode.SelectSingleNode("//td[@class='download-version']").InnerText.Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty), @"\s+", ""))
                     {
                         SyncVersions();
+                        UpdateVersions(true, false);
                     }
                 }
             }
-            LoadVersions();
             Sync = false;
         }
 
@@ -145,6 +146,8 @@ namespace ForgeModBuilder
         //Load the versions from the forge web server
         public static void SyncVersions()
         {
+            Versions.Clear();
+            LatestMinecraftVersion = "";
             try
             {
                 List<string> MinecraftVersions = new List<string>();

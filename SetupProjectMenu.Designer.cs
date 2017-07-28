@@ -49,7 +49,7 @@
             this.Editor.FormattingEnabled = true;
             this.Editor.Items.AddRange(new object[] {
             "Eclipse",
-            "Idea"});
+            "Idea / Intellij"});
             this.Editor.Location = new System.Drawing.Point(11, 30);
             this.Editor.Name = "Editor";
             this.Editor.Size = new System.Drawing.Size(176, 21);

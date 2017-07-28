@@ -13,13 +13,10 @@ namespace ForgeModBuilder
     public partial class SetupProjectMenu : Form
     {
 
-        public static class Dialog
+        public static string ShowSetupProjectMenu()
         {
-            public static string ShowDialog()
-            {
-                SetupProjectMenu menu = new SetupProjectMenu();
-                return menu.ShowDialog() == DialogResult.OK ? menu.Editor.Text : "";
-            }
+            SetupProjectMenu menu = new SetupProjectMenu();
+            return menu.ShowDialog() == DialogResult.OK ? menu.Editor.Text : "";
         }
 
         public SetupProjectMenu()

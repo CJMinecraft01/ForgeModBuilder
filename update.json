@@ -1,8 +1,8 @@
 {
-	"name": "Forge Mod Builder - The StrikerRocker update",
-	"version": "0.1.0.6",
+	"name": "Forge Mod Builder - Null Pointer fix",
+	"version": "0.1.0.7",
 	"changelog": [
-		"+Added ability to easily change the project's forge version"
+		"=Fixed a null pointer error when creating a new project", "=When creating a new project, the program will now check to see if the forge versions are up to date"
 	],
-	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.0.6/ForgeModBuilder-0.1.0.6.exe"
+	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.0.7/ForgeModBuilder-0.1.0.7.exe"
 }

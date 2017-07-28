@@ -60,11 +60,17 @@ namespace ForgeModBuilder
                 else
                 {
                     HtmlWeb web = new HtmlWeb();
-                    HtmlAgilityPack.HtmlDocument document = web.Load(ForgeDownloadsURL);
-                    if (Versions[Versions.Keys.First()].First() != Regex.Replace(document.DocumentNode.SelectSingleNode("//td[@class='download-version']").InnerText.Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty), @"\s+", ""))
-                    {
-                        SyncVersions();
-                        UpdateVersions(true, false);
+                    HtmlAgilityPack.HtmlDocument document;
+                    foreach(string mcversion in Versions.Keys) {
+                        document =  web.Load(ForgeDownloadsURL + "index_" + mcversion + ".html");
+                        if(Versions[mcversion].First() != Regex.Replace(document.DocumentNode.SelectSingleNode("//td[@class='download-version']").InnerText.Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty), @"\s+", ""))
+                        {
+                            Console.WriteLine("Outdated list of forge versions for minecraft " + mcversion);
+                            Program.INSTANCE.AddConsoleText("Outdated list of forge versions for minecraft " + mcversion);
+                            SyncVersions();
+                            UpdateVersions(true, false);
+                            break;
+                        }
                     }
                 }
             }
@@ -105,14 +111,14 @@ namespace ForgeModBuilder
                     using (JsonReader jr = new JsonTextReader(sr))
                     {
                         Versions = js.Deserialize<Dictionary<string, List<string>>>(jr);
-                        if(Versions.Keys.Count > 0)
-                        {
-                            LatestMinecraftVersion = Versions.Keys.First();
-                        }
                     }
                     if(Versions == null)
                     {
                         Versions = new Dictionary<string, List<string>>();
+                    }
+                    if (Versions.Keys.Count > 0)
+                    {
+                        LatestMinecraftVersion = Versions.Keys.First();
                     }
                 }
                 else

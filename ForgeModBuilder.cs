@@ -459,11 +459,12 @@ namespace ForgeModBuilder
             {
                 System.Console.WriteLine("Building project: " + CurrentProject);
                 AddConsoleText("Building project: " + CurrentProject);
-                if(MessageBox.Show("Would you like to make the built file deobfuscated?", "Deobfuscate?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                DialogResult result = MessageBox.Show("Would you like to make the built file deobfuscated?", "Deobfuscate?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
                 {
                     RunGradle("jar");
                 }
-                else
+                else if (result == DialogResult.No)
                 {
                     RunGradle("build");
                 }
@@ -481,22 +482,29 @@ namespace ForgeModBuilder
             {
                 System.Console.WriteLine("Setting up project: " + CurrentProject);
                 AddConsoleText("Setting up project: " + CurrentProject);
-                string editor = SetupProjectMenu.Dialog.ShowDialog();
+                string editor = SetupProjectMenu.ShowSetupProjectMenu();
                 //string editor = Microsoft.VisualBasic.Interaction.InputBox("Enter either idea or eclipse", "What editor are you using?");
                 if(!string.IsNullOrEmpty(editor))
                 {
-                    if(editor.ToLower() == "eclipse" || editor.ToLower() == "idea")
+                    if(editor.ToLower().Contains("eclipse"))
                     {
                         System.Console.WriteLine("Setting editor to " + editor.ToLower());
                         AddConsoleText("Setting editor to " + editor.ToLower());
                         RunGradle("setupDecompWorkspace " + editor.ToLower() + args);
-                    } else
+                        return;
+                    }
+                    else if(editor.ToLower().Contains("idea"))
+                    {
+                        System.Console.WriteLine("Setting editor to idea");
+                        AddConsoleText("Setting editor to idea");
+                        RunGradle("setupDecompWorkspace " + "idea" + args);
+                        RunGradle("genIntellijRuns");
+                        return;
+                    }
+                    else
                     {
                         MessageBox.Show("Please enter a valid editor. It must be either idea or eclipse", "Invalid Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                } else
-                {
-                    MessageBox.Show("Please enter an editor. Either idea or eclipse.", "No editor specified", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else

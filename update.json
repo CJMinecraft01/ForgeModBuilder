@@ -2,7 +2,7 @@
 	"name": "Forge Mod Builder - Null Pointer fix",
 	"version": "0.1.0.7",
 	"changelog": [
-		"=Fixed a null pointer error when creating a new project", "=When creating a new project, the program will now check to see if the forge versions are up to date"
+		"=Fixed a null pointer error when creating a new project", "=When creating a new project, the program will now check to see if the forge versions are up to date", "+Added IntelliJ support!"
 	],
 	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.0.7/ForgeModBuilder-0.1.0.7.exe"
 }

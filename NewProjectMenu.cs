@@ -49,27 +49,35 @@ namespace ForgeModBuilder
 
         public static void SetupVersions()
         {
+            UpdateVersions(false, true);
             if (Sync)
             {
-                UpdateVersions(false, true);
                 if (Versions.Keys.Count == 0)
                 {
+                    Console.WriteLine("Sycing versions!");
+                    Program.INSTANCE.AddConsoleText("Sycing versions!");
                     SyncVersions();
                     UpdateVersions(true, false);
                 }
                 else
                 {
                     HtmlWeb web = new HtmlWeb();
-                    HtmlAgilityPack.HtmlDocument document;
-                    foreach(string mcversion in Versions.Keys) {
+                    HtmlAgilityPack.HtmlDocument document = web.Load(ForgeDownloadsURL);
+                    foreach (string mcversion in Versions.Keys) {
                         document =  web.Load(ForgeDownloadsURL + "index_" + mcversion + ".html");
-                        if(Versions[mcversion].First() != Regex.Replace(document.DocumentNode.SelectSingleNode("//td[@class='download-version']").InnerText.Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty), @"\s+", ""))
+                        HtmlNode node = document.DocumentNode.SelectSingleNode("//td[@class='download-version']");
+                        string latestVersion = Regex.Replace(node.InnerHtml.Split('<')[0].Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty), @"\s+", "") + (node.InnerHtml.Contains("fa fa-star promo-recommended") ? "★" : "");
+                        if (Versions[mcversion].First() != latestVersion)
                         {
                             Console.WriteLine("Outdated list of forge versions for minecraft " + mcversion);
                             Program.INSTANCE.AddConsoleText("Outdated list of forge versions for minecraft " + mcversion);
-                            SyncVersions();
+                            SyncVersion(mcversion);
                             UpdateVersions(true, false);
-                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("No new forge versions found for minecraft " + mcversion);
+                            Program.INSTANCE.AddConsoleText("No new forge versions found for minecraft " + mcversion);
                         }
                     }
                 }
@@ -118,7 +126,19 @@ namespace ForgeModBuilder
                     }
                     if (Versions.Keys.Count > 0)
                     {
+                        Version latest = new Version(Versions.Keys.First());
                         LatestMinecraftVersion = Versions.Keys.First();
+                        Version current;
+                        foreach (string version in Versions.Keys)
+                        {
+                            current = new Version(version.Contains("_") ? version.Substring(0, version.IndexOf("_") - 1) : version);
+                            if (latest.CompareTo(current) < 0)
+                            {
+                                LatestMinecraftVersion = version;
+                                latest = new Version(LatestMinecraftVersion);
+                            }
+                        }
+                        Console.WriteLine("Latest version: " + LatestMinecraftVersion);
                     }
                 }
                 else
@@ -163,7 +183,7 @@ namespace ForgeModBuilder
                 HtmlWeb web = new HtmlWeb();
                 HtmlAgilityPack.HtmlDocument document = web.Load(ForgeDownloadsURL);
                 LatestMinecraftVersion = document.DocumentNode.SelectSingleNode("//li[@class='elem-active']").InnerHtml; //Get the latest minecraft version
-                MinecraftVersions.Add(LatestMinecraftVersion);
+                //MinecraftVersions.Add(LatestMinecraftVersion);
                 foreach (HtmlNode mcVersionNode in document.DocumentNode.SelectNodes("//li[@class='li-version-list']"))
                 {
                     foreach (HtmlNode subMcVersionNode in mcVersionNode.SelectNodes(".//li"))
@@ -180,6 +200,19 @@ namespace ForgeModBuilder
                         }
                     }
                 }
+                Version latestVersion = new Version(LatestMinecraftVersion);
+                Version mc;
+                foreach(string mcversion in MinecraftVersions.ToList())
+                {
+                    mc = new Version(mcversion.Contains("_") ? mcversion.Substring(0, mcversion.IndexOf("_") - 1) : mcversion);
+                    if(latestVersion.CompareTo(mc) < 0)
+                    {
+                        MinecraftVersions.Insert(MinecraftVersions.IndexOf(mcversion), LatestMinecraftVersion);
+                        MinecraftVersions.Remove(mcversion);
+                        LatestMinecraftVersion = mcversion;
+                        MinecraftVersions.Insert(0, mcversion);
+                    }
+                }
                 Console.WriteLine("Loaded minecraft versions from " + ForgeDownloadsURL);
                 ForgeModBuilder.Program.INSTANCE.AddConsoleText("Loaded minecraft versions from " + ForgeDownloadsURL);
                 foreach (string mcversion in MinecraftVersions)
@@ -192,6 +225,10 @@ namespace ForgeModBuilder
                         ProgressBar.ProgressBar.Value = (int)((document.DocumentNode.SelectNodes("//td[@class='download-version']").IndexOf(forgeVersionNode) + 1F) / document.DocumentNode.SelectNodes("//td[@class='download-version']").Count + (int)((MinecraftVersions.IndexOf(mcversion) + 1F) / MinecraftVersions.Count * 100)) - 1;
                         forgeVersions.Add(Regex.Replace(forgeVersionNode.InnerHtml.Split('<')[0].Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty), @"\s+", "") + (forgeVersionNode.InnerHtml.Contains("fa fa-star promo-recommended") ? "★" : ""));
                     }
+                    if(Versions.ContainsKey(mcversion))
+                    {
+                        Versions.Remove(mcversion);
+                    }
                     Versions.Add(mcversion, forgeVersions);
                     Console.WriteLine("Loaded forge versions from " + ForgeDownloadsURL + "index_" + mcversion + ".html");
                     ForgeModBuilder.Program.INSTANCE.AddConsoleText("Loaded forge versions from " + ForgeDownloadsURL + "index_" + mcversion + ".html");
@@ -199,6 +236,33 @@ namespace ForgeModBuilder
                 ProgressBar.Close(); //Close the progress bar
             }
             catch(Exception e)
+            {
+                Console.WriteLine("An error occurred:\n" + e.Message);
+                Program.INSTANCE.AddConsoleText("An error occurred:\n" + e.Message);
+            }
+        }
+
+        public static void SyncVersion(string mcversion)
+        {
+            if(!Versions.ContainsKey(mcversion))
+            {
+                Versions.Add(mcversion, new List<string>());
+            }
+            try
+            {
+                HtmlWeb web = new HtmlWeb();
+                HtmlAgilityPack.HtmlDocument document = web.Load(ForgeDownloadsURL + "index_" + mcversion + ".html");
+                foreach (HtmlNode forgeVersionNode in document.DocumentNode.SelectNodes("//td[@class='download-version']"))
+                {
+                    string version = Regex.Replace(forgeVersionNode.InnerHtml.Split('<')[0].Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty), @"\s+", "") + (forgeVersionNode.InnerHtml.Contains("fa fa-star promo-recommended") ? "★" : "");
+                    if (Versions[mcversion].Contains(version))
+                        break;
+                    Versions[mcversion].Add(version);
+                }
+                Console.WriteLine("Loaded forge versions from " + ForgeDownloadsURL + "index_" + mcversion + ".html");
+                ForgeModBuilder.Program.INSTANCE.AddConsoleText("Loaded forge versions from " + ForgeDownloadsURL + "index_" + mcversion + ".html");
+            }
+            catch (Exception e)
             {
                 Console.WriteLine("An error occurred:\n" + e.Message);
                 Program.INSTANCE.AddConsoleText("An error occurred:\n" + e.Message);

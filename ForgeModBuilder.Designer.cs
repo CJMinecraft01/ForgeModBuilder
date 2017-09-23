@@ -37,8 +37,8 @@ namespace ForgeModBuilder
             this.OpenProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BuildProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SetupProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ChangeProjectVersionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UpdateProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ChangeProjectVersionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RefreshProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -114,19 +114,19 @@ namespace ForgeModBuilder
             this.SetupProjectMenuItem.Text = "Setup Project";
             this.SetupProjectMenuItem.Click += new System.EventHandler(this.SetupProjectClick);
             // 
-            // ChangeProjectVersionMenuItem
-            // 
-            this.ChangeProjectVersionMenuItem.Name = "ChangeProjectVersionMenuItem";
-            this.ChangeProjectVersionMenuItem.Size = new System.Drawing.Size(196, 22);
-            this.ChangeProjectVersionMenuItem.Text = "Change Project Version";
-            this.ChangeProjectVersionMenuItem.Click += new System.EventHandler(this.ChangeProjectVersionClick);
-            // 
             // UpdateProjectMenuItem
             // 
             this.UpdateProjectMenuItem.Name = "UpdateProjectMenuItem";
             this.UpdateProjectMenuItem.Size = new System.Drawing.Size(196, 22);
             this.UpdateProjectMenuItem.Text = "Update Project";
             this.UpdateProjectMenuItem.Click += new System.EventHandler(this.UpdateProjectClick);
+            // 
+            // ChangeProjectVersionMenuItem
+            // 
+            this.ChangeProjectVersionMenuItem.Name = "ChangeProjectVersionMenuItem";
+            this.ChangeProjectVersionMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.ChangeProjectVersionMenuItem.Text = "Change Project Version";
+            this.ChangeProjectVersionMenuItem.Click += new System.EventHandler(this.ChangeProjectVersionClick);
             // 
             // RefreshProjectMenuItem
             // 
@@ -222,7 +222,7 @@ namespace ForgeModBuilder
             // 
             this.OpenProjectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.OpenProjectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.OpenProjectButton.Location = new System.Drawing.Point(143, 493);
+            this.OpenProjectButton.Location = new System.Drawing.Point(124, 490);
             this.OpenProjectButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.OpenProjectButton.Name = "OpenProjectButton";
             this.OpenProjectButton.Size = new System.Drawing.Size(113, 59);
@@ -235,7 +235,7 @@ namespace ForgeModBuilder
             // 
             this.BuildProjectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.BuildProjectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.BuildProjectButton.Location = new System.Drawing.Point(262, 493);
+            this.BuildProjectButton.Location = new System.Drawing.Point(243, 490);
             this.BuildProjectButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.BuildProjectButton.Name = "BuildProjectButton";
             this.BuildProjectButton.Size = new System.Drawing.Size(113, 59);
@@ -248,7 +248,7 @@ namespace ForgeModBuilder
             // 
             this.UpdateProjectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.UpdateProjectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.UpdateProjectButton.Location = new System.Drawing.Point(500, 493);
+            this.UpdateProjectButton.Location = new System.Drawing.Point(481, 490);
             this.UpdateProjectButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.UpdateProjectButton.Name = "UpdateProjectButton";
             this.UpdateProjectButton.Size = new System.Drawing.Size(113, 59);
@@ -261,7 +261,7 @@ namespace ForgeModBuilder
             // 
             this.SetupProjectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.SetupProjectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.SetupProjectButton.Location = new System.Drawing.Point(381, 493);
+            this.SetupProjectButton.Location = new System.Drawing.Point(362, 490);
             this.SetupProjectButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.SetupProjectButton.Name = "SetupProjectButton";
             this.SetupProjectButton.Size = new System.Drawing.Size(113, 59);
@@ -274,7 +274,7 @@ namespace ForgeModBuilder
             // 
             this.RefreshProjectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RefreshProjectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.RefreshProjectButton.Location = new System.Drawing.Point(619, 493);
+            this.RefreshProjectButton.Location = new System.Drawing.Point(600, 490);
             this.RefreshProjectButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.RefreshProjectButton.Name = "RefreshProjectButton";
             this.RefreshProjectButton.Size = new System.Drawing.Size(113, 59);
@@ -287,7 +287,7 @@ namespace ForgeModBuilder
             // 
             this.NewProjectButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.NewProjectButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.NewProjectButton.Location = new System.Drawing.Point(24, 493);
+            this.NewProjectButton.Location = new System.Drawing.Point(5, 490);
             this.NewProjectButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.NewProjectButton.Name = "NewProjectButton";
             this.NewProjectButton.Size = new System.Drawing.Size(113, 59);
@@ -300,7 +300,7 @@ namespace ForgeModBuilder
             // 
             this.ChangeProjectVersionButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.ChangeProjectVersionButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.ChangeProjectVersionButton.Location = new System.Drawing.Point(738, 493);
+            this.ChangeProjectVersionButton.Location = new System.Drawing.Point(719, 490);
             this.ChangeProjectVersionButton.MinimumSize = new System.Drawing.Size(113, 59);
             this.ChangeProjectVersionButton.Name = "ChangeProjectVersionButton";
             this.ChangeProjectVersionButton.Size = new System.Drawing.Size(113, 59);

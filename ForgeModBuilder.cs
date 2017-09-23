@@ -459,15 +459,7 @@ namespace ForgeModBuilder
             {
                 System.Console.WriteLine("Building project: " + CurrentProject);
                 AddConsoleText("Building project: " + CurrentProject);
-                DialogResult result = MessageBox.Show("Would you like to make the built file deobfuscated?", "Deobfuscate?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                {
-                    RunGradle("jar");
-                }
-                else if (result == DialogResult.No)
-                {
-                    RunGradle("build");
-                }
+                RunGradle("build");
             }
             else
             {
@@ -704,9 +696,7 @@ namespace ForgeModBuilder
 
         private void CheckVersionsMenuItem_Click(object sender, EventArgs e)
         {
-            NewProjectMenu.SyncVersions();
-            NewProjectMenu.UpdateVersions(true, false);
-            NewProjectMenu.Sync = false;
+            NewProjectMenu.SetupVersions();
         }
 
         #endregion

@@ -1066,6 +1066,7 @@ namespace ForgeModBuilder
 
         private void CheckVersionsMenuItem_Click(object sender, EventArgs e)
         {
+            NewProjectMenu.Sync = true;
             NewProjectMenu.SetupVersions();
         }
 

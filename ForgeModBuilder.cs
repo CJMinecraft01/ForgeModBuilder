@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
@@ -17,6 +18,8 @@ namespace ForgeModBuilder
 {
     public partial class FMB : Form
     {
+        public static string MCPVersionsUrl = "http://files.minecraftforge.net/maven/de/oceanlabs/mcp/versions.json";
+
         //The current project being used
         public Project CurrentProject;
 
@@ -28,7 +31,7 @@ namespace ForgeModBuilder
         //The available projects loaded from the projects.json file
         private List<Project> Projects = new List<Project>();
         //The current options loaded from the options.json file
-        private Dictionary<string, object> Options = new Dictionary<string, object>();
+        public Dictionary<string, object> Options = new Dictionary<string, object>();
 
         public FMB()
         {
@@ -38,9 +41,41 @@ namespace ForgeModBuilder
             UpdateProjects(false, true); //Receive the projects from the projects.json file
             UpdateOptions(false, true); //Receive the options from the options.json file
             FormClosed += FMBClosed; //Handle when the form closes
+            optionsToolStripMenuItem.DropDown.Closing += (sender, e) => {
+                if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
+                {
+                    e.Cancel = true;
+                }
+                else
+                {
+                    Dictionary<string, bool> checkVersions = new Dictionary<string, bool>();
+                    foreach (ToolStripMenuItem dropDownItem in SelectVersionsToCheckMenuItem.DropDownItems)
+                    {
+                        checkVersions.Add(dropDownItem.Text, dropDownItem.Checked);
+                    }
+                    if (Options.ContainsKey("sync_versions"))
+                    {
+                        Options["sync_versions"] = checkVersions;
+                    }
+                    else
+                    {
+                        Options.Add("sync_versions", checkVersions);
+                    }
+                    UpdateOptions(true, false);
+                }
+            };
+            SelectVersionsToCheckMenuItem.DropDown.Closing += (sender, e) => {
+                if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
+                {
+                    e.Cancel = true;
+                }
+            };
             Load += (sender, e) =>
             {
                 UpdateChecker.CheckForUpdates(UpdateChecker.UpdateURL); //When it loads the form, check for updates
+                AddBuildFileText("No project loaded");
+                BuildFile.ReadOnly = true;
+                NewProjectMenu.SetupVersions();
             };
         }
 
@@ -87,6 +122,7 @@ namespace ForgeModBuilder
                     using (JsonReader jr = new JsonTextReader(sr))
                     {
                         Options = js.Deserialize<Dictionary<string, object>>(jr); //Deserialise the file and place it in the options variable
+
                     }
                     if (Options == null) //If the file was empty
                     {
@@ -109,11 +145,26 @@ namespace ForgeModBuilder
                 if (Options["console_font"] is string) //If it is a string
                 {
                     Console.Font = JsonConvert.DeserializeObject<Font>("\"" + (string)Options["console_font"] + "\""); //Load the console font as a string
+                    BuildFile.Font = JsonConvert.DeserializeObject<Font>("\"" + (string)Options["console_font"] + "\""); //Load the console font as a string
                 }
                 else
                 {
                     Console.Font = (Font)Options["console_font"]; //It must be a font so we can load it directly
+                    BuildFile.Font = (Font)Options["console_font"]; //It must be a font so we can load it directly
                 }
+            }
+
+            if (Options.ContainsKey("sync_versions"))
+            {
+                if(!(Options["sync_versions"] is Dictionary<string, bool>))
+                {
+                    Options["sync_versions"] = JsonConvert.DeserializeObject<Dictionary<string, bool>>(Options["sync_versions"].ToString());
+                }
+            }
+
+            if(Options.ContainsKey("clear_console_on_project_open"))
+            {
+                ClearConsoleOnProjectOpenMenuItem.Checked = (bool) Options["clear_console_on_project_open"];
             }
         }
 
@@ -251,7 +302,8 @@ namespace ForgeModBuilder
         private void SetupLayout()
         {
             int buttonWidth = ClientRectangle.Width / 7 - 9;
-            int buttonY = Console.Height + 33;
+            Tabs.Height = ClientRectangle.Height - 100;
+            int buttonY = Tabs.Height + 33;
             int buttonOffset = 9;
             NewProjectButton.Width = buttonWidth;
             NewProjectButton.Location = new Point(5, buttonY);
@@ -270,8 +322,13 @@ namespace ForgeModBuilder
             ExitMenuItem.Click += (sender, args) => {
                 Application.Exit();
             };
+            Console.Height = Tabs.Height - 60;
+            BuildFile.Height = Console.Height;
+            SaveFileButton.Location = new Point(SaveFileButton.Location.X, BuildFile.Height + 5);
+            UploadBuildFileButton.Location = new Point(UploadBuildFileButton.Location.X, BuildFile.Height + 5);
+            UploadLogButton.Location = new Point(UploadLogButton.Location.X, Console.Height + 5); ;
             //Console.TextChanged += ConsoleTextChanged;
-            if(!Options.ContainsKey("console_font"))
+            if (!Options.ContainsKey("console_font"))
                 Options.Add("console_font", Console.Font);
         }
         #endregion
@@ -280,10 +337,25 @@ namespace ForgeModBuilder
         //Open a new project from the given path
         public void OpenProject(string path)
         {
+            if(!Directory.Exists(path))
+            {
+                MessageBox.Show("This project no longer exists!", "Invalid project", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                foreach(Project p in Projects)
+                {
+                    if(p.path.Equals(path))
+                    {
+                        Projects.Remove(p);
+                        UpdateProjects(true, false);
+                        return;
+                    }
+                }
+                return;
+            }
             string[] files = Directory.GetFiles(path);
             bool gradleFound = false;
             string mcVersion = "";
             string forgeVersion = "";
+            string mcpVersion = "";
             foreach(string file in files)
             {
                 if(file.Contains("gradlew.bat"))
@@ -294,6 +366,7 @@ namespace ForgeModBuilder
                 {
                     string[] data = File.ReadAllLines(file);
                     bool checkVersion = false;
+                    BuildFile.ResetText();
                     foreach (string line in data)
                     {
                         if (checkVersion)
@@ -312,14 +385,22 @@ namespace ForgeModBuilder
                         else if(line.Contains("}") && checkVersion)
                         {
                             checkVersion = false;
-                            break;
+                        }
+                        if(line.Contains("mappings = "))
+                        {
+                            mcpVersion = Regex.Match(line, "\"([^\"]*)\"").Value.Replace("\"", "");
                         }
                     }
+                    foreach(string line in data)
+                    {
+                        AddBuildFileText(line);
+                    }
+                    BuildFile.ReadOnly = false;
                 }
             }
-            if(gradleFound && !string.IsNullOrWhiteSpace(mcVersion) && !string.IsNullOrWhiteSpace(forgeVersion))
+            if (gradleFound && !string.IsNullOrWhiteSpace(mcVersion) && !string.IsNullOrWhiteSpace(forgeVersion) && !string.IsNullOrWhiteSpace(mcpVersion))
             {
-                Project p = new Project(path, mcVersion, forgeVersion);
+                Project p = new Project(path, mcVersion, forgeVersion, mcpVersion);
                 Text = "Forge Mod Builder - " + path;
                 bool shouldadd = true;
                 Project p2 = p;
@@ -339,7 +420,10 @@ namespace ForgeModBuilder
                 
                 CurrentProject = p;
                 UpdateProjects(true, false);
-                Console.Text = string.Empty;
+                if(Options.ContainsKey("clear_console_on_project_open") && (bool)Options["clear_console_on_project_open"])
+                {
+                    Console.Text = string.Empty;
+                }
                 System.Console.WriteLine("Loaded project: " + p);
                 AddConsoleText("Loaded project: " + p);
                 MessageBox.Show("Successfully loaded project!", "Loaded Project!", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -353,13 +437,12 @@ namespace ForgeModBuilder
         //Open a project showing a folder browser dialog
         public void OpenProject()
         {
-            using(var fbd = new FolderBrowserDialog())
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.Description = "Select the folder in which the project is found";
+            DialogResult result = fbd.ShowDialog();
+            if(result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
             {
-                DialogResult result = fbd.ShowDialog();
-                if(result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    OpenProject(fbd.SelectedPath);
-                }
+                OpenProject(fbd.SelectedPath);
             }
         }
         #endregion
@@ -376,6 +459,7 @@ namespace ForgeModBuilder
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.CreateNoWindow = true;
             p.OutputDataReceived += GradleOutputReceived;
+            p.ErrorDataReceived += GradleErrorOutputReceived;
             p.Start();
             p.BeginOutputReadLine();
         }
@@ -449,6 +533,124 @@ namespace ForgeModBuilder
                 AddConsoleText("");
             }
         }
+
+        //For multi-threading
+        delegate void AddErrorConsoleTextCallback(string text);
+
+        //Add actual text to the console
+        public void AddErrorConsoleText(string text)
+        {
+            if (Console.InvokeRequired)
+            {
+                AddErrorConsoleTextCallback d = new AddErrorConsoleTextCallback(AddErrorConsoleText);
+                Invoke(d, new object[] { text });
+            }
+            else
+            {
+                int startcursorposition = Console.SelectionStart;
+                int start = Console.TextLength;
+                Console.AppendText(text + "\n");
+                int end = Console.TextLength;
+                Console.Select(start, end - start);
+                Console.SelectionColor = Color.Red;
+                Console.SelectionFont = new Font(Console.Font, FontStyle.Bold);
+                Console.SelectionLength = startcursorposition;
+                Console.SelectionStart = Console.Text.Length;
+                Console.SelectionColor = Color.Black;
+                Console.SelectionFont = new Font(Console.Font, FontStyle.Regular);
+                Console.ScrollToCaret();
+                Console.DetectUrls = true;
+            }
+        }
+
+        //Add all of error gradle output to the console
+        private void GradleErrorOutputReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (e.Data != null)
+            {
+                AddConsoleText(e.Data);
+            }
+            else
+            {
+                AddConsoleText("");
+            }
+        }
+        #endregion
+
+        #region Adding Build File Text
+        //For multi-threading
+        delegate void AddBuildFileTextCallback(string text);
+
+        //Add actual text to the console
+        public void AddBuildFileText(string text)
+        {
+            if (Console.InvokeRequired)
+            {
+                AddBuildFileTextCallback d = new AddBuildFileTextCallback(AddBuildFileText);
+                Invoke(d, new object[] { text });
+            }
+            else
+            {
+                //int start = BuildFile.TextLength;
+                BuildFile.Text += text + "\n";
+                BuildFile.ScrollToCaret();
+                //int end = BuildFile.TextLength; // now longer by length of appended text
+                //SyntaxHighlightBuildFileText(start, end, text);
+            }
+        }
+
+        public void SyntaxHighlightBuildFileText(int start, int end, string text)
+        {
+            int startcursorposition = BuildFile.SelectionStart;
+            MatchCollection mc = Regex.Matches(text, @"\/\/(.*)");
+            foreach (Match m in mc)
+            {
+                
+                BuildFile.Select(start + m.Index - 1, 2);
+                if (BuildFile.SelectedText.Contains(":"))
+                {
+                    BuildFile.SelectionLength = startcursorposition;
+                    BuildFile.SelectionStart = BuildFile.Text.Length;
+                    return;
+                }
+                BuildFile.SelectionLength = startcursorposition;
+                BuildFile.SelectionStart = BuildFile.Text.Length;
+
+                // Select text that was appended
+                BuildFile.Select(start + m.Index, end - start);
+                BuildFile.SelectionColor = Color.YellowGreen;
+
+                // Unselect text
+                BuildFile.SelectionLength = startcursorposition;
+                BuildFile.SelectionStart = BuildFile.Text.Length;
+                BuildFile.SelectionColor = Color.Black;
+            }
+            mc = Regex.Matches(text, "\"([^\"]*)\"");
+            foreach (Match m in mc)
+            {
+                // Select text that was appended
+                BuildFile.Select(start + m.Index, m.Value.Length);
+                BuildFile.SelectionColor = Color.CornflowerBlue;
+
+                // Unselect text
+                BuildFile.SelectionLength = startcursorposition;
+                BuildFile.SelectionStart = BuildFile.Text.Length;
+                BuildFile.SelectionColor = Color.Black;
+            }
+            mc = Regex.Matches(text, "\'([^\"]*)\'");
+            foreach (Match m in mc)
+            {
+                // Select text that was appended
+                BuildFile.Select(start + m.Index, m.Value.Length);
+                BuildFile.SelectionColor = Color.CornflowerBlue;
+
+                // Unselect text
+                BuildFile.SelectionLength = startcursorposition;
+                BuildFile.SelectionStart = BuildFile.Text.Length;
+                BuildFile.SelectionColor = Color.Black;
+            }
+        }
+
         #endregion
 
         #region Button Actions
@@ -506,7 +708,7 @@ namespace ForgeModBuilder
         }
 
         //Update the current project
-        public void UpdateProject(string forgeVersion, bool showDialog)
+        public bool UpdateProject(string forgeVersion, bool showDialog)
         {
             if(CurrentProject != null)
             {
@@ -529,7 +731,6 @@ namespace ForgeModBuilder
                             {
                                 if (line.Contains("version") && line.Contains("="))
                                 {
-                                    WebClient client = new WebClient();
                                     System.Console.WriteLine("Checking updates at address: " + "http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_" + CurrentProject.mcVersion + ".html");
                                     AddConsoleText("Checking updates at address: " + "http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_" + CurrentProject.mcVersion + ".html");
                                     System.Console.WriteLine("Current Version: MC: " + CurrentProject.mcVersion + ", Forge: " + CurrentProject.forgeVersion);
@@ -539,8 +740,8 @@ namespace ForgeModBuilder
                                     if (CurrentProject.forgeVersion.Contains(forgeVersion))
                                     {
                                         newVersionLine = line;
-                                        AddConsoleText("No update available");
-                                        MessageBox.Show("You are already up to date", "No update available", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        AddConsoleText("No forge update available");
+                                        MessageBox.Show("You are already up to date", "No forge update available", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                     }
                                     else
                                     {
@@ -584,8 +785,9 @@ namespace ForgeModBuilder
                                 w.WriteLine(line);
                             }
                             w.Close();
-                            SetupProject(" --refresh-dependencies");
+                            return true;
                         }
+                        break;
                     }
                 }
             }
@@ -593,6 +795,98 @@ namespace ForgeModBuilder
             {
                 MessageBox.Show("Please open a project!", "No open project", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            return false;
+        }
+
+        //Update the current project's MCP version
+        public bool UpdateProjectMCP(bool showDialog)
+        {
+            if (CurrentProject != null)
+            {
+                System.Console.WriteLine("Checking for mcp updates at address: " + MCPVersionsUrl);
+                AddConsoleText("Checking for mcp updates at address: " + MCPVersionsUrl);
+
+                Dictionary<string, Dictionary<string, List<string>>> mcpVersions;
+
+                JsonSerializer js = new JsonSerializer();
+                js.NullValueHandling = NullValueHandling.Ignore;
+                using (StreamReader sr = new StreamReader(WebRequest.Create(MCPVersionsUrl).GetResponse().GetResponseStream()))
+                using (JsonReader jr = new JsonTextReader(sr))
+                {
+                    mcpVersions = js.Deserialize<Dictionary<string, Dictionary<string, List<string>>>>(jr); //Deserialise the file and place it in the options variable
+                }
+
+                string[] currentVersionDetails = CurrentProject.mcVersion.Split('.');
+
+                string latestMappings = "";
+
+                foreach(string mcversion in mcpVersions.Keys)
+                {
+                    string[] mcVersionDetails = mcversion.Split('.');
+                    if(currentVersionDetails[0] == mcVersionDetails[0] && currentVersionDetails[1] == mcVersionDetails[1])
+                    {
+                        latestMappings = "snapshot_" + mcpVersions[mcversion]["snapshot"].First();
+                        break;
+                    }
+                }
+
+                System.Console.WriteLine("Current Mappings: " + CurrentProject.mcpVersion + ", Latest Mappings: " + latestMappings);
+                AddConsoleText("Current Mappings: " + CurrentProject.mcpVersion + ", Latest Mappings: " + latestMappings);
+
+                if(latestMappings != CurrentProject.mcpVersion)
+                {
+                    bool shouldUpdate = true;
+                    if(showDialog)
+                    {
+                        shouldUpdate = MessageBox.Show("A new mcp mapping is available. Would you like to update?", "Update available", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
+                    }
+                    if (shouldUpdate)
+                    {
+                        string[] files = Directory.GetFiles(CurrentProject.path);
+                        foreach (string file in files)
+                        {
+                            if (file.Contains("build.gradle"))
+                            {
+                                string[] oldData = File.ReadAllLines(file);
+                                string[] newData = new string[oldData.Length];
+                                int index = 0;
+
+                                foreach (string line in oldData)
+                                {
+                                    if (line.Contains("mappings = "))
+                                    {
+                                        newData[index] = "    mappings = \"" + latestMappings + "\"";
+                                        index++;
+                                        continue;
+                                    }
+                                    newData[index] = line;
+                                    index++;
+                                }
+
+                                StreamWriter w = new StreamWriter(file);
+                                foreach (string line in newData)
+                                {
+                                    w.WriteLine(line);
+                                }
+                                w.Close();
+                                CurrentProject.mcpVersion = latestMappings;
+
+                                return true;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    AddConsoleText("No mcp update available");
+                    MessageBox.Show("You are already up to date", "No mcp update available", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please open a project!", "No open project", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return false;
         }
 
         //Reload the current project
@@ -617,6 +911,70 @@ namespace ForgeModBuilder
             AddConsoleText("Creating a new project!");
             NewProjectMenu.ShowNewProjectMenu();
         }
+
+        private void CreatePaste(string title, string data)
+        {
+            Upload:
+                System.Collections.Specialized.NameValueCollection Data = new System.Collections.Specialized.NameValueCollection();
+                Data["api_paste_name"] = title;
+                Data["api_paste_expire_date"] = "N";
+                Data["api_paste_code"] = data;
+                Data["api_dev_key"] = "035c6b23c43bcd77921278ba9f0fd9a5";
+                Data["api_option"] = "paste";
+
+                WebClient wb = new WebClient();
+                byte[] bytes = wb.UploadValues("http://pastebin.com/api/api_post.php", Data);
+
+                string response;
+                using (MemoryStream ms = new MemoryStream(bytes))
+                using (StreamReader reader = new StreamReader(ms))
+                    response = reader.ReadToEnd();
+                if (response.StartsWith("Bad API request"))
+                {
+                    if (MessageBox.Show("Failed to upload!", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
+                        goto Upload;
+                }
+                else
+                {
+                    response = "http://pastebin.com/raw.php?i=" + response.Substring(20);
+                    Process.Start(response);
+                    Clipboard.SetText(response);
+                    System.Console.WriteLine("Successfully created paste " + response + "!");
+                AddConsoleText("Successfully created paste " + response + "!");
+                    MessageBox.Show("Your paste has been uploaded\n\rThe address has been copied to your clipboard!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+        }
+
+        private void SaveFileButton_Click(object sender, EventArgs e)
+        {
+            if (CurrentProject != null)
+            {
+                File.WriteAllLines(CurrentProject.path + "\\build.gradle", BuildFile.Lines);
+            }
+            else
+            {
+                MessageBox.Show("Please open a project!", "No open project", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        private void UploadBuildFileButton_Click(object sender, EventArgs e)
+        {
+            if (CurrentProject != null)
+            {
+                CreatePaste("build.gradle", BuildFile.Text);
+            }
+            else
+            {
+                MessageBox.Show("Please open a project!", "No open project", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void UploadLogButton_Click(object sender, EventArgs e)
+        {
+            CreatePaste(Text.Replace('\\', '/') + " - " + DateTime.Now.ToString(), Console.Text);
+        }
+
         #endregion
 
         #region Menu Strip Buttons
@@ -637,8 +995,20 @@ namespace ForgeModBuilder
 
         private void UpdateProjectClick(object sender, EventArgs e)
         {
-            NewProjectMenu.SetupVersions();
-            UpdateProject(NewProjectMenu.Versions[CurrentProject.mcVersion].First(), true);
+            if (CurrentProject != null)
+            {
+                NewProjectMenu.SetupVersions();
+                bool updatedForgeVersion = UpdateProject(NewProjectMenu.Versions[CurrentProject.mcVersion].First(), true);
+                bool updateMCPMapping = UpdateProjectMCP(true);
+                if (updatedForgeVersion || updateMCPMapping)
+                {
+                    SetupProject(" --refresh-dependencies");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please open a project!", "No open project", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ChangeProjectVersionClick(object sender, EventArgs e)
@@ -699,6 +1069,19 @@ namespace ForgeModBuilder
             NewProjectMenu.SetupVersions();
         }
 
+        private void ClearConsoleOnProjectOpenMenuItem_Click(object sender, EventArgs e)
+        {
+            ClearConsoleOnProjectOpenMenuItem.Checked = !ClearConsoleOnProjectOpenMenuItem.Checked;
+            if(Options.ContainsKey("clear_console_on_project_open"))
+            {
+                Options["clear_console_on_project_open"] = ClearConsoleOnProjectOpenMenuItem.Checked;
+            }
+            else
+            {
+                Options.Add("clear_console_on_project_open", ClearConsoleOnProjectOpenMenuItem.Checked);
+            }
+        }
+
         #endregion
 
         #region Console Text Handling
@@ -734,17 +1117,19 @@ namespace ForgeModBuilder
         public string path;
         public string mcVersion;
         public string forgeVersion;
+        public string mcpVersion;
 
-        public Project(string path, string mcVersion, string forgeVersion)
+        public Project(string path, string mcVersion, string forgeVersion, string mcpVersion)
         {
             this.path = path;
             this.mcVersion = mcVersion;
             this.forgeVersion = forgeVersion;
+            this.mcpVersion = mcpVersion;
         }
 
         public override string ToString()
         {
-            return this.path + ", MC: " + this.mcVersion + ", Forge: " + this.forgeVersion;
+            return this.path + ", MC: " + this.mcVersion + ", Forge: " + this.forgeVersion + ", MCP: " + this.mcpVersion;
         }
     }
 }

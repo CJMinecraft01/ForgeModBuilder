@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.IO.Compression;
 using Newtonsoft.Json;
+using System.Collections;
 
 namespace ForgeModBuilder
 {
@@ -41,7 +42,6 @@ namespace ForgeModBuilder
         public NewProjectMenu()
         {
             InitializeComponent();
-            SetupVersions();
             LoadVersions();
             CancelButton = CancelSetupButton;
             AcceptButton = CreateProjectButton;
@@ -63,7 +63,19 @@ namespace ForgeModBuilder
                 {
                     HtmlWeb web = new HtmlWeb();
                     HtmlAgilityPack.HtmlDocument document = web.Load(ForgeDownloadsURL);
+                    Dictionary<string, bool> checkVersions = new Dictionary<string, bool>();
+                    if(Program.INSTANCE.Options.ContainsKey("sync_versions"))
+                    {
+                        checkVersions = (Dictionary<string, bool>)Program.INSTANCE.Options["sync_versions"];
+                    }
                     foreach (string mcversion in Versions.Keys) {
+                        if(checkVersions.Count != 0 && checkVersions.ContainsKey(mcversion))
+                        {
+                            if(!checkVersions[mcversion])
+                            {
+                                continue;
+                            }
+                        }
                         document =  web.Load(ForgeDownloadsURL + "index_" + mcversion + ".html");
                         HtmlNode node = document.DocumentNode.SelectSingleNode("//td[@class='download-version']");
                         string latestVersion = Regex.Replace(node.InnerHtml.Split('<')[0].Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty), @"\s+", "") + (node.InnerHtml.Contains("fa fa-star promo-recommended") ? "★" : "");
@@ -150,21 +162,57 @@ namespace ForgeModBuilder
                     UpdateVersions(saveFile, readFromFile);
                 }
             }
+            Program.INSTANCE.SelectVersionsToCheckMenuItem.DropDownItems.Clear();
+            Dictionary<string, bool> checkVersions = new Dictionary<string, bool>();
+            if (Program.INSTANCE.Options.ContainsKey("sync_versions"))
+            {
+                checkVersions = (Dictionary<string, bool>)Program.INSTANCE.Options["sync_versions"];
+            }
+            foreach (string mcversion in Versions.Keys)
+            {
+                ToolStripMenuItem menuItem = new ToolStripMenuItem(mcversion);
+                if (checkVersions.Count != 0 && checkVersions.ContainsKey(mcversion))
+                {
+                    menuItem.Checked = checkVersions[mcversion];
+                }
+                menuItem.Click += (sender, args) => {
+                    menuItem.Checked = !menuItem.Checked;
+                };
+                Program.INSTANCE.SelectVersionsToCheckMenuItem.DropDownItems.Add(menuItem);
+            }
         }
 
         //Load the versions from the synced versions. Syncsing should have been done previously
         public void LoadVersions()
         {
             //Reset the holders of the versions
+            if(Versions.Count == 0)
+            {
+                return;
+            }
             MinecraftVersions.Items.Clear();
             ForgeVersions.Items.Clear();
+            if(string.IsNullOrWhiteSpace(LatestMinecraftVersion))
+            {
+                LatestMinecraftVersion = Versions.Keys.First();
+            }
             foreach(string mcversion in Versions.Keys)
             {
                 MinecraftVersions.Items.Add(mcversion); //Add each minecraft version
             }
-            foreach (string forgeVersion in Versions[LatestMinecraftVersion])
+            if (Versions.ContainsKey(LatestMinecraftVersion))
             {
-                ForgeVersions.Items.Add(forgeVersion); //Add each forge version
+                foreach (string forgeVersion in Versions[LatestMinecraftVersion])
+                {
+                    ForgeVersions.Items.Add(forgeVersion); //Add each forge version
+                }
+            }
+            else
+            {
+                foreach (string forgeVersion in Versions[Versions.Keys.First()])
+                {
+                    ForgeVersions.Items.Add(forgeVersion); //Add each forge version
+                }
             }
             MinecraftVersions.SelectedIndex = 0; //Select the first minecraft version
         }
@@ -213,6 +261,10 @@ namespace ForgeModBuilder
                         MinecraftVersions.Insert(0, mcversion);
                     }
                 }
+                if(latestVersion.CompareTo(new Version(LatestMinecraftVersion)) == 0)
+                {
+                    MinecraftVersions.Insert(0, LatestMinecraftVersion);
+                }
                 Console.WriteLine("Loaded minecraft versions from " + ForgeDownloadsURL);
                 ForgeModBuilder.Program.INSTANCE.AddConsoleText("Loaded minecraft versions from " + ForgeDownloadsURL);
                 foreach (string mcversion in MinecraftVersions)
@@ -250,6 +302,7 @@ namespace ForgeModBuilder
             }
             try
             {
+                Versions[mcversion].Clear();
                 HtmlWeb web = new HtmlWeb();
                 HtmlAgilityPack.HtmlDocument document = web.Load(ForgeDownloadsURL + "index_" + mcversion + ".html");
                 foreach (HtmlNode forgeVersionNode in document.DocumentNode.SelectNodes("//td[@class='download-version']"))

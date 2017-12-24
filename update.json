@@ -1,8 +1,8 @@
 {
-	"name": "Forge Mod Builder - Advanced Syncing",
-	"version": "0.1.0.8",
+	"name": "Forge Mod Builder - Advanced Building",
+	"version": "0.1.1.0",
 	"changelog": [
-		"=Improved sycing to now only sync the versions which need syncing", "-Removed deobfuscated jar building as it did not work"
+		"=Fixed links not working in the console", "+Added build file tab", "+Added ability to edit the build file in FMB", "+Added ability to upload build file to pastebin", "+Added ability to upload console to pastebin", "+Added ability to stop the console from clearing when loading a new project", "+Added ability to select which versions to sync", "+Added ability to update forge MCP mappings when updating the project"
 	],
-	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.0.8/ForgeModBuilder-0.1.0.8.exe"
+	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.1.0/ForgeModBuilder-0.1.1.0.exe"
 }

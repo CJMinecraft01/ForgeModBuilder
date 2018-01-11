@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -8,9 +9,10 @@ namespace ForgeModBuilder.Managers
     {
         public static string LanguagesFilePath { get; private set; } = ClientManager.ClientDataPath + "Languages";
 
+
         public static Language CurrentLanguage { get; set; }
 
-        private static List<string> AvailableLanguages = new List<string>();
+        private static Dictionary<string, string> AvailableLanguages = new Dictionary<string, string>();
 
         public static void InitLanguages()
         {
@@ -18,9 +20,22 @@ namespace ForgeModBuilder.Managers
             {
                 LanguagesFilePath = @"..\..\Languages";
             }
-            foreach(string FileName in Directory.GetFiles(LanguagesFilePath))
+            
+            if (File.Exists(LanguagesFilePath + @"\languages.json"))
             {
-                Console.WriteLine(FileName);
+                // Read all of the languages
+                JsonSerializer js = new JsonSerializer();
+                js.NullValueHandling = NullValueHandling.Ignore;
+                using (StreamReader sr = new StreamReader(LanguagesFilePath + @"\languages.json"))
+                using (JsonReader jr = new JsonTextReader(sr))
+                {
+                    AvailableLanguages = js.Deserialize<Dictionary<string, string>>(jr);
+                }
+            }
+            else
+            {
+                // Language File does not exist, need to download languages
+                // I.e. first setup
             }
         }
 
@@ -34,7 +49,7 @@ namespace ForgeModBuilder.Managers
     {
         public string Name { get; private set; }
         public string Path { get; private set; }
-        private Dictionary<string, string> TranslationKeys;
+        private Dictionary<string, string> TranslationKeys = new Dictionary<string, string>();
 
         public Language(string name)
         {

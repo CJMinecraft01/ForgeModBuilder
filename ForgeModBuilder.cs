@@ -30,6 +30,8 @@ namespace ForgeModBuilder
         public static void PreInit()
         {
             MainFormInstance = new MainForm();
+            MainFormInstance.FormClosed += CloseForm;
+            OptionsManager.LoadOptions();
             LanguageManager.InitLanguages();
         }
 
@@ -43,9 +45,9 @@ namespace ForgeModBuilder
 
         }
 
-        public static void CloseForm()
+        public static void CloseForm(object sender, EventArgs e)
         {
-
+            OptionsManager.SaveOptions();
         }
 
     }

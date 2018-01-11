@@ -2,13 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ForgeModBuilder.Managers
 {
     public static class LanguageManager
     {
-        public static string LanguagesFilePath { get; private set; } = ClientManager.ClientDataPath + "Languages";
-
+        public static string LanguagesFilePath { get; private set; } = ClientManager.ClientDataPath + @"Languages\";
 
         public static Language CurrentLanguage { get; set; }
 
@@ -18,18 +18,28 @@ namespace ForgeModBuilder.Managers
         {
             if (ForgeModBuilder.Debugging)
             {
-                LanguagesFilePath = @"..\..\Languages";
+                LanguagesFilePath = @"..\..\Languages\";
             }
             
-            if (File.Exists(LanguagesFilePath + @"\languages.json"))
+            if (File.Exists(LanguagesFilePath + "languages.json"))
             {
                 // Read all of the languages
                 JsonSerializer js = new JsonSerializer();
                 js.NullValueHandling = NullValueHandling.Ignore;
-                using (StreamReader sr = new StreamReader(LanguagesFilePath + @"\languages.json"))
+                using (StreamReader sr = new StreamReader(LanguagesFilePath + "languages.json"))
                 using (JsonReader jr = new JsonTextReader(sr))
                 {
                     AvailableLanguages = js.Deserialize<Dictionary<string, string>>(jr);
+                }
+                string CurrentLanguageName = OptionsManager.GetOption("CurrentLanguage", AvailableLanguages.Keys.First());
+                if (AvailableLanguages.ContainsKey(CurrentLanguageName))
+                {
+                    CurrentLanguage = new Language(AvailableLanguages[CurrentLanguageName]);
+                }
+                else
+                {
+                    // The currrent language name is invalid
+                    // This should never happen
                 }
             }
             else
@@ -37,11 +47,6 @@ namespace ForgeModBuilder.Managers
                 // Language File does not exist, need to download languages
                 // I.e. first setup
             }
-        }
-
-        public static void LoadLanguages()
-        {
-            
         }
     }
 
@@ -54,7 +59,7 @@ namespace ForgeModBuilder.Managers
         public Language(string name)
         {
             this.Name = name;
-            this.Path = LanguageManager.LanguagesFilePath + @"\" + this.Name + ".lang";
+            this.Path = LanguageManager.LanguagesFilePath + this.Name + ".lang";
             LoadLanguage();
         }
 
@@ -66,10 +71,13 @@ namespace ForgeModBuilder.Managers
                 {
                     foreach (string line in File.ReadAllLines(this.Path))
                     {
-                        int colonIndex = line.IndexOf(':');
-                        string key = line.Substring(0, colonIndex);
-                        string value = line.Substring(colonIndex - 1, line.Length);
-                        TranslationKeys.Add(key, value);
+                        if (!line.StartsWith("##") && line.Contains('='))
+                        {
+                            int equalSignIndex = line.IndexOf('=') + 1;
+                            string key = line.Substring(0, equalSignIndex - 1);
+                            string value = line.Substring(equalSignIndex, line.Length - equalSignIndex);
+                            TranslationKeys.Add(key, value);
+                        }
                     }
                 }
             }

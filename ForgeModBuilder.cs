@@ -35,6 +35,7 @@ namespace ForgeModBuilder
 
         public FMB()
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             InitializeComponent(); //Create the default form stuff
             Resize += ResizeWindow; //To allow for window resizing
             SetupLayout(); //Setup the layout of the form
@@ -568,7 +569,7 @@ namespace ForgeModBuilder
         {
             if (e.Data != null)
             {
-                AddConsoleText(e.Data);
+                AddErrorConsoleText(e.Data);
             }
             else
             {
@@ -779,6 +780,7 @@ namespace ForgeModBuilder
                         }
                         if(update)
                         {
+                            System.Console.WriteLine("Updating file");
                             StreamWriter w = new StreamWriter(file);
                             foreach(string line in newData)
                             {
@@ -950,6 +952,7 @@ namespace ForgeModBuilder
             if (CurrentProject != null)
             {
                 File.WriteAllLines(CurrentProject.path + "\\build.gradle", BuildFile.Lines);
+                OpenProject(CurrentProject.path);
             }
             else
             {
@@ -1000,6 +1003,7 @@ namespace ForgeModBuilder
                 NewProjectMenu.SetupVersions();
                 bool updatedForgeVersion = UpdateProject(NewProjectMenu.Versions[CurrentProject.mcVersion].First(), true);
                 bool updateMCPMapping = UpdateProjectMCP(true);
+                System.Console.WriteLine(updatedForgeVersion + " " + updateMCPMapping);
                 if (updatedForgeVersion || updateMCPMapping)
                 {
                     SetupProject(" --refresh-dependencies");

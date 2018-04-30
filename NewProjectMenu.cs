@@ -406,6 +406,13 @@ namespace ForgeModBuilder
                                         Close();
                                         Console.WriteLine("Downloaded file to " + string.Join("\\", Directory) + "temp.zip");
                                         Program.INSTANCE.AddConsoleText("Downloaded file to " + string.Join("\\", Directory) + "temp.zip");
+                                        if (e.Error != null)
+                                        {
+                                            Console.WriteLine("An error occurred:\n" + e.Error);
+                                            Program.INSTANCE.AddConsoleText("An error occurred:\n" + e.Error);
+                                            File.Delete(string.Join("\\", Directory) + "temp.zip"); //Delete the zip file
+                                            return;
+                                        }
                                         ZipFile.ExtractToDirectory(string.Join("\\", Directory) + "temp.zip", fbd.SelectedPath); //Extract the file
                                         Console.WriteLine("Extracting file to " + fbd.SelectedPath);
                                         Program.INSTANCE.AddConsoleText("Extracting file to " + fbd.SelectedPath);
@@ -418,6 +425,7 @@ namespace ForgeModBuilder
                                         }
                                     };
                                     wc.DownloadFileAsync(new Uri(DownloadLink), string.Join("\\", Directory) + "temp.zip"); //Start the download
+                                    while (wc.IsBusy) { }
                                 }
                             }
                             else

@@ -1032,6 +1032,7 @@ namespace ForgeModBuilder
 
         private void ConsoleFontMenuItem_Click(object sender, EventArgs e)
         {
+            optionsToolStripMenuItem.HideDropDown();
             FontDialog fd = new FontDialog();
             fd.Font = Console.Font;
             if (fd.ShowDialog() == DialogResult.OK)
@@ -1048,12 +1049,14 @@ namespace ForgeModBuilder
         private void ClearConsoleMenuItem_Click(object sender, EventArgs e)
         {
             Console.Text = "";
+            optionsToolStripMenuItem.HideDropDown();
         }
 
         private void ClearProjectCacheMenuItem_Click(object sender, EventArgs e)
         {
             Projects.Clear();
             UpdateProjects(true, false);
+            optionsToolStripMenuItem.HideDropDown();
         }
 
         private void ClearVersionsCacheMenuItem_Click(object sender, EventArgs e)
@@ -1061,17 +1064,20 @@ namespace ForgeModBuilder
             NewProjectMenu.Versions.Clear();
             NewProjectMenu.UpdateVersions(true, false);
             NewProjectMenu.Sync = true;
+            optionsToolStripMenuItem.HideDropDown();
         }
 
         private void CheckForUpdatesMenuItem_Click(object sender, EventArgs e)
         {
             UpdateChecker.CheckForUpdates(UpdateChecker.UpdateURL);
+            optionsToolStripMenuItem.HideDropDown();
         }
 
         private void CheckVersionsMenuItem_Click(object sender, EventArgs e)
         {
             NewProjectMenu.Sync = true;
             NewProjectMenu.SetupVersions();
+            optionsToolStripMenuItem.HideDropDown();
         }
 
         private void ClearConsoleOnProjectOpenMenuItem_Click(object sender, EventArgs e)
@@ -1085,6 +1091,7 @@ namespace ForgeModBuilder
             {
                 Options.Add("clear_console_on_project_open", ClearConsoleOnProjectOpenMenuItem.Checked);
             }
+            optionsToolStripMenuItem.HideDropDown();
         }
 
         #endregion

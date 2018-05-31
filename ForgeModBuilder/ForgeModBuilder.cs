@@ -76,7 +76,7 @@ namespace ForgeModBuilder
                 UpdateChecker.CheckForUpdates(UpdateChecker.UpdateURL); //When it loads the form, check for updates
                 AddBuildFileText("No project loaded");
                 BuildFile.ReadOnly = true;
-                NewProjectMenu.SetupVersions();
+                NewProjectMenu.UpdateVersions(false, true);
             };
         }
 

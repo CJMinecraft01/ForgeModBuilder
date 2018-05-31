@@ -188,7 +188,13 @@ namespace ForgeModBuilder
             //Reset the holders of the versions
             if(Versions.Count == 0)
             {
-                return;
+                if (Sync)
+                {
+                    SetupVersions();
+                } else
+                {
+                    return;
+                }
             }
             MinecraftVersions.Items.Clear();
             ForgeVersions.Items.Clear();
@@ -275,7 +281,7 @@ namespace ForgeModBuilder
                     {
                         //Load each forge version for every minecraft version
                         ProgressBar.ProgressBar.Value = (int)((document.DocumentNode.SelectNodes("//td[@class='download-version']").IndexOf(forgeVersionNode) + 1F) / document.DocumentNode.SelectNodes("//td[@class='download-version']").Count + (int)((MinecraftVersions.IndexOf(mcversion) + 1F) / MinecraftVersions.Count * 100)) - 1;
-                        forgeVersions.Add(Regex.Replace(forgeVersionNode.InnerHtml.Split('<')[0].Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty), @"\s+", "") + (forgeVersionNode.InnerHtml.Contains("fa fa-star promo-recommended") ? "★" : ""));
+                        forgeVersions.Add(Regex.Replace(forgeVersionNode.InnerHtml.Split('<')[0].Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty), @"\s+", "") + (forgeVersionNode.InnerHtml.Contains("fa promo-recommended") ? "★" : ""));
                     }
                     if(Versions.ContainsKey(mcversion))
                     {
@@ -361,7 +367,7 @@ namespace ForgeModBuilder
                         HtmlNode downloadLinkNode = null; //Find the correct download link
                         try
                         {
-                            downloadLinkNode = downloadNode.SelectSingleNode(".//a[.='Mdk']");
+                            downloadLinkNode = downloadNode.SelectSingleNode(".//i[contains(@class, 'classifier-mdk')]").ParentNode;
                         }
                         catch
                         {
@@ -371,7 +377,7 @@ namespace ForgeModBuilder
                         {
                             try
                             {
-                                downloadLinkNode = downloadNode.SelectSingleNode(".//a[.='Src']");
+                                downloadLinkNode = downloadNode.SelectSingleNode(".//i[contains(@class, 'classifier-src')]").ParentNode;
                             }
                             catch
                             {
@@ -380,7 +386,7 @@ namespace ForgeModBuilder
                         }
                         if(downloadLinkNode != null)
                         {
-                            string DownloadLink = downloadLinkNode.Attributes["href"].Value.Substring("http://adfoc.us/serve/sitelinks/?id=271228&url=".Length); //Remove the adfocus link as it breaks the download - find the direct download link
+                            string DownloadLink = downloadLinkNode.Attributes["href"].Value.Substring("https://adfoc.us/serve/sitelinks/?id=271228&url=".Length); //Remove the adfocus link as it breaks the download - find the direct download link
                             Console.WriteLine("Found download link: " + DownloadLink);
                             Program.INSTANCE.AddConsoleText("Found download link: " + DownloadLink);
                             FolderBrowserDialog fbd = new FolderBrowserDialog(); //Ask where they want to put the mod

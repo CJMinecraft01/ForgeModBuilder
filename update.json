@@ -1,8 +1,8 @@
 {
-	"name": "Forge Mod Builder - TLS Update",
-	"version": "0.1.1.1",
+	"name": "Forge Mod Builder - Why Forge?",
+	"version": "0.1.1.2",
 	"changelog": [
-		"=Updated the security protocol to what Forge uses to fix a major bug!"
+		"=Fixed the new project loader as Forge has been updating their website", "=Fixed some minor other issues"
 	],
-	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.1.1/ForgeModBuilder-0.1.1.1.exe"
+	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.1.2/ForgeModBuilder-0.1.1.2.exe"
 }

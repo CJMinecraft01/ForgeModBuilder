@@ -46,6 +46,7 @@ namespace ForgeModBuilder.Managers
             {
                 // Language File does not exist, need to download languages
                 // I.e. first setup
+
             }
         }
     }

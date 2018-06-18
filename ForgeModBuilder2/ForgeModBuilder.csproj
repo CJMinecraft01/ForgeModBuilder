@@ -73,6 +73,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ForgeModBuilder.cs" />
+    <Compile Include="Forms\SelectLanguageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SelectLanguageForm.Designer.cs">
+      <DependentUpon>SelectLanguageForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\LanguageManager.cs" />
     <Compile Include="Forms\MainForm.cs">
@@ -83,10 +89,14 @@
     </Compile>
     <Compile Include="Managers\OptionsManager.cs" />
     <Compile Include="Managers\ProjectManager.cs" />
+    <Compile Include="Managers\WebManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Languages\en.lang">
       <Generator>ResXFileCodeGenerator</Generator>
     </None>
+    <EmbeddedResource Include="Forms\SelectLanguageForm.resx">
+      <DependentUpon>SelectLanguageForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

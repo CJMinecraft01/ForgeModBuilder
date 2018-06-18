@@ -18,7 +18,7 @@ namespace ForgeModBuilder.Managers
         {
             if (ForgeModBuilder.Debugging)
             {
-                LanguagesFilePath = @"..\..\..\Languages\";
+                LanguagesFilePath = @"..\..\..\Updates\Languages\";
             }
             
             if (File.Exists(LanguagesFilePath + "languages.json"))

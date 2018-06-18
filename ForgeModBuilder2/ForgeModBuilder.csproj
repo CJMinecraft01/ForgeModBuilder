@@ -80,6 +80,7 @@
       <DependentUpon>SelectLanguageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Managers\ClientManager.cs" />
+    <Compile Include="Managers\InstallationManager.cs" />
     <Compile Include="Managers\LanguageManager.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
@@ -89,7 +90,6 @@
     </Compile>
     <Compile Include="Managers\OptionsManager.cs" />
     <Compile Include="Managers\ProjectManager.cs" />
-    <Compile Include="Managers\WebManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Languages\en.lang">
       <Generator>ResXFileCodeGenerator</Generator>

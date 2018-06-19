@@ -16,6 +16,7 @@ namespace ForgeModBuilder.Managers
         public static Version CurrentVersion = new Version(Application.ProductVersion);
 
         public static string UpdateURL { get; private set; } = "https://raw.githubusercontent.com/CJMinecraft01/ForgeModBuilder/rewrite/update.json";
+        public static string UpdateLanguagesURL { get; private set; } = "https://raw.githubusercontent.com/CJMinecraft01/ForgeModBuilder/rewrite/Languages/";
 
         public static bool CheckForUpdates()
         {
@@ -40,7 +41,7 @@ namespace ForgeModBuilder.Managers
             return false;
         }
 
-        private static async Task<bool> InstallUpdates(InstallingUpdateForm form, WebClient client, Update update)
+        private static async Task<bool> InstallUpdates(InstallingUpdateForm form, WebClient client1, Update update)
         {
             try
             {
@@ -48,20 +49,35 @@ namespace ForgeModBuilder.Managers
 
                 string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\";
                 string fileName = "ForgeModBuilder-" + update.version + ".exe";
-                client.DownloadProgressChanged += (sender, e) =>
+                client1.DownloadProgressChanged += (sender, e) =>
                 {
                     form.ProgressBar.Value = e.ProgressPercentage;
                 };
-                client.DownloadFileCompleted += (sender, e) => {
-                    Process.Start(directory + fileName);
-                    Application.Exit();
-                    
-                };
-                client.DownloadFileAsync(new Uri(update.download), directory + fileName);
+                client1.DownloadFileCompleted += (sender, e) =>
+                {
+                    WebClient client2 = new WebClient();
+                    foreach (string file in Directory.GetFiles(LanguageManager.LanguagesFilePath))
+                    {
+                        try
+                        {
+                            client2.DownloadFile(UpdateLanguagesURL + Path.GetFileName(file), file);
+                            form.ProgressBar.Value += 100 / Directory.GetFiles(LanguageManager.LanguagesFilePath).Length;
+                        }
+                        catch (Exception e2)
+                        {
+                            Console.WriteLine(e2.Message);
+                        }
+                    }
 
-            } catch (Exception e)
+                    // Start updated version
+                    //Process.Start(directory + fileName);
+                    //Application.Exit();
+                };
+                client1.DownloadFileAsync(new Uri(update.download), directory + fileName);
+
+            } catch (Exception e1)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e1.Message);
             }
             return true;
         }

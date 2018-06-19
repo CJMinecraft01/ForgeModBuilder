@@ -54,6 +54,7 @@ namespace ForgeModBuilder.Forms
             this.ProgressBar.Size = new System.Drawing.Size(346, 17);
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.ProgressBar.TabIndex = 1;
+            this.ProgressBar.Maximum = 300;
             // 
             // TitleLabel
             // 

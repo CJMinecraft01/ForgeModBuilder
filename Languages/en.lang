@@ -1,4 +1,4 @@
-﻿message_box.project.non_existant.title=Invalid project!
+﻿﻿message_box.project.non_existant.title=Invalid project!
 message_box.project.non_existant.desc=The project you have chosen no longer exists!
 message_box.update.title=An update is available!
 message_box.update.desc=A new version of the Forge Mod Builder is available, would you like to download the update now?

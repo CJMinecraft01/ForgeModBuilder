@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -22,27 +23,31 @@ namespace ForgeModBuilder
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             PreInit();
-            Init();
+            if (Init()) return;
             PostInit();
-            Application.Run(MainFormInstance);
         }
 
         public static void PreInit()
         {
+            //Setup values
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             MainFormInstance = new MainForm();
             MainFormInstance.FormClosed += CloseForm;
             OptionsManager.LoadOptions();
             LanguageManager.InitLanguages();
         }
 
-        public static void Init()
+        public static bool Init()
         {
-            InstallationManager.CheckForUpdates();
+            if(InstallationManager.CheckForUpdates()) return true;
+            return false;
         }
 
         public static void PostInit()
         {
-
+            Application.Run(MainFormInstance);
         }
 
         public static void CloseForm(object sender, EventArgs e)

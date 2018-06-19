@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace ForgeModBuilder.Forms
 {
-    public partial class SelectLanguageForm : Form
+    public partial class InstallingUpdateForm : Form
     {
-        public SelectLanguageForm()
+        public InstallingUpdateForm()
         {
             InitializeComponent();
         }

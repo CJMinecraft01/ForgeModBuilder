@@ -73,11 +73,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ForgeModBuilder.cs" />
-    <Compile Include="Forms\SelectLanguageForm.cs">
+    <Compile Include="Forms\InstallingUpdateForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SelectLanguageForm.Designer.cs">
-      <DependentUpon>SelectLanguageForm.cs</DependentUpon>
+    <Compile Include="Forms\InstallingUpdateForm.Designer.cs">
+      <DependentUpon>InstallingUpdateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\InstallationManager.cs" />
@@ -91,8 +91,8 @@
     <Compile Include="Managers\OptionsManager.cs" />
     <Compile Include="Managers\ProjectManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\SelectLanguageForm.resx">
-      <DependentUpon>SelectLanguageForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\InstallingUpdateForm.resx">
+      <DependentUpon>InstallingUpdateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

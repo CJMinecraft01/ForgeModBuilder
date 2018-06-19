@@ -1,8 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
 using System.Windows.Forms;
+using ForgeModBuilder.Forms;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Reflection;
+using System.IO;
+using System.Diagnostics;
 
 namespace ForgeModBuilder.Managers
 {
@@ -12,27 +17,53 @@ namespace ForgeModBuilder.Managers
 
         public static string UpdateURL { get; private set; } = "https://raw.githubusercontent.com/CJMinecraft01/ForgeModBuilder/rewrite/update.json";
 
-        public static void CheckForUpdates()
+        public static bool CheckForUpdates()
         {
-            Console.WriteLine("Checking for updates at URL: " + UpdateURL);
-
             WebClient client = new WebClient();
 
             string data = client.DownloadString(UpdateURL);
             Update update = JsonConvert.DeserializeObject<Update>(data);
-            client.Dispose();
-
-            Console.WriteLine("Current Version: " + CurrentVersion.ToString() + ", Latest Version: " + update.version);
-            Console.WriteLine(CurrentVersion.CompareTo(new Version(update.version)) < 0);
 
             if (CurrentVersion.CompareTo(new Version(update.version)) < 0) {
                 // The current version is old. We should update
 
-                if (MessageBox.Show(LanguageManager.CurrentLanguage.Localize("message_box.update.title"), LanguageManager.CurrentLanguage.Localize("message_box.update.desc"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show(LanguageManager.CurrentLanguage.Localize("message_box.update.desc"), LanguageManager.CurrentLanguage.Localize("message_box.update.title"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     // The user wants to update so let's do it!
+
+                    InstallingUpdateForm form = new InstallingUpdateForm();
+                    Task<bool> task = InstallUpdates(form, client, update);
+                    Application.Run(form);
+                    return true;
                 }
             }
+            return false;
+        }
+
+        private static async Task<bool> InstallUpdates(InstallingUpdateForm form, WebClient client, Update update)
+        {
+            try
+            {
+                // Install the actual update and update the progress bar
+
+                string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\";
+                string fileName = "ForgeModBuilder-" + update.version + ".exe";
+                client.DownloadProgressChanged += (sender, e) =>
+                {
+                    form.ProgressBar.Value = e.ProgressPercentage;
+                };
+                client.DownloadFileCompleted += (sender, e) => {
+                    Process.Start(directory + fileName);
+                    Application.Exit();
+                    
+                };
+                client.DownloadFileAsync(new Uri(update.download), directory + fileName);
+
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return true;
         }
 
         public static void CheckFirstInstall()

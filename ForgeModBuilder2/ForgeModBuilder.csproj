@@ -91,9 +91,6 @@
     <Compile Include="Managers\OptionsManager.cs" />
     <Compile Include="Managers\ProjectManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Languages\en.lang">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </None>
     <EmbeddedResource Include="Forms\SelectLanguageForm.resx">
       <DependentUpon>SelectLanguageForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -107,7 +104,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="Languages\languages.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

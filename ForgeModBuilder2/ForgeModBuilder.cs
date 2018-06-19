@@ -37,7 +37,7 @@ namespace ForgeModBuilder
 
         public static void Init()
         {
-
+            InstallationManager.CheckForUpdates();
         }
 
         public static void PostInit()

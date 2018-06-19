@@ -14,16 +14,30 @@ namespace ForgeModBuilder.Managers
 
         public static void CheckForUpdates()
         {
+            Console.WriteLine("Checking for updates at URL: " + UpdateURL);
+
             WebClient client = new WebClient();
 
             string data = client.DownloadString(UpdateURL);
             Update update = JsonConvert.DeserializeObject<Update>(data);
+            client.Dispose();
+
+            Console.WriteLine("Current Version: " + CurrentVersion.ToString() + ", Latest Version: " + update.version);
+            Console.WriteLine(CurrentVersion.CompareTo(new Version(update.version)) < 0);
 
             if (CurrentVersion.CompareTo(new Version(update.version)) < 0) {
                 // The current version is old. We should update
 
-                
+                if (MessageBox.Show(LanguageManager.CurrentLanguage.Localize("message_box.update.title"), LanguageManager.CurrentLanguage.Localize("message_box.update.desc"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    // The user wants to update so let's do it!
+                }
             }
+        }
+
+        public static void CheckFirstInstall()
+        {
+
         }
 
         public class Update

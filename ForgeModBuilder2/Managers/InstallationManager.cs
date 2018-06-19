@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.IO;
 using System.Diagnostics;
+using System.Threading;
 
 namespace ForgeModBuilder.Managers
 {
@@ -55,6 +56,7 @@ namespace ForgeModBuilder.Managers
                 };
                 client1.DownloadFileCompleted += (sender, e) =>
                 {
+                    // Update languages
                     WebClient client2 = new WebClient();
                     foreach (string file in Directory.GetFiles(LanguageManager.LanguagesFilePath))
                     {
@@ -70,8 +72,8 @@ namespace ForgeModBuilder.Managers
                     }
 
                     // Start updated version
-                    //Process.Start(directory + fileName);
-                    //Application.Exit();
+                    Process.Start(directory + fileName);
+                    Application.Exit();
                 };
                 client1.DownloadFileAsync(new Uri(update.download), directory + fileName);
 

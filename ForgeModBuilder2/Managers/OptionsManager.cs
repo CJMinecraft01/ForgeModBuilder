@@ -29,6 +29,7 @@ namespace ForgeModBuilder.Managers
 
         public static T GetOption<T>(string Option, T DefaultValue)
         {
+
             if (Options.ContainsKey(Option))
             {
                 if (Options[Option] is JArray)

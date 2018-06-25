@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using ForgeModBuilder.Forms;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace ForgeModBuilder.Managers
 {
@@ -51,8 +52,20 @@ namespace ForgeModBuilder.Managers
             InstallingUpdateForm form = new InstallingUpdateForm();
             form.ProgressBar.Maximum = 200;
             form.TaskDetailsLabel.Text = LanguageManager.CurrentLanguage.Localize("form.update.label.task_details.version_syncing");
+            form.CancelButton.Click += (sender, e) =>
+            {
+                form.Close();
+            };
+            form.Paint += (sender, e) => {
+                if(form.ProgressBar.Value == form.ProgressBar.Maximum)
+                {
+                    form.Close();
+                }
+            };
             Task<bool> task = UpdateLists(form);
             Application.Run(form);
+            task.Dispose();
+            form.Dispose();
         }
 
         private static async Task<bool> UpdateLists(InstallingUpdateForm form)
@@ -60,7 +73,6 @@ namespace ForgeModBuilder.Managers
             DownloadMCPVersionList(form);
             DownloadMCVersionList(form);
             DownloadForgeVersionList(form);
-            Application.Exit();
             return true;
         }
 
@@ -105,7 +117,7 @@ namespace ForgeModBuilder.Managers
                 }
                 JArray ForgeVersionsData = (JArray)data.SelectToken("md").SelectToken("versions");
 
-                if (OptionsManager.ForcedCreate || (string) ForgeVersionsData.First().SelectToken("version") != ForgeVersions[Version].First())
+                if (OptionsManager.ForcedCreate || (string)ForgeVersionsData.First().SelectToken("version") != ForgeVersions[Version].First())
                 {
                     List<string> BuildVersions = new List<string>();
                     foreach (JObject ForgeVersionObject in ForgeVersionsData)

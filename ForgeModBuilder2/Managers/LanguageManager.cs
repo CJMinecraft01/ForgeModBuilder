@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace ForgeModBuilder.Managers
@@ -61,8 +62,7 @@ namespace ForgeModBuilder.Managers
 
                 if (form.LanguagesComboBox.SelectedItem == null || !AvailableLanguages.ContainsKey((string)form.LanguagesComboBox.SelectedItem))
                 {
-                    // The only message box not localised as a lnaguage is not yet chosen
-                    if (MessageBox.Show("Please select a language!", "Invalid Language", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                    if (MessageBox.Show(CurrentLanguage.Localize("message_box.invalid_language.desc"), CurrentLanguage.Localize("message_box.invalid_language.title"), MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
                     {
                         goto SelectLanguage;
                     }
@@ -114,6 +114,8 @@ namespace ForgeModBuilder.Managers
                 }
                 else
                 {
+                    Console.WriteLine("The language file is not there, let's download it");
+
                     // The language file doesn't exist
                     WebClient client = new WebClient();
 
@@ -159,6 +161,7 @@ namespace ForgeModBuilder.Managers
                         TranslationKeys.Add(key, value);
                     }
                 }
+                Console.WriteLine("Language Loaded!");
             }
         }
 

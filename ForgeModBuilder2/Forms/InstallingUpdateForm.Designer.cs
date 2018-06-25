@@ -74,7 +74,7 @@ namespace ForgeModBuilder.Forms
             this.TaskDetailsLabel.Name = "TaskDetailsLabel";
             this.TaskDetailsLabel.Size = new System.Drawing.Size(112, 15);
             this.TaskDetailsLabel.TabIndex = 3;
-            this.TaskDetailsLabel.Text = LanguageManager.CurrentLanguage.Localize("form.update.label.task_details.1");
+            this.TaskDetailsLabel.Text = LanguageManager.CurrentLanguage.Localize("form.update.label.task_details");
             // 
             // InstallingUpdateForm
             // 

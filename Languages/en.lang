@@ -2,10 +2,17 @@
 message_box.project.non_existant.desc=The project you have chosen no longer exists!
 message_box.update.title=An update is available!
 message_box.update.desc=A new version of the Forge Mod Builder is available, would you like to download the update now?
+message_box.invalid_language.title=Invalid Language
+message_box.invalid_language.desc=Please select a valid language!
+
 
 form.update.label.title=Updating Forge Mod Builder...
-form.update.label.task_details.1=Downloading updates...
-form.update.label.task_details.2=Installing updates...
+form.update.label.task_details=Downloading updates...
+
 form.main.title=Forge Mod Builder
 
+form.language_selection.title=Language Selection
+form.language_selection.label.select_language=Please select a language
+
 button.cancel=Cancel
+button.ok=OK

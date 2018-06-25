@@ -1,4 +1,6 @@
-﻿namespace ForgeModBuilder.Forms
+﻿using ForgeModBuilder.Managers;
+
+namespace ForgeModBuilder.Forms
 {
     partial class LanguageSelectionForm
     {
@@ -50,7 +52,7 @@
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 2;
-            this.OKButton.Text = "OK";
+            this.OKButton.Text = LanguageManager.CurrentLanguage.Localize("button.ok");
             this.OKButton.UseVisualStyleBackColor = true;
             // 
             // CancelButton
@@ -60,7 +62,7 @@
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 3;
-            this.CancelButton.Text = "Cancel";
+            this.CancelButton.Text = LanguageManager.CurrentLanguage.Localize("button.cancel");
             this.CancelButton.UseVisualStyleBackColor = true;
             // 
             // SelectLanguageLabel
@@ -70,7 +72,7 @@
             this.SelectLanguageLabel.Name = "SelectLanguageLabel";
             this.SelectLanguageLabel.Size = new System.Drawing.Size(126, 13);
             this.SelectLanguageLabel.TabIndex = 4;
-            this.SelectLanguageLabel.Text = "Please select a language";
+            this.SelectLanguageLabel.Text = LanguageManager.CurrentLanguage.Localize("form.select_language.label.select_language");
             // 
             // LanguageSelectionForm
             // 
@@ -86,7 +88,7 @@
             this.Name = "LanguageSelectionForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Language";
+            this.Text = LanguageManager.CurrentLanguage.Localize("form.select_language.title");
             this.ResumeLayout(false);
             this.PerformLayout();
 

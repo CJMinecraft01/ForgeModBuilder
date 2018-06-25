@@ -33,8 +33,6 @@ namespace ForgeModBuilder
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            MainFormInstance = new MainForm();
-            MainFormInstance.FormClosed += CloseForm;
             OptionsManager.LoadOptions();
             if(LanguageManager.InitLanguages()) return true;
 
@@ -49,6 +47,9 @@ namespace ForgeModBuilder
 
         public static void PostInit()
         {
+            MainFormInstance = new MainForm();
+            MainFormInstance.FormClosed += CloseForm;
+
             Application.Run(MainFormInstance);
         }
 

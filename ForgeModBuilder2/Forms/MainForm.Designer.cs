@@ -1,4 +1,6 @@
-﻿namespace ForgeModBuilder.Forms
+﻿using ForgeModBuilder.Managers;
+
+namespace ForgeModBuilder.Forms
 {
     partial class MainForm
     {
@@ -30,7 +32,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Text = "Form1";
+            this.Text = LanguageManager.CurrentLanguage.Localize("form.main.title");
         }
 
         #endregion

@@ -33,6 +33,18 @@ namespace ForgeModBuilder.Managers
             return DefaultValue;
         }
 
+        public static void SetOption<T>(string Option, T Value)
+        {
+            if (Options.ContainsKey(Option))
+            {
+                Options[Option] = Value;
+            }
+            else
+            {
+                Options.Add(Option, Value);
+            }
+        }
+
     }
 
 }

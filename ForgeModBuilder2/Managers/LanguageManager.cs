@@ -68,17 +68,23 @@ namespace ForgeModBuilder.Managers
                     }
                     else
                     {
-                        File.Delete(LanguagesFilePath + "languages.json");
+                        foreach (string FilePath in Directory.GetFiles(LanguagesFilePath))
+                        {
+                            File.Delete(FilePath);
+                        }
+
                         Directory.Delete(LanguagesFilePath);
                         return true;
                     }
                 }
                 string SelectedLanguage = AvailableLanguages[(string)form.LanguagesComboBox.SelectedItem];
+                Console.WriteLine(SelectedLanguage);
+                OptionsManager.SetOption<string>("CurrentLanguage", (string)form.LanguagesComboBox.SelectedItem);
 
                 client.DownloadFile(InstallationManager.UpdateLanguagesURL + SelectedLanguage + ".lang", LanguagesFilePath + SelectedLanguage + ".lang");
                 client.Dispose();
 
-                CurrentLanguage = new Language(AvailableLanguages[(string)form.LanguagesComboBox.SelectedItem]);
+                CurrentLanguage = new Language(SelectedLanguage);
 
                 return false;
             }
@@ -114,8 +120,6 @@ namespace ForgeModBuilder.Managers
                 }
                 else
                 {
-                    Console.WriteLine("The language file is not there, let's download it");
-
                     // The language file doesn't exist
                     WebClient client = new WebClient();
 

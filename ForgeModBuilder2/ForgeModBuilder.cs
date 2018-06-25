@@ -43,6 +43,7 @@ namespace ForgeModBuilder
         public static bool Init()
         {
             if (InstallationManager.CheckForUpdates()) return true;
+            ForgeManager.UpdateVersionLists();
 
             return false;
         }
@@ -51,8 +52,6 @@ namespace ForgeModBuilder
         {
             MainFormInstance = new MainForm();
             MainFormInstance.FormClosed += CloseForm;
-
-            ForgeManager.UpdateVersionLists();
 
             Application.Run(MainFormInstance);
         }

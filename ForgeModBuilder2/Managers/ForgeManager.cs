@@ -9,6 +9,8 @@ using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
+using ForgeModBuilder.Forms;
+using System.Windows.Forms;
 
 namespace ForgeModBuilder.Managers
 {
@@ -46,12 +48,23 @@ namespace ForgeModBuilder.Managers
 
         public static void UpdateVersionLists()
         {
-            DownloadMCPVersionList();
-            DownloadMCVersionList();
-            DownloadForgeVersionList();
+            InstallingUpdateForm form = new InstallingUpdateForm();
+            form.ProgressBar.Maximum = 200;
+            form.TaskDetailsLabel.Text = LanguageManager.CurrentLanguage.Localize("form.update.label.task_details.version_syncing");
+            Task<bool> task = UpdateLists(form);
+            Application.Run(form);
         }
 
-        private static void DownloadMCPVersionList()
+        private static async Task<bool> UpdateLists(InstallingUpdateForm form)
+        {
+            DownloadMCPVersionList(form);
+            DownloadMCVersionList(form);
+            DownloadForgeVersionList(form);
+            Application.Exit();
+            return true;
+        }
+
+        private static void DownloadMCPVersionList(InstallingUpdateForm form)
         {
             JsonSerializer js = new JsonSerializer();
             using (StreamReader sr = new StreamReader(WebRequest.Create(MCPVersionsURL).GetResponse().GetResponseStream()))
@@ -60,9 +73,10 @@ namespace ForgeModBuilder.Managers
                 MCPVersions = js.Deserialize<Dictionary<string, Dictionary<string, List<string>>>>(jr);
                 jr.Close();
             }
+            form.ProgressBar.Value += 100;
         }
 
-        private static void DownloadMCVersionList()
+        private static void DownloadMCVersionList(InstallingUpdateForm form)
         {
             JsonSerializer js = new JsonSerializer();
             using (StreamReader sr = new StreamReader(WebRequest.Create(MCVersionsURL).GetResponse().GetResponseStream()))
@@ -71,12 +85,14 @@ namespace ForgeModBuilder.Managers
                 MCVersions = js.Deserialize<List<string>>(jr);
                 jr.Close();
             }
+            form.ProgressBar.Value += 100;
         }
 
-        private static void DownloadForgeVersionList()
+        private static void DownloadForgeVersionList(InstallingUpdateForm form)
         {
-            ForgeVersions.Clear();
             List<string> VersionsToSync = OptionsManager.GetOption<List<string>>("VersionsToSync", MCVersions);
+            form.ProgressBar.Value = 0;
+            form.ProgressBar.Maximum = VersionsToSync.Count;
             foreach (string Version in VersionsToSync)
             {
                 JObject data;
@@ -87,14 +103,19 @@ namespace ForgeModBuilder.Managers
                     data = js.Deserialize<JObject>(jr);
                     jr.Close();
                 }
-                JArray ForgeVersionsData = (JArray) data.SelectToken("md").SelectToken("versions");
-                
-                List<string> BuildVersions = new List<string>();
-                foreach (JObject ForgeVersionObject in ForgeVersionsData)
+                JArray ForgeVersionsData = (JArray)data.SelectToken("md").SelectToken("versions");
+
+                if (OptionsManager.ForcedCreate || (string) ForgeVersionsData.First().SelectToken("version") != ForgeVersions[Version].First())
                 {
-                    BuildVersions.Add((string) ForgeVersionObject.SelectToken("version"));
+                    List<string> BuildVersions = new List<string>();
+                    foreach (JObject ForgeVersionObject in ForgeVersionsData)
+                    {
+                        BuildVersions.Add((string)ForgeVersionObject.SelectToken("version"));
+                    }
+                    ForgeVersions.Remove(Version);
+                    ForgeVersions.Add(Version, BuildVersions);
                 }
-                ForgeVersions.Add(Version, BuildVersions);
+                form.ProgressBar.Value += 1;
             }
         }
 

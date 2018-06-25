@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,8 @@ namespace ForgeModBuilder.Managers
     {
         public static string OptionsFileName { get; private set; } = "options.json";
 
+        public static bool ForcedCreate { get; private set; } = false;
+
         private static Dictionary<string, object> Options = new Dictionary<string, object>();
 
         public static void SaveOptions()
@@ -19,7 +23,7 @@ namespace ForgeModBuilder.Managers
 
         public static void LoadOptions()
         {
-            ClientManager.CreateCustomDataFileIfNotFound(OptionsFileName);
+            ForcedCreate = ClientManager.CreateCustomDataFileIfNotFound(OptionsFileName);
             Options = ClientManager.ReadCustomData<Dictionary<string, object>>(OptionsFileName);
         }
 
@@ -27,7 +31,11 @@ namespace ForgeModBuilder.Managers
         {
             if (Options.ContainsKey(Option))
             {
-                return (T) Options[Option];
+                if (Options[Option] is JArray)
+                {
+                    return ((JArray)Options[Option]).ToObject<T>();
+                }
+                return (T)Options[Option];
             }
             Options.Add(Option, DefaultValue);
             return DefaultValue;

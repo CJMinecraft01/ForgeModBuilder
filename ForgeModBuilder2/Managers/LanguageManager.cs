@@ -30,7 +30,7 @@ namespace ForgeModBuilder.Managers
                 Directory.CreateDirectory(LanguagesFilePath);
             }
 
-            if (File.Exists(LanguagesFilePath + "languages.json"))
+            if (File.Exists(LanguagesFilePath + "languages.json") && !OptionsManager.ForcedCreate)
             {
                 LoadAvailableLanguages();
             }
@@ -78,7 +78,6 @@ namespace ForgeModBuilder.Managers
                     }
                 }
                 string SelectedLanguage = AvailableLanguages[(string)form.LanguagesComboBox.SelectedItem];
-                Console.WriteLine(SelectedLanguage);
                 OptionsManager.SetOption<string>("CurrentLanguage", (string)form.LanguagesComboBox.SelectedItem);
 
                 client.DownloadFile(InstallationManager.UpdateLanguagesURL + SelectedLanguage + ".lang", LanguagesFilePath + SelectedLanguage + ".lang");

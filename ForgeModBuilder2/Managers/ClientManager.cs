@@ -56,12 +56,15 @@ namespace ForgeModBuilder.Managers
             }
         }
 
-        public static void CreateCustomDataFileIfNotFound(string DataPath)
+        public static bool CreateCustomDataFileIfNotFound(string DataPath)
         {
+            CheckClientDataDirectory();
             if (!File.Exists(ClientDataPath + DataPath))
             {
                 File.CreateText(ClientDataPath + DataPath).Close();
+                return true;
             }
+            return false;
         }
 
         public static void CheckClientDataDirectory()

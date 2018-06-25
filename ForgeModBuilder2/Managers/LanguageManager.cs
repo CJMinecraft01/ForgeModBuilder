@@ -51,7 +51,7 @@ namespace ForgeModBuilder.Managers
 
             LoadAvailableLanguages();
 
-            SelectLanguage:
+        SelectLanguage:
 
             LanguageSelectionForm form = new LanguageSelectionForm();
             form.LanguagesComboBox.Items.AddRange(AvailableLanguages.Keys.ToArray());
@@ -59,7 +59,7 @@ namespace ForgeModBuilder.Managers
             if (form.ShowDialog() == DialogResult.OK)
             {
 
-                if (form.LanguagesComboBox.SelectedItem == null || !AvailableLanguages.ContainsKey((string) form.LanguagesComboBox.SelectedItem))
+                if (form.LanguagesComboBox.SelectedItem == null || !AvailableLanguages.ContainsKey((string)form.LanguagesComboBox.SelectedItem))
                 {
                     // The only message box not localised as a lnaguage is not yet chosen
                     if (MessageBox.Show("Please select a language!", "Invalid Language", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
@@ -84,7 +84,11 @@ namespace ForgeModBuilder.Managers
             }
             else
             {
-                File.Delete(LanguagesFilePath + "languages.json");
+                foreach (string FilePath in Directory.GetFiles(LanguagesFilePath))
+                {
+                    File.Delete(FilePath);
+                }
+
                 Directory.Delete(LanguagesFilePath);
                 return true;
             }
@@ -143,14 +147,17 @@ namespace ForgeModBuilder.Managers
 
         public void LoadLanguage()
         {
-            foreach (string line in File.ReadAllLines(this.Path))
+            if (File.Exists(this.Path))
             {
-                if (!line.StartsWith("##") && line.Contains('='))
+                foreach (string line in File.ReadAllLines(this.Path))
                 {
-                    int equalSignIndex = line.IndexOf('=') + 1;
-                    string key = line.Substring(0, equalSignIndex - 1);
-                    string value = line.Substring(equalSignIndex, line.Length - equalSignIndex);
-                    TranslationKeys.Add(key, value);
+                    if (!line.StartsWith("##") && line.Contains('='))
+                    {
+                        int equalSignIndex = line.IndexOf('=') + 1;
+                        string key = line.Substring(0, equalSignIndex - 1);
+                        string value = line.Substring(equalSignIndex, line.Length - equalSignIndex);
+                        TranslationKeys.Add(key, value);
+                    }
                 }
             }
         }

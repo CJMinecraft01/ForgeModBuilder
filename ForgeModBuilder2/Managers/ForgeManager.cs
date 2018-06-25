@@ -8,6 +8,7 @@ using ForgeModBuilder.Managers;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
 
 namespace ForgeModBuilder.Managers
 {
@@ -70,12 +71,31 @@ namespace ForgeModBuilder.Managers
                 MCVersions = js.Deserialize<List<string>>(jr);
                 jr.Close();
             }
-            MCVersions.ForEach(i => Console.Write("{0}\t", i));
         }
 
         private static void DownloadForgeVersionList()
         {
-            
+            ForgeVersions.Clear();
+            List<string> VersionsToSync = OptionsManager.GetOption<List<string>>("VersionsToSync", MCVersions);
+            foreach (string Version in VersionsToSync)
+            {
+                JObject data;
+                JsonSerializer js = new JsonSerializer();
+                using (StreamReader sr = new StreamReader(WebRequest.Create(ForgeVersionsURL.Replace("MCVERSION", Version)).GetResponse().GetResponseStream()))
+                using (JsonReader jr = new JsonTextReader(sr))
+                {
+                    data = js.Deserialize<JObject>(jr);
+                    jr.Close();
+                }
+                JArray ForgeVersionsData = (JArray) data.SelectToken("md").SelectToken("versions");
+                
+                List<string> BuildVersions = new List<string>();
+                foreach (JObject ForgeVersionObject in ForgeVersionsData)
+                {
+                    BuildVersions.Add((string) ForgeVersionObject.SelectToken("version"));
+                }
+                ForgeVersions.Add(Version, BuildVersions);
+            }
         }
 
     }

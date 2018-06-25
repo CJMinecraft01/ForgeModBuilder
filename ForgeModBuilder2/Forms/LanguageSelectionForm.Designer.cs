@@ -30,6 +30,7 @@ namespace ForgeModBuilder.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LanguageSelectionForm));
             this.LanguagesComboBox = new System.Windows.Forms.ComboBox();
             this.OKButton = new System.Windows.Forms.Button();
             this.CancelButton = new System.Windows.Forms.Button();
@@ -70,7 +71,7 @@ namespace ForgeModBuilder.Forms
             this.SelectLanguageLabel.AutoSize = true;
             this.SelectLanguageLabel.Location = new System.Drawing.Point(12, 9);
             this.SelectLanguageLabel.Name = "SelectLanguageLabel";
-            this.SelectLanguageLabel.Size = new System.Drawing.Size(126, 13);
+            this.SelectLanguageLabel.Size = new System.Drawing.Size(0, 13);
             this.SelectLanguageLabel.TabIndex = 4;
             this.SelectLanguageLabel.Text = LanguageManager.CurrentLanguage.Localize("form.language_selection.label.select_language");
             // 
@@ -84,9 +85,10 @@ namespace ForgeModBuilder.Forms
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.LanguagesComboBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "LanguageSelectionForm";
-            this.ShowIcon = false;
+            this.ShowIcon = true;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = LanguageManager.CurrentLanguage.Localize("form.language_selection.title");
             this.ResumeLayout(false);

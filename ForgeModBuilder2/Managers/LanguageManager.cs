@@ -161,7 +161,6 @@ namespace ForgeModBuilder.Managers
                         TranslationKeys.Add(key, value);
                     }
                 }
-                Console.WriteLine("Language Loaded!");
             }
         }
 

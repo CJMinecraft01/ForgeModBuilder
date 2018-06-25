@@ -72,7 +72,7 @@ namespace ForgeModBuilder.Forms
             this.SelectLanguageLabel.Name = "SelectLanguageLabel";
             this.SelectLanguageLabel.Size = new System.Drawing.Size(126, 13);
             this.SelectLanguageLabel.TabIndex = 4;
-            this.SelectLanguageLabel.Text = LanguageManager.CurrentLanguage.Localize("form.select_language.label.select_language");
+            this.SelectLanguageLabel.Text = LanguageManager.CurrentLanguage.Localize("form.language_selection.label.select_language");
             // 
             // LanguageSelectionForm
             // 
@@ -88,7 +88,7 @@ namespace ForgeModBuilder.Forms
             this.Name = "LanguageSelectionForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = LanguageManager.CurrentLanguage.Localize("form.select_language.title");
+            this.Text = LanguageManager.CurrentLanguage.Localize("form.language_selection.title");
             this.ResumeLayout(false);
             this.PerformLayout();
 

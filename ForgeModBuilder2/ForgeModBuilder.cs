@@ -22,12 +22,12 @@ namespace ForgeModBuilder
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            PreInit();
+            if (PreInit()) return;
             if (Init()) return;
             PostInit();
         }
 
-        public static void PreInit()
+        public static bool PreInit()
         {
             //Setup values
             ServicePointManager.Expect100Continue = true;
@@ -36,12 +36,14 @@ namespace ForgeModBuilder
             MainFormInstance = new MainForm();
             MainFormInstance.FormClosed += CloseForm;
             OptionsManager.LoadOptions();
-            LanguageManager.InitLanguages();
+            if(LanguageManager.InitLanguages()) return true;
+
+            return false;
         }
 
         public static bool Init()
         {
-            if(InstallationManager.CheckForUpdates()) return true;
+            if (InstallationManager.CheckForUpdates()) return true;
             return false;
         }
 

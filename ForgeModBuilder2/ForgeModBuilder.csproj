@@ -79,6 +79,12 @@
     <Compile Include="Forms\InstallingUpdateForm.Designer.cs">
       <DependentUpon>InstallingUpdateForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\LanguageSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LanguageSelectionForm.Designer.cs">
+      <DependentUpon>LanguageSelectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\InstallationManager.cs" />
     <Compile Include="Managers\LanguageManager.cs" />
@@ -93,6 +99,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\InstallingUpdateForm.resx">
       <DependentUpon>InstallingUpdateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LanguageSelectionForm.resx">
+      <DependentUpon>LanguageSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

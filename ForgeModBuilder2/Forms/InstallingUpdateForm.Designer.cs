@@ -54,7 +54,7 @@ namespace ForgeModBuilder.Forms
             this.ProgressBar.Size = new System.Drawing.Size(346, 17);
             this.ProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.ProgressBar.TabIndex = 1;
-            this.ProgressBar.Maximum = 200;
+            this.ProgressBar.Maximum = 100;
             // 
             // TitleLabel
             // 
@@ -81,6 +81,7 @@ namespace ForgeModBuilder.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.ClientSize = new System.Drawing.Size(370, 83);
             this.Controls.Add(this.TaskDetailsLabel);
             this.Controls.Add(this.TitleLabel);

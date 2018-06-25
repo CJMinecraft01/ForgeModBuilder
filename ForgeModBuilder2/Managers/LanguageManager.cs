@@ -1,8 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using ForgeModBuilder.Forms;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Windows.Forms;
 
 namespace ForgeModBuilder.Managers
 {
@@ -14,38 +17,112 @@ namespace ForgeModBuilder.Managers
 
         private static Dictionary<string, string> AvailableLanguages = new Dictionary<string, string>();
 
-        public static void InitLanguages()
+        public static bool InitLanguages()
         {
             if (ForgeModBuilder.Debugging)
             {
-                LanguagesFilePath = @"..\..\..\Languages\";
+                //LanguagesFilePath = @"..\..\..\Languages\";
             }
-            
+
+            if (!Directory.Exists(LanguagesFilePath))
+            {
+                Directory.CreateDirectory(LanguagesFilePath);
+            }
+
             if (File.Exists(LanguagesFilePath + "languages.json"))
             {
-                // Read all of the languages
-                JsonSerializer js = new JsonSerializer();
-                js.NullValueHandling = NullValueHandling.Ignore;
-                using (StreamReader sr = new StreamReader(LanguagesFilePath + "languages.json"))
-                using (JsonReader jr = new JsonTextReader(sr))
-                {
-                    AvailableLanguages = js.Deserialize<Dictionary<string, string>>(jr);
-                }
-                string CurrentLanguageName = OptionsManager.GetOption("CurrentLanguage", AvailableLanguages.Keys.First());
-                if (AvailableLanguages.ContainsKey(CurrentLanguageName))
-                {
-                    CurrentLanguage = new Language(AvailableLanguages[CurrentLanguageName]);
-                }
-                else
-                {
-                    // The currrent language name is invalid
-                    // This should never happen
-                }
+                LoadAvailableLanguages();
             }
             else
             {
                 // Language File does not exist, need to download languages
                 // I.e. first setup
+                return LanguagesSetup();
+            }
+            return false;
+        }
+
+        private static bool LanguagesSetup()
+        {
+            // Download the languages.json file
+
+            WebClient client = new WebClient();
+            client.DownloadFile(InstallationManager.UpdateLanguagesURL + "languages.json", LanguagesFilePath + "languages.json");
+
+            LoadAvailableLanguages();
+
+            SelectLanguage:
+
+            LanguageSelectionForm form = new LanguageSelectionForm();
+            form.LanguagesComboBox.Items.AddRange(AvailableLanguages.Keys.ToArray());
+
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+
+                if (form.LanguagesComboBox.SelectedItem == null || !AvailableLanguages.ContainsKey((string) form.LanguagesComboBox.SelectedItem))
+                {
+                    // The only message box not localised as a lnaguage is not yet chosen
+                    if (MessageBox.Show("Please select a language!", "Invalid Language", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                    {
+                        goto SelectLanguage;
+                    }
+                    else
+                    {
+                        File.Delete(LanguagesFilePath + "languages.json");
+                        Directory.Delete(LanguagesFilePath);
+                        return true;
+                    }
+                }
+                string SelectedLanguage = AvailableLanguages[(string)form.LanguagesComboBox.SelectedItem];
+
+                client.DownloadFile(InstallationManager.UpdateLanguagesURL + SelectedLanguage + ".lang", LanguagesFilePath + SelectedLanguage + ".lang");
+                client.Dispose();
+
+                CurrentLanguage = new Language(AvailableLanguages[(string)form.LanguagesComboBox.SelectedItem]);
+
+                return false;
+            }
+            else
+            {
+                File.Delete(LanguagesFilePath + "languages.json");
+                Directory.Delete(LanguagesFilePath);
+                return true;
+            }
+        }
+
+
+        private static void LoadAvailableLanguages()
+        {
+            // Read all of the languages
+            JsonSerializer js = new JsonSerializer();
+            js.NullValueHandling = NullValueHandling.Ignore;
+            using (StreamReader sr = new StreamReader(LanguagesFilePath + "languages.json"))
+            using (JsonReader jr = new JsonTextReader(sr))
+            {
+                AvailableLanguages = js.Deserialize<Dictionary<string, string>>(jr);
+            }
+            string CurrentLanguageName = OptionsManager.GetOption("CurrentLanguage", AvailableLanguages.Keys.First());
+            if (AvailableLanguages.ContainsKey(CurrentLanguageName))
+            {
+                if (File.Exists(LanguagesFilePath + AvailableLanguages[CurrentLanguageName] + ".lang"))
+                {
+                    CurrentLanguage = new Language(AvailableLanguages[CurrentLanguageName]);
+                }
+                else
+                {
+                    // The language file doesn't exist
+                    WebClient client = new WebClient();
+
+                    client.DownloadFile(InstallationManager.UpdateLanguagesURL + AvailableLanguages[CurrentLanguageName] + ".lang", LanguagesFilePath + AvailableLanguages[CurrentLanguageName] + ".lang");
+                    client.Dispose();
+
+                    CurrentLanguage = new Language(AvailableLanguages[CurrentLanguageName]);
+                }
+            }
+            else
+            {
+                // The currrent language name is invalid
+                // This should never happen
 
             }
         }
@@ -66,32 +143,26 @@ namespace ForgeModBuilder.Managers
 
         public void LoadLanguage()
         {
-            if (Directory.Exists(LanguageManager.LanguagesFilePath))
+            foreach (string line in File.ReadAllLines(this.Path))
             {
-                if (File.Exists(this.Path))
+                if (!line.StartsWith("##") && line.Contains('='))
                 {
-                    foreach (string line in File.ReadAllLines(this.Path))
-                    {
-                        if (!line.StartsWith("##") && line.Contains('='))
-                        {
-                            int equalSignIndex = line.IndexOf('=') + 1;
-                            string key = line.Substring(0, equalSignIndex - 1);
-                            string value = line.Substring(equalSignIndex, line.Length - equalSignIndex);
-                            TranslationKeys.Add(key, value);
-                        }
-                    }
+                    int equalSignIndex = line.IndexOf('=') + 1;
+                    string key = line.Substring(0, equalSignIndex - 1);
+                    string value = line.Substring(equalSignIndex, line.Length - equalSignIndex);
+                    TranslationKeys.Add(key, value);
                 }
             }
         }
 
         public string Localize(string key, params object[] args)
         {
-            if(TranslationKeys == null)
+            if (TranslationKeys == null)
             {
                 Console.WriteLine("Langauge " + this.Name + " not loaded!");
             }
             string value;
-            if(TranslationKeys.TryGetValue(key, out value))
+            if (TranslationKeys.TryGetValue(key, out value))
             {
                 return value;
             }

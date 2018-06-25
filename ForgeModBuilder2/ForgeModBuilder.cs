@@ -34,7 +34,8 @@ namespace ForgeModBuilder
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             OptionsManager.LoadOptions();
-            if(LanguageManager.InitLanguages()) return true;
+            ForgeManager.LoadVersions();
+            if (LanguageManager.InitLanguages()) return true;
 
             return false;
         }
@@ -51,12 +52,15 @@ namespace ForgeModBuilder
             MainFormInstance = new MainForm();
             MainFormInstance.FormClosed += CloseForm;
 
+            ForgeManager.UpdateVersionLists();
+
             Application.Run(MainFormInstance);
         }
 
         public static void CloseForm(object sender, EventArgs e)
         {
             OptionsManager.SaveOptions();
+            ForgeManager.SaveVersions();
         }
 
     }

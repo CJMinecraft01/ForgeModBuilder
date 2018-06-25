@@ -86,6 +86,7 @@
       <DependentUpon>LanguageSelectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Managers\ClientManager.cs" />
+    <Compile Include="Managers\ForgeManager.cs" />
     <Compile Include="Managers\InstallationManager.cs" />
     <Compile Include="Managers\LanguageManager.cs" />
     <Compile Include="Forms\MainForm.cs">

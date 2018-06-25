@@ -42,6 +42,7 @@ namespace ForgeModBuilder
         public static bool Init()
         {
             if (InstallationManager.CheckForUpdates()) return true;
+
             return false;
         }
 

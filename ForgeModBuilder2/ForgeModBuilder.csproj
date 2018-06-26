@@ -86,7 +86,7 @@
       <DependentUpon>LanguageSelectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Managers\ClientManager.cs" />
-    <Compile Include="Managers\ForgeManager.cs" />
+    <Compile Include="Managers\ForgeVersionManager.cs" />
     <Compile Include="Managers\InstallationManager.cs" />
     <Compile Include="Managers\LanguageManager.cs" />
     <Compile Include="Forms\MainForm.cs">
@@ -103,6 +103,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LanguageSelectionForm.resx">
       <DependentUpon>LanguageSelectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

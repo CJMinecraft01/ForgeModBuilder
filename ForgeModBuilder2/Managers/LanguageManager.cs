@@ -22,7 +22,7 @@ namespace ForgeModBuilder.Managers
         {
             if (ForgeModBuilder.Debugging)
             {
-                //LanguagesFilePath = @"..\..\..\Languages\";
+                LanguagesFilePath = @"..\..\..\Languages\";
             }
 
             if (!Directory.Exists(LanguagesFilePath))

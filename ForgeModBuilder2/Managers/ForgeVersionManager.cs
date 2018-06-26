@@ -15,7 +15,7 @@ using System.Threading;
 
 namespace ForgeModBuilder.Managers
 {
-    public static class ForgeManager
+    public static class ForgeVersionManager
     {
 
         public static string MCPVersionsURL { get; private set; } = "http://files.minecraftforge.net/maven/de/oceanlabs/mcp/versions.json";

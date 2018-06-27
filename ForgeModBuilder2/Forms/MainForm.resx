@@ -134,10 +134,10 @@
   <data name="OpenProjectButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4yMfEgaZUAAACcSURBVFhH7dcx
-        CoAwDAXQHq+T4Ob1nN1dXXoDR2/g4hEiHRJUYrFE26oZHoSQtB861QBAVmwzJbaZEttMiYp5sBAD96So
-        4C4JwT0pKqa+hhi4J0UFd0kI7klRgQcvrgnCOe5ZYogDSL03gJQG+HYA19ogP/OPAGNX7UQFwGGJswBb
-        5Qc4HnIXDaABNMDlAE8rL0Au/kOSFdtMx5oVy5xdQmOhhmkAAAAASUVORK5CYII=
+        wgAADsIBFShKgAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4yMfEgaZUAAACdSURBVFhH7dcx
+        CoAwDAVQb1pwESdv5+jq5iIewMkDuLhFOiSoxGKItlU7PAghaT90agYAQbFNn9imT2zTJyrmzoAE7mlR
+        wV3igntaVExtCRK4p0UFd4kL7mlRgQcvfeWEc9yzSKgDaL03gFYK8O0AQ5072Zl/BBibYkcUAIc1zgJs
+        xR/geMhdUoAUIAW4HOBp8QUIxX5IgmKb/phsBcvw8Twb1AlcAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="RefreshProjectButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

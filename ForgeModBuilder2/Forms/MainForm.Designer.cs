@@ -33,39 +33,39 @@ namespace ForgeModBuilder.Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.MenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BottomPanel = new System.Windows.Forms.Panel();
-            this.StatusLabel = new System.Windows.Forms.Label();
             this.LastConsoleMessageLabel = new System.Windows.Forms.Label();
+            this.StatusLabel = new System.Windows.Forms.Label();
             this.MainPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.TopPanel = new System.Windows.Forms.Panel();
             this.CentrePanel = new System.Windows.Forms.TableLayoutPanel();
             this.LeftTabControl = new System.Windows.Forms.TabControl();
             this.ProjectsTab = new System.Windows.Forms.TabPage();
+            this.ProjectsListBox = new System.Windows.Forms.ListBox();
             this.RightTabControl = new System.Windows.Forms.TabControl();
             this.ConsoleTab = new System.Windows.Forms.TabPage();
+            this.ConsoleTextBox = new System.Windows.Forms.TextBox();
             this.ConsoleBottomPanel = new System.Windows.Forms.Panel();
             this.ExecuteCommandButton = new System.Windows.Forms.Button();
             this.CommandEntryTextBox = new System.Windows.Forms.TextBox();
-            this.ConsoleTextBox = new System.Windows.Forms.TextBox();
-            this.ProjectsListBox = new System.Windows.Forms.ListBox();
+            this.TopPanel = new System.Windows.Forms.Panel();
+            this.BuildProjectButton = new System.Windows.Forms.Button();
+            this.OpenProjectButton = new System.Windows.Forms.Button();
+            this.RefreshProjectButton = new System.Windows.Forms.Button();
+            this.UpdateProjectButton = new System.Windows.Forms.Button();
             this.NewProjectButton = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.MenuStrip.SuspendLayout();
             this.BottomPanel.SuspendLayout();
             this.MainPanel.SuspendLayout();
-            this.TopPanel.SuspendLayout();
             this.CentrePanel.SuspendLayout();
             this.LeftTabControl.SuspendLayout();
             this.ProjectsTab.SuspendLayout();
             this.RightTabControl.SuspendLayout();
             this.ConsoleTab.SuspendLayout();
             this.ConsoleBottomPanel.SuspendLayout();
+            this.TopPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // MenuStrip
@@ -87,6 +87,12 @@ namespace ForgeModBuilder.Forms
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // projectToolStripMenuItem
+            // 
+            this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
+            this.projectToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.projectToolStripMenuItem.Text = "Project";
+            // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
@@ -99,12 +105,6 @@ namespace ForgeModBuilder.Forms
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
-            // projectToolStripMenuItem
-            // 
-            this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
-            this.projectToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
-            this.projectToolStripMenuItem.Text = "Project";
-            // 
             // BottomPanel
             // 
             this.BottomPanel.Controls.Add(this.LastConsoleMessageLabel);
@@ -114,16 +114,6 @@ namespace ForgeModBuilder.Forms
             this.BottomPanel.Name = "BottomPanel";
             this.BottomPanel.Size = new System.Drawing.Size(734, 25);
             this.BottomPanel.TabIndex = 1;
-            // 
-            // StatusLabel
-            // 
-            this.StatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.StatusLabel.Location = new System.Drawing.Point(3, 6);
-            this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(100, 15);
-            this.StatusLabel.TabIndex = 1;
-            this.StatusLabel.Text = "Status";
             // 
             // LastConsoleMessageLabel
             // 
@@ -135,6 +125,16 @@ namespace ForgeModBuilder.Forms
             this.LastConsoleMessageLabel.Size = new System.Drawing.Size(114, 13);
             this.LastConsoleMessageLabel.TabIndex = 2;
             this.LastConsoleMessageLabel.Text = "Last Console Message";
+            // 
+            // StatusLabel
+            // 
+            this.StatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.StatusLabel.Location = new System.Drawing.Point(3, 6);
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(100, 15);
+            this.StatusLabel.TabIndex = 1;
+            this.StatusLabel.Text = "Status";
             // 
             // MainPanel
             // 
@@ -151,20 +151,6 @@ namespace ForgeModBuilder.Forms
             this.MainPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainPanel.Size = new System.Drawing.Size(734, 512);
             this.MainPanel.TabIndex = 3;
-            // 
-            // TopPanel
-            // 
-            this.TopPanel.Controls.Add(this.button4);
-            this.TopPanel.Controls.Add(this.button3);
-            this.TopPanel.Controls.Add(this.button2);
-            this.TopPanel.Controls.Add(this.button1);
-            this.TopPanel.Controls.Add(this.NewProjectButton);
-            this.TopPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TopPanel.Location = new System.Drawing.Point(0, 0);
-            this.TopPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.TopPanel.Name = "TopPanel";
-            this.TopPanel.Size = new System.Drawing.Size(734, 50);
-            this.TopPanel.TabIndex = 0;
             // 
             // CentrePanel
             // 
@@ -205,6 +191,18 @@ namespace ForgeModBuilder.Forms
             this.ProjectsTab.Text = "Projects";
             this.ProjectsTab.UseVisualStyleBackColor = true;
             // 
+            // ProjectsListBox
+            // 
+            this.ProjectsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProjectsListBox.FormattingEnabled = true;
+            this.ProjectsListBox.Items.AddRange(new object[] {
+            "Industrial Tech 1.12",
+            "CJCore 1.12"});
+            this.ProjectsListBox.Location = new System.Drawing.Point(3, 3);
+            this.ProjectsListBox.Name = "ProjectsListBox";
+            this.ProjectsListBox.Size = new System.Drawing.Size(199, 422);
+            this.ProjectsListBox.TabIndex = 0;
+            // 
             // RightTabControl
             // 
             this.RightTabControl.Controls.Add(this.ConsoleTab);
@@ -226,6 +224,17 @@ namespace ForgeModBuilder.Forms
             this.ConsoleTab.TabIndex = 0;
             this.ConsoleTab.Text = "Console";
             this.ConsoleTab.UseVisualStyleBackColor = true;
+            // 
+            // ConsoleTextBox
+            // 
+            this.ConsoleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ConsoleTextBox.Location = new System.Drawing.Point(3, 3);
+            this.ConsoleTextBox.Multiline = true;
+            this.ConsoleTextBox.Name = "ConsoleTextBox";
+            this.ConsoleTextBox.ReadOnly = true;
+            this.ConsoleTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.ConsoleTextBox.Size = new System.Drawing.Size(492, 397);
+            this.ConsoleTextBox.TabIndex = 1;
             // 
             // ConsoleBottomPanel
             // 
@@ -254,31 +263,75 @@ namespace ForgeModBuilder.Forms
             this.CommandEntryTextBox.Size = new System.Drawing.Size(411, 20);
             this.CommandEntryTextBox.TabIndex = 0;
             // 
-            // ConsoleTextBox
+            // TopPanel
             // 
-            this.ConsoleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ConsoleTextBox.Location = new System.Drawing.Point(3, 3);
-            this.ConsoleTextBox.Multiline = true;
-            this.ConsoleTextBox.Name = "ConsoleTextBox";
-            this.ConsoleTextBox.ReadOnly = true;
-            this.ConsoleTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.ConsoleTextBox.Size = new System.Drawing.Size(492, 397);
-            this.ConsoleTextBox.TabIndex = 1;
+            this.TopPanel.Controls.Add(this.BuildProjectButton);
+            this.TopPanel.Controls.Add(this.OpenProjectButton);
+            this.TopPanel.Controls.Add(this.RefreshProjectButton);
+            this.TopPanel.Controls.Add(this.UpdateProjectButton);
+            this.TopPanel.Controls.Add(this.NewProjectButton);
+            this.TopPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TopPanel.Location = new System.Drawing.Point(0, 0);
+            this.TopPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.TopPanel.Name = "TopPanel";
+            this.TopPanel.Size = new System.Drawing.Size(734, 50);
+            this.TopPanel.TabIndex = 0;
             // 
-            // ProjectsListBox
+            // BuildProjectButton
             // 
-            this.ProjectsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ProjectsListBox.FormattingEnabled = true;
-            this.ProjectsListBox.Items.AddRange(new object[] {
-            "Industrial Tech 1.12",
-            "CJCore 1.12"});
-            this.ProjectsListBox.Location = new System.Drawing.Point(3, 3);
-            this.ProjectsListBox.Name = "ProjectsListBox";
-            this.ProjectsListBox.Size = new System.Drawing.Size(199, 422);
-            this.ProjectsListBox.TabIndex = 0;
+            this.BuildProjectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BuildProjectButton.BackgroundImage")));
+            this.BuildProjectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.BuildProjectButton.FlatAppearance.BorderSize = 0;
+            this.BuildProjectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BuildProjectButton.Location = new System.Drawing.Point(192, 0);
+            this.BuildProjectButton.Margin = new System.Windows.Forms.Padding(0);
+            this.BuildProjectButton.Name = "BuildProjectButton";
+            this.BuildProjectButton.Size = new System.Drawing.Size(48, 48);
+            this.BuildProjectButton.TabIndex = 4;
+            this.BuildProjectButton.UseVisualStyleBackColor = true;
+            // 
+            // OpenProjectButton
+            // 
+            this.OpenProjectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("OpenProjectButton.BackgroundImage")));
+            this.OpenProjectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.OpenProjectButton.FlatAppearance.BorderSize = 0;
+            this.OpenProjectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OpenProjectButton.Location = new System.Drawing.Point(48, 0);
+            this.OpenProjectButton.Margin = new System.Windows.Forms.Padding(0);
+            this.OpenProjectButton.Name = "OpenProjectButton";
+            this.OpenProjectButton.Size = new System.Drawing.Size(48, 48);
+            this.OpenProjectButton.TabIndex = 3;
+            this.OpenProjectButton.UseVisualStyleBackColor = true;
+            // 
+            // RefreshProjectButton
+            // 
+            this.RefreshProjectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("RefreshProjectButton.BackgroundImage")));
+            this.RefreshProjectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.RefreshProjectButton.FlatAppearance.BorderSize = 0;
+            this.RefreshProjectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.RefreshProjectButton.Location = new System.Drawing.Point(144, 0);
+            this.RefreshProjectButton.Margin = new System.Windows.Forms.Padding(0);
+            this.RefreshProjectButton.Name = "RefreshProjectButton";
+            this.RefreshProjectButton.Size = new System.Drawing.Size(48, 48);
+            this.RefreshProjectButton.TabIndex = 2;
+            this.RefreshProjectButton.UseVisualStyleBackColor = true;
+            // 
+            // UpdateProjectButton
+            // 
+            this.UpdateProjectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("UpdateProjectButton.BackgroundImage")));
+            this.UpdateProjectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.UpdateProjectButton.FlatAppearance.BorderSize = 0;
+            this.UpdateProjectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UpdateProjectButton.Location = new System.Drawing.Point(96, 0);
+            this.UpdateProjectButton.Margin = new System.Windows.Forms.Padding(0);
+            this.UpdateProjectButton.Name = "UpdateProjectButton";
+            this.UpdateProjectButton.Size = new System.Drawing.Size(48, 48);
+            this.UpdateProjectButton.TabIndex = 1;
+            this.UpdateProjectButton.UseVisualStyleBackColor = true;
             // 
             // NewProjectButton
             // 
+            this.NewProjectButton.BackColor = System.Drawing.SystemColors.Control;
             this.NewProjectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("NewProjectButton.BackgroundImage")));
             this.NewProjectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.NewProjectButton.FlatAppearance.BorderSize = 0;
@@ -288,59 +341,7 @@ namespace ForgeModBuilder.Forms
             this.NewProjectButton.Name = "NewProjectButton";
             this.NewProjectButton.Size = new System.Drawing.Size(48, 48);
             this.NewProjectButton.TabIndex = 0;
-            this.NewProjectButton.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button1.BackgroundImage")));
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(48, 0);
-            this.button1.Margin = new System.Windows.Forms.Padding(0);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(48, 48);
-            this.button1.TabIndex = 1;
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button2.BackgroundImage")));
-            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(96, 0);
-            this.button2.Margin = new System.Windows.Forms.Padding(0);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(48, 48);
-            this.button2.TabIndex = 2;
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button3.BackgroundImage")));
-            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Location = new System.Drawing.Point(144, 0);
-            this.button3.Margin = new System.Windows.Forms.Padding(0);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(48, 48);
-            this.button3.TabIndex = 3;
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            this.button4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button4.BackgroundImage")));
-            this.button4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button4.FlatAppearance.BorderSize = 0;
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Location = new System.Drawing.Point(192, 0);
-            this.button4.Margin = new System.Windows.Forms.Padding(0);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(48, 48);
-            this.button4.TabIndex = 4;
-            this.button4.UseVisualStyleBackColor = true;
+            this.NewProjectButton.UseVisualStyleBackColor = false;
             // 
             // MainForm
             // 
@@ -359,7 +360,6 @@ namespace ForgeModBuilder.Forms
             this.BottomPanel.ResumeLayout(false);
             this.BottomPanel.PerformLayout();
             this.MainPanel.ResumeLayout(false);
-            this.TopPanel.ResumeLayout(false);
             this.CentrePanel.ResumeLayout(false);
             this.LeftTabControl.ResumeLayout(false);
             this.ProjectsTab.ResumeLayout(false);
@@ -368,6 +368,7 @@ namespace ForgeModBuilder.Forms
             this.ConsoleTab.PerformLayout();
             this.ConsoleBottomPanel.ResumeLayout(false);
             this.ConsoleBottomPanel.PerformLayout();
+            this.TopPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -396,10 +397,10 @@ namespace ForgeModBuilder.Forms
         public System.Windows.Forms.TextBox ConsoleTextBox;
         private System.Windows.Forms.ListBox ProjectsListBox;
         private System.Windows.Forms.Button NewProjectButton;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button OpenProjectButton;
+        private System.Windows.Forms.Button RefreshProjectButton;
+        private System.Windows.Forms.Button UpdateProjectButton;
+        private System.Windows.Forms.Button BuildProjectButton;
     }
 }
 

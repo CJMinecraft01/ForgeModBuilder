@@ -1,19 +1,32 @@
-﻿using System.IO;
-using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace ForgeModBuilder.Managers
 {
     public static class ProjectManager
     {
 
-        public static Project CurrentProject = null;
+        public static List<Project> Projects { get; private set; } = new List<Project>();
 
-        public static void LoadProject(string path, bool successDialog)
+        public static string ProjectsFileName { get; private set; } = "projects.json";
+
+        public static void LoadProjects()
         {
-            if(!Directory.Exists(path))
+            ClientManager.CreateCustomDataFileIfNotFound(ProjectsFileName);
+            Projects = ClientManager.ReadCustomData<List<Project>>(ProjectsFileName);
+        }
+
+        public static void SaveProjects()
+        {
+            ClientManager.WriteCustomData<List<Project>>(Projects, ProjectsFileName);
+        }
+
+        public static void OpenProject(string Name, string Path)
+        {
+            if (Directory.Exists(Path) && File.Exists(Path + "gradlew.bat") && File.Exists(Path + "build.gradle"))
             {
-                MessageBox.Show(LanguageManager.CurrentLanguage.Localize("message_box.project.non_existant.desc"), LanguageManager.CurrentLanguage.Localize("message_box.project.non_existant.title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                string[] data = File.ReadAllLines(Path + "build.gradle");
+
             }
         }
 
@@ -21,17 +34,19 @@ namespace ForgeModBuilder.Managers
 
     public class Project
     {
-        public string Path;
-        public string MinecraftVersion;
-        public string ForgeVersion;
-        public string MCPMapping;
+        public string Name { get; private set; }
+        public string Path { get; private set; }
+        public string MinecraftVersion { get; private set; }
+        public string ForgeVersion { get; private set; }
+        public string MCPMapping { get; private set; }
 
-        public Project(string path, string minecraftVersion, string forgeVersion, string mcpMapping)
+        public Project(string name, string path, string minecraftVersion, string forgeVersion, string mcpMapping)
         {
-            this.Path = path;
-            this.MinecraftVersion = minecraftVersion;
-            this.ForgeVersion = forgeVersion;
-            this.MCPMapping = mcpMapping;
+            Name = name;
+            Path = path;
+            MinecraftVersion = minecraftVersion;
+            ForgeVersion = forgeVersion;
+            MCPMapping = mcpMapping;
         }
     }
 }

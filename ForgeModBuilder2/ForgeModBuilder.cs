@@ -45,6 +45,10 @@ namespace ForgeModBuilder
             if (InstallationManager.CheckForUpdates()) return true;
             ForgeVersionManager.UpdateVersionLists();
 
+            ProjectManager.LoadProjects();
+
+            Gradle.GradleReader.ReadBuildFile(@"C:\Users\Callum\Coding\Minecraft\Minecraft Mods\MatterCraft\build.gradle");
+
             return false;
         }
 
@@ -60,6 +64,7 @@ namespace ForgeModBuilder
         {
             OptionsManager.SaveOptions();
             ForgeVersionManager.SaveVersions();
+            ProjectManager.SaveProjects();
         }
 
     }

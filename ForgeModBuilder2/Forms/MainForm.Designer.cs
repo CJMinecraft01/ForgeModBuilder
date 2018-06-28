@@ -53,9 +53,15 @@ namespace ForgeModBuilder.Forms
             this.TopPanel = new System.Windows.Forms.Panel();
             this.BuildProjectButton = new System.Windows.Forms.Button();
             this.OpenProjectButton = new System.Windows.Forms.Button();
-            this.RefreshProjectButton = new System.Windows.Forms.Button();
+            this.ConfigureProjectButton = new System.Windows.Forms.Button();
             this.UpdateProjectButton = new System.Windows.Forms.Button();
             this.NewProjectButton = new System.Windows.Forms.Button();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.configureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuStrip.SuspendLayout();
             this.BottomPanel.SuspendLayout();
             this.MainPanel.SuspendLayout();
@@ -89,6 +95,12 @@ namespace ForgeModBuilder.Forms
             // 
             // projectToolStripMenuItem
             // 
+            this.projectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.configureToolStripMenuItem,
+            this.updateToolStripMenuItem,
+            this.buildToolStripMenuItem});
             this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
             this.projectToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
             this.projectToolStripMenuItem.Text = "Project";
@@ -101,6 +113,8 @@ namespace ForgeModBuilder.Forms
             // 
             // helpToolStripMenuItem
             // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.optionsToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -267,7 +281,7 @@ namespace ForgeModBuilder.Forms
             // 
             this.TopPanel.Controls.Add(this.BuildProjectButton);
             this.TopPanel.Controls.Add(this.OpenProjectButton);
-            this.TopPanel.Controls.Add(this.RefreshProjectButton);
+            this.TopPanel.Controls.Add(this.ConfigureProjectButton);
             this.TopPanel.Controls.Add(this.UpdateProjectButton);
             this.TopPanel.Controls.Add(this.NewProjectButton);
             this.TopPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -303,18 +317,18 @@ namespace ForgeModBuilder.Forms
             this.OpenProjectButton.TabIndex = 3;
             this.OpenProjectButton.UseVisualStyleBackColor = true;
             // 
-            // RefreshProjectButton
+            // ConfigureProjectButton
             // 
-            this.RefreshProjectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("RefreshProjectButton.BackgroundImage")));
-            this.RefreshProjectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.RefreshProjectButton.FlatAppearance.BorderSize = 0;
-            this.RefreshProjectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RefreshProjectButton.Location = new System.Drawing.Point(144, 0);
-            this.RefreshProjectButton.Margin = new System.Windows.Forms.Padding(0);
-            this.RefreshProjectButton.Name = "RefreshProjectButton";
-            this.RefreshProjectButton.Size = new System.Drawing.Size(48, 48);
-            this.RefreshProjectButton.TabIndex = 2;
-            this.RefreshProjectButton.UseVisualStyleBackColor = true;
+            this.ConfigureProjectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ConfigureProjectButton.BackgroundImage")));
+            this.ConfigureProjectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.ConfigureProjectButton.FlatAppearance.BorderSize = 0;
+            this.ConfigureProjectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ConfigureProjectButton.Location = new System.Drawing.Point(96, 0);
+            this.ConfigureProjectButton.Margin = new System.Windows.Forms.Padding(0);
+            this.ConfigureProjectButton.Name = "ConfigureProjectButton";
+            this.ConfigureProjectButton.Size = new System.Drawing.Size(48, 48);
+            this.ConfigureProjectButton.TabIndex = 2;
+            this.ConfigureProjectButton.UseVisualStyleBackColor = true;
             // 
             // UpdateProjectButton
             // 
@@ -322,7 +336,7 @@ namespace ForgeModBuilder.Forms
             this.UpdateProjectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.UpdateProjectButton.FlatAppearance.BorderSize = 0;
             this.UpdateProjectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UpdateProjectButton.Location = new System.Drawing.Point(96, 0);
+            this.UpdateProjectButton.Location = new System.Drawing.Point(144, 0);
             this.UpdateProjectButton.Margin = new System.Windows.Forms.Padding(0);
             this.UpdateProjectButton.Name = "UpdateProjectButton";
             this.UpdateProjectButton.Size = new System.Drawing.Size(48, 48);
@@ -342,6 +356,42 @@ namespace ForgeModBuilder.Forms
             this.NewProjectButton.Size = new System.Drawing.Size(48, 48);
             this.NewProjectButton.TabIndex = 0;
             this.NewProjectButton.UseVisualStyleBackColor = false;
+            // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Text = "New";
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            // 
+            // updateToolStripMenuItem
+            // 
+            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.updateToolStripMenuItem.Text = "Update";
+            // 
+            // configureToolStripMenuItem
+            // 
+            this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
+            this.configureToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.configureToolStripMenuItem.Text = "Configure";
+            // 
+            // buildToolStripMenuItem
+            // 
+            this.buildToolStripMenuItem.Name = "buildToolStripMenuItem";
+            this.buildToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.buildToolStripMenuItem.Text = "Build";
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.optionsToolStripMenuItem.Text = "Options";
             // 
             // MainForm
             // 
@@ -398,9 +448,15 @@ namespace ForgeModBuilder.Forms
         private System.Windows.Forms.ListBox ProjectsListBox;
         private System.Windows.Forms.Button NewProjectButton;
         private System.Windows.Forms.Button OpenProjectButton;
-        private System.Windows.Forms.Button RefreshProjectButton;
         private System.Windows.Forms.Button UpdateProjectButton;
         private System.Windows.Forms.Button BuildProjectButton;
+        public System.Windows.Forms.Button ConfigureProjectButton;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem configureToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem buildToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
     }
 }
 

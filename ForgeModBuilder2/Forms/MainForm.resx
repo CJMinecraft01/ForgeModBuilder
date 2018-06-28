@@ -124,11 +124,11 @@
   <data name="BuildProjectButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4yMfEgaZUAAACtSURBVFhH7ZBB
-        DsUgCER7dM/knTwHzSxMqFgrCvzkR5K3cEqd115E9FNEkHMmT9q+xwFgqZTigkrAesIEUkoP6oT/ATMB
-        /jUj+NQzz7cENMP3wwVGu+4CX3uuAu1O7x03gd7zUIHeHIEjcASOwP8JrMDnrRyIoBXYnVE5EIGlwFc5
-        EIGVwEw5EIGFwGw5EMGugKYciGBHQFsORFAFVtCWAxHgklXau2bohnHQdQM+NcPbRZ+GlgAAAABJRU5E
-        rkJggg==
+        wwAADsMBx2+oZAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4yMfEgaZUAAADISURBVFhH7c4x
+        DsIwEETR3JKGiopzcBA6OtL4Tr4ANZLRBBlZYr27iT0uICt9KWk8bzpf5qWU0tDy7hcghJCYuQAxRkqr
+        AL1vB+yA3wXE62HJOirgcTuaCDrAQjQB8LBWBmiIZkA5IvW8nz7fEqILACNWNcQwAJIQ/wOQxnFdAFra
+        OK4ZoFVC8C9dE0C7ElAbx9EB2jiOClg7jroBrJPG0RBAbRzRAdo4ogKscUQDeMYRBeAdRyZgS95xpAK2
+        lt/wVAWM6r07Ty9hVu4byeqsfQAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="OpenProjectButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -140,14 +140,14 @@
         xR/geMhdUoAUIAW4HOBp8QUIxX5IgmKb/phsBcvw8Twb1AlcAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="RefreshProjectButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="ConfigureProjectButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4yMfEgaZUAAADLSURBVFhH7ZDR
-        CcMwDESzQfdfwwt0Gs/hclB9VIpkWZITKDl4hFyC7yXHGONWRNFaGzvhez83AC/13rewJFCdR+AR+COB
-        90vHSI3AZMR6nheYjVOU9/YL0HN+/SYv4AlGCZZrBJCTcSQvoBzsTU7A+LXexAVolF+1KM9zfwDxfv02
-        AST49UiNAIIRDSN1AsHcKqCNA1FUC1jjQBSVArNxIIoqAc84EEWFgHcciCIrsDIORJERWB0HoiCBCKvj
-        QBQ4JAo/y8NpeR3j+AA2MPd4TJUj6gAAAABJRU5ErkJggg==
+        wwAADsMBx2+oZAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4yMfEgaZUAAADcSURBVFhH7ZBR
+        DoMgEAU9OkfxDJzAO3gGz0EzTWiExVZ2F/rRvuQl8mKY0SWl9NWKIcaYRrbmFQfKS8dxDGmXgHf+Ar8h
+        EEJ4tc5wAaDbtj3bylCBDK9z/hPTBThPEbj6+ikCANZ1LQR4ruHEXeAM3/e9ANdw4irQgnNugXPcBDRw
+        4iKghROzgAVOTAJWOFELeMCJScAKJyYBK5yoBQjQXE2u4FQMLQFL3sGpGDwFPsGpGLwE7sCpGDwE7sKp
+        GKwCPXAqBotAL5yKIQto2gunYuASbeu77rQ5zmtaHspjxt7X0VeJAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="UpdateProjectButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

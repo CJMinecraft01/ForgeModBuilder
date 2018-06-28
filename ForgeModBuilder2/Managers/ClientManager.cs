@@ -13,7 +13,7 @@ namespace ForgeModBuilder.Managers
         public const int DelayOnRetry = 1000;
         public const int NumberOfRetries = 3;
 
-        public static T ReadCustomData<T>(string DataPath) where T: new()
+        public static T ReadCustomData<T>(string DataPath) where T : new()
         {
             CheckClientDataDirectory();
 
@@ -27,7 +27,8 @@ namespace ForgeModBuilder.Managers
                 using (JsonReader jr = new JsonTextReader(sr))
                 {
                     data = js.Deserialize<T>(jr);
-                    if (data == null) {
+                    if (data == null)
+                    {
                         data = new T();
                     }
                     jr.Close();
@@ -74,6 +75,18 @@ namespace ForgeModBuilder.Managers
                 // If we don't have the custom data directory
                 Directory.CreateDirectory(ClientDataPath);
                 // Create it!
+            }
+        }
+
+        public static void Output(string text)
+        {
+            Console.WriteLine(text);
+            if (ForgeModBuilder.MainFormInstance != null)
+            {
+                ForgeModBuilder.MainFormInstance.ConsoleTextBox.ReadOnly = false;
+                ForgeModBuilder.MainFormInstance.ConsoleTextBox.AppendText(text + "\n");
+                ForgeModBuilder.MainFormInstance.ConsoleTextBox.ReadOnly = true;
+                ForgeModBuilder.MainFormInstance.LastConsoleMessageLabel.Text = text;
             }
         }
 

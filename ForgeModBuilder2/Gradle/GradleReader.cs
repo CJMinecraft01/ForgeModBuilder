@@ -51,9 +51,16 @@ namespace ForgeModBuilder.Gradle
         private static GBlock Decode(List<List<string>> data)
         {
             GBlock block = new GBlock();
+            string nestedName = "";
+            int nestedLevel = 0;
+            List<List<string>> nestedData = new List<List<string>>();
             for (int i = 0; i < data.Count; i++)
             {
                 List<string> dataChunk = data[i];
+                if (nestedLevel != 0)
+                {
+                    nestedData.Add(dataChunk);
+                }
                 for (int j = 0; j < dataChunk.Count; j++)
                 {
                     string chunk = dataChunk[j];
@@ -66,10 +73,32 @@ namespace ForgeModBuilder.Gradle
                     else if (chunk == "{")
                     {
                         // Opening a block or a task
+                        if (nestedLevel == 0)
+                        {
+                            if (j > 0)
+                            {
+                                nestedName = dataChunk[j - 1];
+                            }
+                            else
+                            {
+                                nestedName = data[i - 1].Last();
+                            }
+                        }
+                        nestedLevel++;
                     }
                     else if (chunk == "}")
                     {
                         // Closing a block or a task
+                        nestedLevel--;
+
+                        if (nestedLevel == 0)
+                        {
+                            GBlock newBlock = Decode(nestedData);
+                            newBlock.Name = nestedName;
+                            block.Children.Add(nestedName, newBlock);
+                            nestedData.Clear();
+                            nestedName = string.Empty;
+                        }
                     }
                     else if (chunk == "=")
                     {
@@ -124,10 +153,7 @@ namespace ForgeModBuilder.Gradle
                     }
                 }
             }
-            block.Children.Keys.ToList().ForEach(key =>
-            {
-                Console.WriteLine(block.Children[key]);
-            });
+            Console.WriteLine(block);
 
             return block;
         }
@@ -135,7 +161,7 @@ namespace ForgeModBuilder.Gradle
 
     public class GObject
     {
-        public string Name { get; protected set; }
+        public string Name { get; set; }
 
         public override string ToString()
         {
@@ -162,6 +188,16 @@ namespace ForgeModBuilder.Gradle
     public class GBlock : GObject
     {
         public Dictionary<string, GObject> Children { get; private set; } = new Dictionary<string, GObject>();
+
+        public override string ToString()
+        {
+            string text = "";
+            foreach (GObject child in Children.Values)
+            {
+                text += child + "\n";
+            }
+            return text;
+        }
     }
 
     public class GTask : GBlock

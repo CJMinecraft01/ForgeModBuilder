@@ -40,7 +40,7 @@ namespace ForgeModBuilder.Gradle
                     }
                     if (i == _line.Length - 1)
                     {
-                        dataChunk.Add(_line.Substring(dataBegin));
+                        dataChunk.Add(_line.Substring(dataBegin).TrimEnd());
                     }
                 }
                 data.Add(dataChunk);
@@ -56,7 +56,7 @@ namespace ForgeModBuilder.Gradle
                 List<string> dataChunk = data[i];
                 for (int j = 0; j < dataChunk.Count; j++)
                 {
-                    string chunk = dataChunk[j].TrimEnd();
+                    string chunk = dataChunk[j];
                     // Decode the data
                     if (chunk.StartsWith("//"))
                     {
@@ -76,6 +76,7 @@ namespace ForgeModBuilder.Gradle
                         // Assigning a variable
                         if (j > 0)
                         {
+                            // Console.WriteLine(dataChunk[j - 1] + " " + dataChunk[j] + " " + dataChunk[j + 1]);
                             if (j > 1)
                             {
                                 // Creating a new variable (type is given)
@@ -85,27 +86,27 @@ namespace ForgeModBuilder.Gradle
                             {
                                 // Overwriting a current variable (type is not given)
                                 int _int;
-                                if (int.TryParse(chunk, out _int))
+                                if (int.TryParse(dataChunk[j + 1], out _int))
                                 {
-                                    block.Children.Add(new GVariable(dataChunk[0], _int));
+                                    block.Children.Add(new GVariable(dataChunk[j - 1], _int));
                                 }
                                 float _float;
-                                if (float.TryParse(chunk, out _float))
+                                if (float.TryParse(dataChunk[j + 1], out _float))
                                 {
-                                    block.Children.Add(new GVariable(dataChunk[0], _float));
+                                    block.Children.Add(new GVariable(dataChunk[j - 1], _float));
                                 }
                                 bool _bool;
-                                if (bool.TryParse(chunk, out _bool))
+                                if (bool.TryParse(dataChunk[j + 1], out _bool))
                                 {
-                                    block.Children.Add(new GVariable(dataChunk[0], _bool));
+                                    block.Children.Add(new GVariable(dataChunk[j - 1], _bool));
                                 }
-                                if (chunk.StartsWith("\"") && chunk.EndsWith("\""))
+                                if (dataChunk[j + 1].StartsWith("\"") && dataChunk[j + 1].EndsWith("\""))
                                 {
-                                    block.Children.Add(new GVariable(dataChunk[0], chunk.Substring(1, chunk.Length - 1)));
+                                    block.Children.Add(new GVariable(dataChunk[j - 1], dataChunk[j + 1].Substring(1, dataChunk[j + 1].Length - 2)));
                                 }
-                                else if (chunk.StartsWith("\'") && chunk.EndsWith("\'"))
+                                else if (dataChunk[j + 1].StartsWith("\'") && dataChunk[j + 1].EndsWith("\'"))
                                 {
-                                    block.Children.Add(new GVariable(dataChunk[0], chunk.Substring(1, chunk.Length - 1)));
+                                    block.Children.Add(new GVariable(dataChunk[j - 1], dataChunk[j + 1].Substring(1, dataChunk[j + 1].Length - 2)));
                                 }
                             }
                         }
@@ -115,10 +116,9 @@ namespace ForgeModBuilder.Gradle
                             // This means there is an error in the format of the file!
                         }
                     }
-                    Console.WriteLine(chunk);
                 }
             }
-            /*
+            
             block.Children.ForEach(child => {
                 Console.Write(child.Name);
                 if (child is GVariable)
@@ -127,7 +127,7 @@ namespace ForgeModBuilder.Gradle
                 }
                 Console.Write("\n");
             });
-            */
+            
             return block;
         }
     }

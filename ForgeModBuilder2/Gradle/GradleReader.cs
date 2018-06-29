@@ -76,38 +76,44 @@ namespace ForgeModBuilder.Gradle
                         // Assigning a variable
                         if (j > 0)
                         {
-                            // Console.WriteLine(dataChunk[j - 1] + " " + dataChunk[j] + " " + dataChunk[j + 1]);
-                            if (j > 1)
+                            int _int;
+                            if (int.TryParse(dataChunk[j + 1], out _int))
                             {
-                                // Creating a new variable (type is given)
-                                
+                                if (!block.Children.ContainsKey(dataChunk[j - 1]))
+                                    block.Children.Add(dataChunk[j - 1], new GVariable(dataChunk[j - 1], _int));
+                                continue;
                             }
-                            else
+                            float _float;
+                            if (float.TryParse(dataChunk[j + 1], out _float))
                             {
-                                // Overwriting a current variable (type is not given)
-                                int _int;
-                                if (int.TryParse(dataChunk[j + 1], out _int))
-                                {
-                                    block.Children.Add(new GVariable(dataChunk[j - 1], _int));
-                                }
-                                float _float;
-                                if (float.TryParse(dataChunk[j + 1], out _float))
-                                {
-                                    block.Children.Add(new GVariable(dataChunk[j - 1], _float));
-                                }
-                                bool _bool;
-                                if (bool.TryParse(dataChunk[j + 1], out _bool))
-                                {
-                                    block.Children.Add(new GVariable(dataChunk[j - 1], _bool));
-                                }
-                                if (dataChunk[j + 1].StartsWith("\"") && dataChunk[j + 1].EndsWith("\""))
-                                {
-                                    block.Children.Add(new GVariable(dataChunk[j - 1], dataChunk[j + 1].Substring(1, dataChunk[j + 1].Length - 2)));
-                                }
-                                else if (dataChunk[j + 1].StartsWith("\'") && dataChunk[j + 1].EndsWith("\'"))
-                                {
-                                    block.Children.Add(new GVariable(dataChunk[j - 1], dataChunk[j + 1].Substring(1, dataChunk[j + 1].Length - 2)));
-                                }
+                                if (!block.Children.ContainsKey(dataChunk[j - 1]))
+                                    block.Children.Add(dataChunk[j - 1], new GVariable(dataChunk[j - 1], _float));
+                                continue;
+                            }
+                            bool _bool;
+                            if (bool.TryParse(dataChunk[j + 1], out _bool))
+                            {
+                                if (!block.Children.ContainsKey(dataChunk[j - 1]))
+                                    block.Children.Add(dataChunk[j - 1], new GVariable(dataChunk[j - 1], _bool));
+                                continue;
+                            }
+                            if (dataChunk[j + 1].StartsWith("\"") && dataChunk[j + 1].EndsWith("\""))
+                            {
+                                if (!block.Children.ContainsKey(dataChunk[j - 1]))
+                                    block.Children.Add(dataChunk[j - 1], new GVariable(dataChunk[j - 1], dataChunk[j + 1].Substring(1, dataChunk[j + 1].Length - 2)));
+                                continue;
+                            }
+                            else if (dataChunk[j + 1].StartsWith("\'") && dataChunk[j + 1].EndsWith("\'"))
+                            {
+                                if (!block.Children.ContainsKey(dataChunk[j - 1]))
+                                    block.Children.Add(dataChunk[j - 1], new GVariable(dataChunk[j - 1], dataChunk[j + 1].Substring(1, dataChunk[j + 1].Length - 2)));
+                                continue;
+                            }
+                            else if (block.Children.ContainsKey(dataChunk[j + 1]))
+                            {
+                                if (block.Children[dataChunk[j + 1]] is GVariable)
+                                    if (!block.Children.ContainsKey(dataChunk[j - 1]))
+                                        block.Children.Add(dataChunk[j - 1], new GVariable(dataChunk[j - 1], ((GVariable)block.Children[dataChunk[j + 1]]).Value));
                             }
                         }
                         else
@@ -118,16 +124,16 @@ namespace ForgeModBuilder.Gradle
                     }
                 }
             }
-            
-            block.Children.ForEach(child => {
-                Console.Write(child.Name);
-                if (child is GVariable)
+            block.Children.Keys.ToList().ForEach(key =>
+            {
+                Console.Write(key);
+                if (block.Children[key] is GVariable)
                 {
-                    Console.Write(" " + ((GVariable)child).Value);
+                    Console.Write(" " + ((GVariable)block.Children[key]).Value);
                 }
                 Console.Write("\n");
             });
-            
+
             return block;
         }
     }
@@ -150,7 +156,7 @@ namespace ForgeModBuilder.Gradle
 
     public class GBlock : GObject
     {
-        public List<GObject> Children { get; private set; } = new List<GObject>();
+        public Dictionary<string, GObject> Children { get; private set; } = new Dictionary<string, GObject>();
     }
 
     public class GTask : GBlock

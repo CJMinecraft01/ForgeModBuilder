@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ForgeModBuilder.Gradle;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,43 +12,124 @@ namespace ForgeModBuilder.Gradle
     // TODO Finish reader
     public static class GradleReader
     {
-        public static GFile ReadBuildFile(string Path)
+        public static GBlock ReadBuildFile(string Path)
         {
-            GFile file = new GFile();
-            string[] data = File.ReadAllLines(Path);
-            foreach (string line in data)
+            return Decode(GetDataFromLines(File.ReadAllLines(Path)));
+        }
+
+        private static List<List<string>> GetDataFromLines(string[] lines)
+        {
+            List<List<string>> data = new List<List<string>>();
+            foreach (string line in lines)
             {
-                Console.WriteLine(line);
-                if (string.IsNullOrWhiteSpace(line) || string.IsNullOrEmpty(line))
+                if (string.IsNullOrEmpty(line) || string.IsNullOrWhiteSpace(line))
                 {
                     continue;
                 }
-                if (line.Contains('=') && !line.Contains('{') && !line.Contains('}'))
+                string _line = line.TrimStart();
+                List<string> dataChunk = new List<string>();
+                int dataBegin = 0;
+                for (int i = 0; i < _line.Length; i++)
                 {
-                    Console.WriteLine("Detected variable");
-                    file.Variables.Add(new GVariable(line));
-                    Console.WriteLine(file.Variables.Last().Name + " " + file.Variables.Last().Value);
+                    char c = _line[i];
+                    if (char.IsWhiteSpace(c))
+                    {
+                        string info = _line.Substring(dataBegin, i - dataBegin);
+                        dataChunk.Add(info);
+                        dataBegin = i + 1;
+                    }
+                    if (i == _line.Length - 1)
+                    {
+                        dataChunk.Add(_line.Substring(dataBegin));
+                    }
+                }
+                data.Add(dataChunk);
+            }
+            return data;
+        }
+
+        private static GBlock Decode(List<List<string>> data)
+        {
+            GBlock block = new GBlock();
+            for (int i = 0; i < data.Count; i++)
+            {
+                List<string> dataChunk = data[i];
+                for (int j = 0; j < dataChunk.Count; j++)
+                {
+                    string chunk = dataChunk[j].TrimEnd();
+                    // Decode the data
+                    if (chunk.StartsWith("//"))
+                    {
+                        // A comment so rest of the data should be ignored
+                        break;
+                    }
+                    else if (chunk == "{")
+                    {
+                        // Opening a block or a task
+                    }
+                    else if (chunk == "}")
+                    {
+                        // Closing a block or a task
+                    }
+                    else if (chunk == "=")
+                    {
+                        // Assigning a variable
+                        if (j > 0)
+                        {
+                            if (j > 1)
+                            {
+                                // Creating a new variable (type is given)
+                                
+                            }
+                            else
+                            {
+                                // Overwriting a current variable (type is not given)
+                                int _int;
+                                if (int.TryParse(chunk, out _int))
+                                {
+                                    block.Children.Add(new GVariable(dataChunk[0], _int));
+                                }
+                                float _float;
+                                if (float.TryParse(chunk, out _float))
+                                {
+                                    block.Children.Add(new GVariable(dataChunk[0], _float));
+                                }
+                                bool _bool;
+                                if (bool.TryParse(chunk, out _bool))
+                                {
+                                    block.Children.Add(new GVariable(dataChunk[0], _bool));
+                                }
+                                if (chunk.StartsWith("\"") && chunk.EndsWith("\""))
+                                {
+                                    block.Children.Add(new GVariable(dataChunk[0], chunk.Substring(1, chunk.Length - 1)));
+                                }
+                                else if (chunk.StartsWith("\'") && chunk.EndsWith("\'"))
+                                {
+                                    block.Children.Add(new GVariable(dataChunk[0], chunk.Substring(1, chunk.Length - 1)));
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // You can't begin data with an equals sign!
+                            // This means there is an error in the format of the file!
+                        }
+                    }
+                    Console.WriteLine(chunk);
                 }
             }
-            return file;
+            /*
+            block.Children.ForEach(child => {
+                Console.Write(child.Name);
+                if (child is GVariable)
+                {
+                    Console.Write(" " + ((GVariable)child).Value);
+                }
+                Console.Write("\n");
+            });
+            */
+            return block;
         }
-
-        public static string RemoveInitialWhiteSpace(this string text)
-        {
-            return text.Substring(text.IndexOf(text.First(c => !char.IsWhiteSpace(c))));
-        }
-
-        public static string RemoveFinalWhiteSpace(this string text)
-        {
-            return text.Substring(0, text.IndexOf(text.Last(c => !char.IsWhiteSpace(c))));
-        }
-    }
-
-    public class GFile
-    {
-        public List<GVariable> Variables { get; private set; } = new List<GVariable>();
-        public List<GBlock> Blocks { get; private set; } = new List<GBlock>();
-        public List<GTask> Tasks { get; private set; } = new List<GTask>();
     }
 
     public class GObject
@@ -59,33 +141,10 @@ namespace ForgeModBuilder.Gradle
     {
         public object Value { get; private set; }
 
-        public GVariable(string line)
+        public GVariable(string name, object value)
         {
-            line = line.RemoveInitialWhiteSpace();
-            string[] data = line.Split('=');
-
-            Name = data[0].RemoveFinalWhiteSpace();
-            int i;
-            float j;
-            bool k;
-            if (data[1].Contains('\"') || data[1].Contains('\''))
-            {
-                string _string = data[1].RemoveInitialWhiteSpace().RemoveFinalWhiteSpace();
-                _string = _string.Substring(1, _string.Length);
-                Value = _string;
-            }
-            else if (int.TryParse(data[1].RemoveInitialWhiteSpace(), out i))
-            {
-                Value = i;
-            }
-            else if (float.TryParse(data[1].RemoveInitialWhiteSpace(), out j))
-            {
-                Value = j;
-            }
-            else if (bool.TryParse(data[1].RemoveInitialWhiteSpace(), out k))
-            {
-                Value = k;
-            }
+            Name = name;
+            Value = value;
         }
     }
 

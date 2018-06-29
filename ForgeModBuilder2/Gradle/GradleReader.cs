@@ -126,12 +126,7 @@ namespace ForgeModBuilder.Gradle
             }
             block.Children.Keys.ToList().ForEach(key =>
             {
-                Console.Write(key);
-                if (block.Children[key] is GVariable)
-                {
-                    Console.Write(" " + ((GVariable)block.Children[key]).Value);
-                }
-                Console.Write("\n");
+                Console.WriteLine(block.Children[key]);
             });
 
             return block;
@@ -141,6 +136,11 @@ namespace ForgeModBuilder.Gradle
     public class GObject
     {
         public string Name { get; protected set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     public class GVariable : GObject
@@ -151,6 +151,11 @@ namespace ForgeModBuilder.Gradle
         {
             Name = name;
             Value = value;
+        }
+
+        public override string ToString()
+        {
+            return Name + " = " + Value;
         }
     }
 

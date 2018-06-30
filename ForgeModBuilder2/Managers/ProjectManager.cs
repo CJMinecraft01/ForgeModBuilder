@@ -26,7 +26,6 @@ namespace ForgeModBuilder.Managers
             if (Directory.Exists(Path) && File.Exists(Path + "gradlew.bat") && File.Exists(Path + "build.gradle"))
             {
                 string[] data = File.ReadAllLines(Path + "build.gradle");
-
             }
         }
 

@@ -35,6 +35,11 @@ namespace ForgeModBuilder.Gradle
                     if (char.IsWhiteSpace(c))
                     {
                         string info = _line.Substring(dataBegin, i - dataBegin);
+                        if (info.StartsWith("//"))
+                        {
+                            // A comment so contains no useful data for the program
+                            break;
+                        }
                         dataChunk.Add(info);
                         dataBegin = i + 1;
                     }
@@ -48,9 +53,10 @@ namespace ForgeModBuilder.Gradle
             return data;
         }
 
-        private static GBlock Decode(List<List<string>> data)
+        private static GBlock Decode(List<List<string>> data, int NestedLevel = -1)
         {
             GBlock block = new GBlock();
+            block.NestedLevel = NestedLevel;
             string nestedName = "";
             int nestedLevel = 0;
             List<List<string>> nestedData = new List<List<string>>();
@@ -65,12 +71,7 @@ namespace ForgeModBuilder.Gradle
                 {
                     string chunk = dataChunk[j];
                     // Decode the data
-                    if (chunk.StartsWith("//"))
-                    {
-                        // A comment so rest of the data should be ignored
-                        break;
-                    }
-                    else if (chunk == "{")
+                    if (chunk == "{")
                     {
                         // Opening a block or a task
                         if (nestedLevel == 0)
@@ -78,10 +79,24 @@ namespace ForgeModBuilder.Gradle
                             if (j > 0)
                             {
                                 nestedName = dataChunk[j - 1];
+                                if (nestedName.Contains("(") && nestedName.Contains(")"))
+                                {
+                                    // This must be using a function, meaning this is not a block
+                                    continue;
+                                }
+                                if (j < dataChunk.Count)
+                                {
+                                    nestedData.Add(dataChunk.Skip(j + 1).ToList());
+                                }
                             }
                             else
                             {
                                 nestedName = data[i - 1].Last();
+                                if (nestedName.Contains("(") && nestedName.Contains(")"))
+                                {
+                                    // This must be using a function, meaning this is not a block
+                                    continue;
+                                }
                             }
                         }
                         nestedLevel++;
@@ -93,56 +108,31 @@ namespace ForgeModBuilder.Gradle
 
                         if (nestedLevel == 0)
                         {
-                            GBlock newBlock = Decode(nestedData);
+                            GBlock newBlock = Decode(nestedData, NestedLevel + 1);
+                            Console.WriteLine(nestedName + " " + (NestedLevel + 1));
                             newBlock.Name = nestedName;
                             block.Children.Add(nestedName, newBlock);
                             nestedData.Clear();
                             nestedName = string.Empty;
                         }
                     }
+                    else if (nestedLevel != 0)
+                    {
+                        continue;
+                    }
                     else if (chunk == "=")
                     {
                         // Assigning a variable
                         if (j > 0)
                         {
-                            int _int;
-                            if (int.TryParse(dataChunk[j + 1], out _int))
+                            GVariable variable = DecodeVariable(j, dataChunk, block);
+                            variable.NestedLevel = NestedLevel + 1;
+                            if (variable != null)
                             {
-                                if (!block.Children.ContainsKey(dataChunk[j - 1]))
-                                    block.Children.Add(dataChunk[j - 1], new GVariable(dataChunk[j - 1], _int));
-                                continue;
-                            }
-                            float _float;
-                            if (float.TryParse(dataChunk[j + 1], out _float))
-                            {
-                                if (!block.Children.ContainsKey(dataChunk[j - 1]))
-                                    block.Children.Add(dataChunk[j - 1], new GVariable(dataChunk[j - 1], _float));
-                                continue;
-                            }
-                            bool _bool;
-                            if (bool.TryParse(dataChunk[j + 1], out _bool))
-                            {
-                                if (!block.Children.ContainsKey(dataChunk[j - 1]))
-                                    block.Children.Add(dataChunk[j - 1], new GVariable(dataChunk[j - 1], _bool));
-                                continue;
-                            }
-                            if (dataChunk[j + 1].StartsWith("\"") && dataChunk[j + 1].EndsWith("\""))
-                            {
-                                if (!block.Children.ContainsKey(dataChunk[j - 1]))
-                                    block.Children.Add(dataChunk[j - 1], new GVariable(dataChunk[j - 1], dataChunk[j + 1].Substring(1, dataChunk[j + 1].Length - 2)));
-                                continue;
-                            }
-                            else if (dataChunk[j + 1].StartsWith("\'") && dataChunk[j + 1].EndsWith("\'"))
-                            {
-                                if (!block.Children.ContainsKey(dataChunk[j - 1]))
-                                    block.Children.Add(dataChunk[j - 1], new GVariable(dataChunk[j - 1], dataChunk[j + 1].Substring(1, dataChunk[j + 1].Length - 2)));
-                                continue;
-                            }
-                            else if (block.Children.ContainsKey(dataChunk[j + 1]))
-                            {
-                                if (block.Children[dataChunk[j + 1]] is GVariable)
-                                    if (!block.Children.ContainsKey(dataChunk[j - 1]))
-                                        block.Children.Add(dataChunk[j - 1], new GVariable(dataChunk[j - 1], ((GVariable)block.Children[dataChunk[j + 1]]).Value));
+                                if (!block.Children.ContainsKey(variable.Name))
+                                {
+                                    block.Children.Add(variable.Name, variable);
+                                }
                             }
                         }
                         else
@@ -153,19 +143,76 @@ namespace ForgeModBuilder.Gradle
                     }
                 }
             }
-            Console.WriteLine(block);
-
             return block;
         }
+
+        private static GVariable DecodeVariable(int equalChunkIndex, List<string> dataChunk, GBlock parentBlock)
+        {
+            object value = DecodeVariableValue(dataChunk[equalChunkIndex + 1]);
+            if (value != null)
+            {
+                return new GVariable(dataChunk[equalChunkIndex - 1], value);
+            }
+            else if (parentBlock.Children.ContainsKey(dataChunk[equalChunkIndex + 1]) && parentBlock.Children[dataChunk[equalChunkIndex + 1]] is GVariable)
+            {
+                return new GVariable(dataChunk[equalChunkIndex - 1], ((GVariable)parentBlock.Children[dataChunk[equalChunkIndex + 1]]).Value);
+            }
+            else if (dataChunk.Count > equalChunkIndex + 3 && dataChunk[equalChunkIndex + 2] == "=")
+            {
+                if (!parentBlock.Children.ContainsKey(dataChunk[equalChunkIndex - 1]))
+                    return new GVariable(dataChunk[equalChunkIndex - 1], DecodeVariable(equalChunkIndex + 2, dataChunk, parentBlock).Value);
+            }
+            return null;
+        }
+
+        private static object DecodeVariableValue(string chunk)
+        {
+            int _int;
+            if (int.TryParse(chunk, out _int))
+            {
+                return _int;
+            }
+            float _float;
+            if (float.TryParse(chunk, out _float))
+            {
+                return _float;
+            }
+            bool _bool;
+            if (bool.TryParse(chunk, out _bool))
+            {
+                return _bool;
+            }
+            if (chunk.StartsWith("\"") && chunk.EndsWith("\""))
+            {
+                return chunk.Substring(1, chunk.Length - 2);
+            }
+            else if (chunk.StartsWith("\'") && chunk.EndsWith("\'"))
+            {
+                return chunk.Substring(1, chunk.Length - 2);
+            }
+            return null;
+        }
+
     }
 
     public class GObject
     {
         public string Name { get; set; }
+        public int NestedLevel { get; set; } = -1;
 
         public override string ToString()
         {
-            return Name;
+            return GetTab() + Name;
+        }
+
+        protected string GetTab()
+        {
+            string tab = "";
+            if (NestedLevel > 0)
+            {
+                tab = new string(' ', NestedLevel * 4);
+            }
+            return tab;
         }
     }
 
@@ -181,7 +228,7 @@ namespace ForgeModBuilder.Gradle
 
         public override string ToString()
         {
-            return Name + " = " + Value;
+            return GetTab() + Name + " = " + Value;
         }
     }
 
@@ -191,11 +238,13 @@ namespace ForgeModBuilder.Gradle
 
         public override string ToString()
         {
-            string text = "";
+            string tab = GetTab();
+            string text = tab + Name + " {\n";
             foreach (GObject child in Children.Values)
             {
                 text += child + "\n";
             }
+            text += tab + "}";
             return text;
         }
     }

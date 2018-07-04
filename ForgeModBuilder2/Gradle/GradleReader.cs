@@ -202,10 +202,10 @@ namespace ForgeModBuilder.Gradle
                         if (nestedLevel == 0)
                         {
                             GBlock newBlock = Decode(nestedData, NestedLevel + 1);
-                            if (nestedName.StartsWith("task"))
+                            if (nestedName.StartsWith("task "))
                             {
                                 GTask newTask = new GTask(newBlock);
-                                newTask.Name = nestedName.Replace("task", "").TrimStart();
+                                newTask.Name = nestedName.Replace("task ", "").TrimStart();
                                 block.Children.Add(newTask);
                             }
                             else

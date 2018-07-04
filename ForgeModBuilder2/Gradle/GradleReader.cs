@@ -109,7 +109,6 @@ namespace ForgeModBuilder.Gradle
                         if (nestedLevel == 0)
                         {
                             GBlock newBlock = Decode(nestedData, NestedLevel + 1);
-                            Console.WriteLine(nestedName + " " + (NestedLevel + 1));
                             newBlock.Name = nestedName;
                             block.Children.Add(nestedName, newBlock);
                             nestedData.Clear();
@@ -126,9 +125,9 @@ namespace ForgeModBuilder.Gradle
                         if (j > 0)
                         {
                             GVariable variable = DecodeVariable(j, dataChunk, block);
-                            variable.NestedLevel = NestedLevel + 1;
                             if (variable != null)
                             {
+                                variable.NestedLevel = NestedLevel + 1;
                                 if (!block.Children.ContainsKey(variable.Name))
                                 {
                                     block.Children.Add(variable.Name, variable);
@@ -139,6 +138,13 @@ namespace ForgeModBuilder.Gradle
                         {
                             // You can't begin data with an equals sign!
                             // This means there is an error in the format of the file!
+                        }
+                    }
+                    else
+                    {
+                        if (j > 0 && dataChunk[j - 1] == "=")
+                        {
+                            continue;
                         }
                     }
                 }

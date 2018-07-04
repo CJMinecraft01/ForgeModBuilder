@@ -47,7 +47,7 @@ namespace ForgeModBuilder
 
             ProjectManager.LoadProjects();
 
-            Console.WriteLine(Gradle.GradleReader.ReadBuildFile(@"C:\Users\Callum\Coding\Minecraft\Minecraft Mods\MatterCraft\build.gradle"));
+            Console.WriteLine(Gradle.GradleReader.ReadBuildFile(@"C:\Users\Callum\Coding\Minecraft\Minecraft Mods\CJMinecraft Core\1.11.2\build.gradle"));
 
             return false;
         }

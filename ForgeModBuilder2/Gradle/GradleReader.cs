@@ -29,6 +29,8 @@ namespace ForgeModBuilder.Gradle
                 string _line = line.TrimStart();
                 List<string> dataChunk = new List<string>();
                 int dataBegin = 0;
+                bool insideApostropheQuotes = false;
+                bool insideSpeechQuotes = false;
                 for (int i = 0; i < _line.Length; i++)
                 {
                     char c = _line[i];
@@ -44,7 +46,15 @@ namespace ForgeModBuilder.Gradle
                         dataBegin = i + 1;
                         continue;
                     }
-                    if (i > 0)
+                    else if (c == '\'')
+                    {
+                        insideApostropheQuotes = !insideApostropheQuotes;
+                    }
+                    else if (c == '\"')
+                    {
+                        insideSpeechQuotes = !insideSpeechQuotes;
+                    }
+                    if (i > 0 && !(insideApostropheQuotes || insideSpeechQuotes))
                     {
                         if (c == '{' && !char.IsWhiteSpace(_line[i - 1]))
                         {

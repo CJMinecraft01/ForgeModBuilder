@@ -47,7 +47,7 @@ namespace ForgeModBuilder
 
             ProjectManager.LoadProjects();
 
-            Console.WriteLine(Gradle.GradleReader.ReadBuildFile(@"C:\Users\Callum\Coding\Minecraft\Minecraft Mods\CJMinecraft Core\1.11.2\build.gradle"));
+            Console.WriteLine(Gradle.GradleParser.ReadBuildFile(@"C:\Users\Callum\Coding\Minecraft\Minecraft Mods\CJMinecraft Core\1.12.2\build.gradle"));
 
             return false;
         }

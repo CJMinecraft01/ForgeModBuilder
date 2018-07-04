@@ -42,6 +42,65 @@ namespace ForgeModBuilder.Gradle
                         }
                         dataChunk.Add(info);
                         dataBegin = i + 1;
+                        continue;
+                    }
+                    if (i > 0)
+                    {
+                        if (c == '{' && !char.IsWhiteSpace(_line[i - 1]))
+                        {
+                            dataChunk.Add(_line.Substring(dataBegin, i - dataBegin));
+                            dataChunk.Add("{");
+                            dataBegin = i + 1;
+                            if (i + 1 == _line.Length - 1)
+                            {
+                                break;
+                            }
+                            continue;
+                        }
+                        if (c == '}' && !char.IsWhiteSpace(_line[i - 1]))
+                        {
+                            dataChunk.Add(_line.Substring(dataBegin, i - dataBegin));
+                            dataChunk.Add("}");
+                            dataBegin = i + 1;
+                            if (i + 1 == _line.Length - 1)
+                            {
+                                break;
+                            }
+                            continue;
+                        }
+                        if (c == '=' && !char.IsWhiteSpace(_line[i - 1]))
+                        {
+                            dataChunk.Add(_line.Substring(dataBegin, i - dataBegin));
+                            dataChunk.Add("=");
+                            dataBegin = i + 1;
+                            if (i + 1 == _line.Length - 1)
+                            {
+                                break;
+                            }
+                            continue;
+                        }
+                        if (_line[i - 1] == '{' && !char.IsWhiteSpace(c))
+                        {
+                            if (dataChunk.Last() != "{")
+                            {
+                                dataChunk.Add("{");
+                            }
+                            continue;
+                        }
+                        if (_line[i - 1] == '}' && !char.IsWhiteSpace(c))
+                        {
+                            if (dataChunk.Last() != "}")
+                            {
+                                dataChunk.Add("}");
+                            }
+                        }
+                        if (_line[i - 1] == '=' && !char.IsWhiteSpace(c))
+                        {
+                            if (dataChunk.Last() != "=")
+                            {
+                                dataChunk.Add("=");
+                            }
+                        }
                     }
                     if (i == _line.Length - 1)
                     {
@@ -110,7 +169,7 @@ namespace ForgeModBuilder.Gradle
                         {
                             GBlock newBlock = Decode(nestedData, NestedLevel + 1);
                             newBlock.Name = nestedName;
-                            block.Children.Add(nestedName, newBlock);
+                            block.Children.Add(newBlock);
                             nestedData.Clear();
                             nestedName = string.Empty;
                         }
@@ -128,9 +187,9 @@ namespace ForgeModBuilder.Gradle
                             if (variable != null)
                             {
                                 variable.NestedLevel = NestedLevel + 1;
-                                if (!block.Children.ContainsKey(variable.Name))
+                                if (!block.Children.ContainsObject(variable.Name))
                                 {
-                                    block.Children.Add(variable.Name, variable);
+                                    block.Children.Add(variable);
                                 }
                             }
                         }
@@ -159,13 +218,13 @@ namespace ForgeModBuilder.Gradle
             {
                 return new GVariable(dataChunk[equalChunkIndex - 1], value);
             }
-            else if (parentBlock.Children.ContainsKey(dataChunk[equalChunkIndex + 1]) && parentBlock.Children[dataChunk[equalChunkIndex + 1]] is GVariable)
+            else if (parentBlock.Children.ContainsObject(dataChunk[equalChunkIndex + 1]) && parentBlock.Children.GetObject(dataChunk[equalChunkIndex + 1]) is GVariable)
             {
-                return new GVariable(dataChunk[equalChunkIndex - 1], ((GVariable)parentBlock.Children[dataChunk[equalChunkIndex + 1]]).Value);
+                return new GVariable(dataChunk[equalChunkIndex - 1], ((GVariable)parentBlock.Children.GetObject(dataChunk[equalChunkIndex + 1])).Value);
             }
             else if (dataChunk.Count > equalChunkIndex + 3 && dataChunk[equalChunkIndex + 2] == "=")
             {
-                if (!parentBlock.Children.ContainsKey(dataChunk[equalChunkIndex - 1]))
+                if (!parentBlock.Children.ContainsObject(dataChunk[equalChunkIndex - 1]))
                     return new GVariable(dataChunk[equalChunkIndex - 1], DecodeVariable(equalChunkIndex + 2, dataChunk, parentBlock).Value);
             }
             return null;
@@ -240,13 +299,13 @@ namespace ForgeModBuilder.Gradle
 
     public class GBlock : GObject
     {
-        public Dictionary<string, GObject> Children { get; private set; } = new Dictionary<string, GObject>();
+        public List<GObject> Children { get; private set; } = new List<GObject>();
 
         public override string ToString()
         {
             string tab = GetTab();
             string text = tab + Name + " {\n";
-            foreach (GObject child in Children.Values)
+            foreach (GObject child in Children)
             {
                 text += child + "\n";
             }
@@ -258,6 +317,33 @@ namespace ForgeModBuilder.Gradle
     public class GTask : GBlock
     {
 
+    }
+
+    public static class GradleExtensions
+    {
+        public static bool ContainsObject(this List<GObject> list, string name)
+        {
+            foreach (GObject child in list)
+            {
+                if (child.Name == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static GObject GetObject(this List<GObject> list, string name)
+        {
+            foreach (GObject child in list)
+            {
+                if (child.Name == name)
+                {
+                    return child;
+                }
+            }
+            return null;
+        }
     }
 
 }

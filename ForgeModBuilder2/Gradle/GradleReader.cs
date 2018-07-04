@@ -46,14 +46,6 @@ namespace ForgeModBuilder.Gradle
                         dataBegin = i + 1;
                         continue;
                     }
-                    else if (c == '\'')
-                    {
-                        insideApostropheQuotes = !insideApostropheQuotes;
-                    }
-                    else if (c == '\"')
-                    {
-                        insideSpeechQuotes = !insideSpeechQuotes;
-                    }
                     if (i > 0 && !(insideApostropheQuotes || insideSpeechQuotes))
                     {
                         if (c == '{' && !char.IsWhiteSpace(_line[i - 1]))
@@ -65,9 +57,8 @@ namespace ForgeModBuilder.Gradle
                             {
                                 break;
                             }
-                            continue;
                         }
-                        if (c == '}' && !char.IsWhiteSpace(_line[i - 1]))
+                        else if (c == '}' && !char.IsWhiteSpace(_line[i - 1]))
                         {
                             dataChunk.Add(_line.Substring(dataBegin, i - dataBegin));
                             dataChunk.Add("}");
@@ -76,9 +67,8 @@ namespace ForgeModBuilder.Gradle
                             {
                                 break;
                             }
-                            continue;
                         }
-                        if (c == '=' && !char.IsWhiteSpace(_line[i - 1]))
+                        else if (c == '=' && !char.IsWhiteSpace(_line[i - 1]))
                         {
                             dataChunk.Add(_line.Substring(dataBegin, i - dataBegin));
                             dataChunk.Add("=");
@@ -87,30 +77,36 @@ namespace ForgeModBuilder.Gradle
                             {
                                 break;
                             }
-                            continue;
                         }
-                        if (_line[i - 1] == '{' && !char.IsWhiteSpace(c))
+                        else if (_line[i - 1] == '{' && !char.IsWhiteSpace(c))
                         {
                             if (dataChunk.Last() != "{")
                             {
                                 dataChunk.Add("{");
                             }
-                            continue;
                         }
-                        if (_line[i - 1] == '}' && !char.IsWhiteSpace(c))
+                        else if (_line[i - 1] == '}' && !char.IsWhiteSpace(c))
                         {
                             if (dataChunk.Last() != "}")
                             {
                                 dataChunk.Add("}");
                             }
                         }
-                        if (_line[i - 1] == '=' && !char.IsWhiteSpace(c))
+                        else if (_line[i - 1] == '=' && !char.IsWhiteSpace(c))
                         {
                             if (dataChunk.Last() != "=")
                             {
                                 dataChunk.Add("=");
                             }
                         }
+                    }
+                    if (c == '\'')
+                    {
+                        insideApostropheQuotes = !insideApostropheQuotes;
+                    }
+                    else if (c == '\"')
+                    {
+                        insideSpeechQuotes = !insideSpeechQuotes;
                     }
                     if (i == _line.Length - 1)
                     {
@@ -148,10 +144,24 @@ namespace ForgeModBuilder.Gradle
                             if (j > 0)
                             {
                                 nestedName = dataChunk[j - 1];
-                                if (nestedName.Contains("(") && nestedName.Contains(")"))
+                                if (nestedName.Contains(")"))
                                 {
-                                    // This must be using a function, meaning this is not a block
-                                    continue;
+                                    // This must be a function / task with parameters
+                                    for (int k = j - 1; k > 0; k--)
+                                    {
+                                        if (dataChunk[k].Contains("("))
+                                        {
+                                            if (k > 0 && dataChunk[k - 1] == "task")
+                                            {
+                                                nestedName = "task " + dataChunk[k].Substring(0, dataChunk[k].IndexOf('('));
+                                            }
+                                            else
+                                            {
+                                                nestedName = dataChunk[k].Substring(0, dataChunk[k].IndexOf('('));
+                                            }
+                                            break;
+                                        }
+                                    }
                                 }
                                 if (j < dataChunk.Count)
                                 {
@@ -161,10 +171,24 @@ namespace ForgeModBuilder.Gradle
                             else
                             {
                                 nestedName = data[i - 1].Last();
-                                if (nestedName.Contains("(") && nestedName.Contains(")"))
+                                if (nestedName.Contains(")"))
                                 {
-                                    // This must be using a function, meaning this is not a block
-                                    continue;
+                                    // This must be a function / task with parameters
+                                    for (int k = j - 1; k > 0; k--)
+                                    {
+                                        if (dataChunk[k].Contains("("))
+                                        {
+                                            if (k > 0 && dataChunk[k - 1] == "task")
+                                            {
+                                                nestedName = "task " + dataChunk[k].Substring(0, dataChunk[k].IndexOf('('));
+                                            }
+                                            else
+                                            {
+                                                nestedName = dataChunk[k].Substring(0, dataChunk[k].IndexOf('('));
+                                            }
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -178,8 +202,17 @@ namespace ForgeModBuilder.Gradle
                         if (nestedLevel == 0)
                         {
                             GBlock newBlock = Decode(nestedData, NestedLevel + 1);
-                            newBlock.Name = nestedName;
-                            block.Children.Add(newBlock);
+                            if (nestedName.StartsWith("task"))
+                            {
+                                GTask newTask = new GTask(newBlock);
+                                newTask.Name = nestedName.Replace("task", "").TrimStart();
+                                block.Children.Add(newTask);
+                            }
+                            else
+                            {
+                                newBlock.Name = nestedName;
+                                block.Children.Add(newBlock);
+                            }
                             nestedData.Clear();
                             nestedName = string.Empty;
                         }
@@ -207,13 +240,6 @@ namespace ForgeModBuilder.Gradle
                         {
                             // You can't begin data with an equals sign!
                             // This means there is an error in the format of the file!
-                        }
-                    }
-                    else
-                    {
-                        if (j > 0 && dataChunk[j - 1] == "=")
-                        {
-                            continue;
                         }
                     }
                 }
@@ -326,7 +352,24 @@ namespace ForgeModBuilder.Gradle
 
     public class GTask : GBlock
     {
+        public GTask(GBlock block)
+        {
+            Name = block.Name;
+            Children.AddRange(block.Children);
+            NestedLevel = block.NestedLevel;
+        }
 
+        public override string ToString()
+        {
+            string tab = GetTab();
+            string text = tab + "task " + Name + " {\n";
+            foreach (GObject child in Children)
+            {
+                text += child + "\n";
+            }
+            text += tab + "}";
+            return text;
+        }
     }
 
     public static class GradleExtensions

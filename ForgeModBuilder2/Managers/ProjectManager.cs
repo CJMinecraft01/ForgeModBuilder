@@ -8,6 +8,8 @@ namespace ForgeModBuilder.Managers
     {
         public static List<Project> Projects { get; private set; } = new List<Project>();
 
+        public static Project CurrentProject { get; set; }
+
         public static string ProjectsFileName { get; private set; } = "projects.json";
 
         public static void LoadProjects()

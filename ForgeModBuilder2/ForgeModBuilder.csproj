@@ -85,6 +85,7 @@
     <Compile Include="Forms\LanguageSelectionForm.Designer.cs">
       <DependentUpon>LanguageSelectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gradle\GradleExecuter.cs" />
     <Compile Include="Gradle\GradleObjects.cs" />
     <Compile Include="Gradle\GradleParser.cs" />
     <Compile Include="Managers\ClientManager.cs" />

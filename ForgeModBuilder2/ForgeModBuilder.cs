@@ -1,4 +1,5 @@
 ﻿using ForgeModBuilder.Forms;
+using ForgeModBuilder.Gradle;
 using ForgeModBuilder.Managers;
 using System;
 using System.Collections.Generic;
@@ -45,9 +46,7 @@ namespace ForgeModBuilder
             if (InstallationManager.CheckForUpdates()) return true;
             ForgeVersionManager.UpdateVersionLists();
 
-            ProjectManager.LoadProjects();
-
-            ProjectManager.OpenProject("CJCore 1.12.2", @"C:\Users\Callum\Coding\Minecraft\Minecraft Mods\CJMinecraft Core\1.12.2\");
+            ProjectManager.LoadProjects();            
 
             return false;
         }
@@ -56,6 +55,12 @@ namespace ForgeModBuilder
         {
             MainFormInstance = new MainForm();
             MainFormInstance.FormClosed += CloseForm;
+
+            MainFormInstance.OpenProjectButton.Click += (sender, e) => {
+                ProjectManager.OpenProject("CJCore 1.12.2", @"C:\Users\Callum\Coding\Minecraft\Minecraft Mods\CJMinecraft Core\1.12.2\");
+                ProjectManager.CurrentProject = ProjectManager.Projects[0];
+                GradleExecuter.RunGradleCommand("build");
+            };
 
             Application.Run(MainFormInstance);
         }

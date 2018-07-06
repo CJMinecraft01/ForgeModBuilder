@@ -52,6 +52,8 @@ namespace ForgeModBuilder.Forms
             this.ProjectsListBox = new System.Windows.Forms.ListBox();
             this.RightTabControl = new System.Windows.Forms.TabControl();
             this.ConsoleTab = new System.Windows.Forms.TabPage();
+            this.ConsoleTextBoxPanel = new System.Windows.Forms.Panel();
+            this.ConsoleTextBox = new System.Windows.Forms.RichTextBox();
             this.ConsoleBottomPanel = new System.Windows.Forms.Panel();
             this.ExecuteCommandButton = new System.Windows.Forms.Button();
             this.CommandEntryTextBox = new System.Windows.Forms.TextBox();
@@ -61,8 +63,6 @@ namespace ForgeModBuilder.Forms
             this.ConfigureProjectButton = new System.Windows.Forms.Button();
             this.UpdateProjectButton = new System.Windows.Forms.Button();
             this.NewProjectButton = new System.Windows.Forms.Button();
-            this.ConsoleTextBoxPanel = new System.Windows.Forms.Panel();
-            this.ConsoleTextBox = new System.Windows.Forms.RichTextBox();
             this.MenuStrip.SuspendLayout();
             this.BottomPanel.SuspendLayout();
             this.MainPanel.SuspendLayout();
@@ -71,9 +71,9 @@ namespace ForgeModBuilder.Forms
             this.ProjectsTab.SuspendLayout();
             this.RightTabControl.SuspendLayout();
             this.ConsoleTab.SuspendLayout();
+            this.ConsoleTextBoxPanel.SuspendLayout();
             this.ConsoleBottomPanel.SuspendLayout();
             this.TopPanel.SuspendLayout();
-            this.ConsoleTextBoxPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // MenuStrip
@@ -277,6 +277,27 @@ namespace ForgeModBuilder.Forms
             this.ConsoleTab.Text = "Console";
             this.ConsoleTab.UseVisualStyleBackColor = true;
             // 
+            // ConsoleTextBoxPanel
+            // 
+            this.ConsoleTextBoxPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ConsoleTextBoxPanel.Controls.Add(this.ConsoleTextBox);
+            this.ConsoleTextBoxPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ConsoleTextBoxPanel.Location = new System.Drawing.Point(3, 3);
+            this.ConsoleTextBoxPanel.Name = "ConsoleTextBoxPanel";
+            this.ConsoleTextBoxPanel.Size = new System.Drawing.Size(492, 397);
+            this.ConsoleTextBoxPanel.TabIndex = 2;
+            // 
+            // ConsoleTextBox
+            // 
+            this.ConsoleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ConsoleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ConsoleTextBox.Location = new System.Drawing.Point(0, 0);
+            this.ConsoleTextBox.Name = "ConsoleTextBox";
+            this.ConsoleTextBox.ReadOnly = true;
+            this.ConsoleTextBox.Size = new System.Drawing.Size(490, 395);
+            this.ConsoleTextBox.TabIndex = 2;
+            this.ConsoleTextBox.Text = "";
+            // 
             // ConsoleBottomPanel
             // 
             this.ConsoleBottomPanel.Controls.Add(this.ExecuteCommandButton);
@@ -384,27 +405,6 @@ namespace ForgeModBuilder.Forms
             this.NewProjectButton.TabIndex = 0;
             this.NewProjectButton.UseVisualStyleBackColor = false;
             // 
-            // ConsoleTextBoxPanel
-            // 
-            this.ConsoleTextBoxPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ConsoleTextBoxPanel.Controls.Add(this.ConsoleTextBox);
-            this.ConsoleTextBoxPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ConsoleTextBoxPanel.Location = new System.Drawing.Point(3, 3);
-            this.ConsoleTextBoxPanel.Name = "ConsoleTextBoxPanel";
-            this.ConsoleTextBoxPanel.Size = new System.Drawing.Size(492, 397);
-            this.ConsoleTextBoxPanel.TabIndex = 2;
-            // 
-            // ConsoleTextBox
-            // 
-            this.ConsoleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.ConsoleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ConsoleTextBox.Location = new System.Drawing.Point(0, 0);
-            this.ConsoleTextBox.Name = "ConsoleTextBox";
-            this.ConsoleTextBox.ReadOnly = true;
-            this.ConsoleTextBox.Size = new System.Drawing.Size(490, 395);
-            this.ConsoleTextBox.TabIndex = 2;
-            this.ConsoleTextBox.Text = "";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -427,10 +427,10 @@ namespace ForgeModBuilder.Forms
             this.ProjectsTab.ResumeLayout(false);
             this.RightTabControl.ResumeLayout(false);
             this.ConsoleTab.ResumeLayout(false);
+            this.ConsoleTextBoxPanel.ResumeLayout(false);
             this.ConsoleBottomPanel.ResumeLayout(false);
             this.ConsoleBottomPanel.PerformLayout();
             this.TopPanel.ResumeLayout(false);
-            this.ConsoleTextBoxPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -457,10 +457,6 @@ namespace ForgeModBuilder.Forms
         public System.Windows.Forms.TextBox CommandEntryTextBox;
         public System.Windows.Forms.Panel TopPanel;
         private System.Windows.Forms.ListBox ProjectsListBox;
-        private System.Windows.Forms.Button NewProjectButton;
-        private System.Windows.Forms.Button OpenProjectButton;
-        private System.Windows.Forms.Button UpdateProjectButton;
-        private System.Windows.Forms.Button BuildProjectButton;
         public System.Windows.Forms.Button ConfigureProjectButton;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
@@ -470,6 +466,10 @@ namespace ForgeModBuilder.Forms
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         public System.Windows.Forms.Panel ConsoleTextBoxPanel;
         public System.Windows.Forms.RichTextBox ConsoleTextBox;
+        public System.Windows.Forms.Button NewProjectButton;
+        public System.Windows.Forms.Button OpenProjectButton;
+        public System.Windows.Forms.Button UpdateProjectButton;
+        public System.Windows.Forms.Button BuildProjectButton;
     }
 }
 

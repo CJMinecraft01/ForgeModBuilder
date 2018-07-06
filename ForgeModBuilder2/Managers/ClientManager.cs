@@ -78,11 +78,21 @@ namespace ForgeModBuilder.Managers
             }
         }
 
-        public static void Output(string text)
+        delegate void OutputCallback(string text, bool outputToSystemConsole = false, bool isError = false);
+
+        public static void Output(string text, bool outputToSystemConsole = true, bool isError = false)
         {
-            Console.WriteLine(text);
+            if (outputToSystemConsole)
+            {
+                Console.WriteLine(text);
+            }
             if (ForgeModBuilder.MainFormInstance != null)
             {
+                if (ForgeModBuilder.MainFormInstance.ConsoleTextBox.InvokeRequired)
+                {
+                    OutputCallback callback = new OutputCallback(Output);
+                    ForgeModBuilder.MainFormInstance.Invoke(callback, new object[] { text, false, isError });
+                }
                 ForgeModBuilder.MainFormInstance.ConsoleTextBox.ReadOnly = false;
                 ForgeModBuilder.MainFormInstance.ConsoleTextBox.AppendText(text + "\n");
                 ForgeModBuilder.MainFormInstance.ConsoleTextBox.ReadOnly = true;

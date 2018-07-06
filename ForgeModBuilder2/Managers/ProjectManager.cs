@@ -35,7 +35,15 @@ namespace ForgeModBuilder.Managers
             }
         }
 
-
+        public static void UpdateProjectInfo(Project originalProject)
+        {
+            if (Directory.Exists(originalProject.Path) && File.Exists(originalProject.Path + "gradlew.bat") && File.Exists(originalProject.Path + "build.gradle"))
+            {
+                Project newProject = new Project(originalProject.Name, originalProject.Path);
+                Projects.Remove(originalProject);
+                Projects.Add(newProject);
+            }
+        }
 
     }
 

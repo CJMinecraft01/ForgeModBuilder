@@ -55,6 +55,42 @@ namespace ForgeModBuilder.Gradle
             text += tab + "}";
             return text;
         }
+
+        public bool HasChild(string Name)
+        {
+            foreach (GObject child in Children)
+            {
+                if (child.Name == Name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool HasChild<T>(string Name) where T : GObject
+        {
+            foreach (GObject child in Children)
+            {
+                if (child.Name == Name && child is T)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public T SelectChild<T>(string Name) where T : GObject
+        {
+            foreach (GObject child in Children)
+            {
+                if (child.Name == Name && child is T)
+                {
+                    return (T) child;
+                }
+            }
+            return null;
+        }
     }
 
     public class GTask : GBlock

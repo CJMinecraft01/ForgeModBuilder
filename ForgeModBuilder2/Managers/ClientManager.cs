@@ -93,10 +93,17 @@ namespace ForgeModBuilder.Managers
                     OutputCallback callback = new OutputCallback(Output);
                     ForgeModBuilder.MainFormInstance.Invoke(callback, new object[] { text, false, isError });
                 }
-                ForgeModBuilder.MainFormInstance.ConsoleTextBox.ReadOnly = false;
-                ForgeModBuilder.MainFormInstance.ConsoleTextBox.AppendText(text + "\n");
-                ForgeModBuilder.MainFormInstance.ConsoleTextBox.ReadOnly = true;
-                ForgeModBuilder.MainFormInstance.LastConsoleMessageLabel.Text = text;
+                else
+                {
+                    ForgeModBuilder.MainFormInstance.ConsoleTextBox.ReadOnly = false;
+                    ForgeModBuilder.MainFormInstance.ConsoleTextBox.AppendText(text + "\n");
+                    ForgeModBuilder.MainFormInstance.ConsoleTextBox.ReadOnly = true;
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        ForgeModBuilder.MainFormInstance.LastConsoleMessageLabel.Text = text;
+                    }
+                    ForgeModBuilder.MainFormInstance.ConsoleTextBox.ScrollToCaret();
+                }
             }
         }
 

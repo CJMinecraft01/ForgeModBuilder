@@ -36,9 +36,16 @@ namespace ForgeModBuilder.Gradle
                             // A comment so contains no useful data for the program
                             break;
                         }
-                        dataChunk.Add(info);
-                        dataBegin = i + 1;
-                        continue;
+                        else if (info.StartsWith("/*") || info.StartsWith("*/"))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            dataChunk.Add(info);
+                            dataBegin = i + 1;
+                            continue;
+                        }
                     }
                     if (i > 0 && !(insideApostropheQuotes || insideSpeechQuotes))
                     {

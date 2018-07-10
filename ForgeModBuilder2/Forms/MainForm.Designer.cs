@@ -172,11 +172,12 @@ namespace ForgeModBuilder.Forms
             this.LastConsoleMessageLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LastConsoleMessageLabel.AutoSize = true;
-            this.LastConsoleMessageLabel.Location = new System.Drawing.Point(525, 6);
+            this.LastConsoleMessageLabel.Location = new System.Drawing.Point(608, 6);
             this.LastConsoleMessageLabel.Name = "LastConsoleMessageLabel";
             this.LastConsoleMessageLabel.Size = new System.Drawing.Size(114, 13);
             this.LastConsoleMessageLabel.TabIndex = 2;
             this.LastConsoleMessageLabel.Text = "Last Console Message";
+            this.LastConsoleMessageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // StatusLabel
             // 
@@ -246,6 +247,7 @@ namespace ForgeModBuilder.Forms
             // ProjectsListBox
             // 
             this.ProjectsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProjectsListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ProjectsListBox.FormattingEnabled = true;
             this.ProjectsListBox.Items.AddRange(new object[] {
             "Industrial Tech 1.12",
@@ -414,6 +416,7 @@ namespace ForgeModBuilder.Forms
             this.Controls.Add(this.BottomPanel);
             this.Controls.Add(this.MenuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(750, 600);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Forge Mod Builder";
@@ -453,7 +456,6 @@ namespace ForgeModBuilder.Forms
         private System.Windows.Forms.TabControl RightTabControl;
         private System.Windows.Forms.TabPage ConsoleTab;
         private System.Windows.Forms.Panel ConsoleBottomPanel;
-        private System.Windows.Forms.Button ExecuteCommandButton;
         public System.Windows.Forms.TextBox CommandEntryTextBox;
         public System.Windows.Forms.Panel TopPanel;
         private System.Windows.Forms.ListBox ProjectsListBox;
@@ -470,6 +472,7 @@ namespace ForgeModBuilder.Forms
         public System.Windows.Forms.Button OpenProjectButton;
         public System.Windows.Forms.Button UpdateProjectButton;
         public System.Windows.Forms.Button BuildProjectButton;
+        public System.Windows.Forms.Button ExecuteCommandButton;
     }
 }
 

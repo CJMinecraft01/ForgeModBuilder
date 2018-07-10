@@ -56,6 +56,10 @@ namespace ForgeModBuilder
             MainFormInstance = new MainForm();
             MainFormInstance.FormClosed += CloseForm;
 
+            MainFormInstance.NewProjectButton.Click += (sender, e) => {
+                ClientManager.Output("Hello?");
+            };
+
             MainFormInstance.OpenProjectButton.Click += (sender, e) => {
                 ProjectManager.OpenProject("CJCore 1.12.2", @"C:\Users\Callum\Coding\Minecraft\Minecraft Mods\CJMinecraft Core\1.12.2\");
                 ProjectManager.CurrentProject = ProjectManager.Projects[0];

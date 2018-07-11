@@ -77,6 +77,38 @@ namespace ForgeModBuilder.Managers
                         item.Group = null;
                     }
                 }
+                bool allHaveNoGroup = true;
+                foreach (ListViewItem item in ForgeModBuilder.MainFormInstance.ProjectsListView.Items)
+                {
+                    if (item.Group != null)
+                    {
+                        allHaveNoGroup = false;
+                    }
+                }
+                if (allHaveNoGroup)
+                {
+                    ForgeModBuilder.MainFormInstance.ProjectsListView.Groups.Clear();
+                    int count = ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Count;
+                    for(int i = 0; i < count; i++)
+                    {
+                        ToolStripMenuItem item = (ToolStripMenuItem) ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems[0];
+                        if (item.Tag != null && item.Tag is string && (string) item.Tag == "NewGroupButton")
+                        {
+                            continue;
+                        }
+                        ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Remove(item);
+                    }
+                    count = ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        ToolStripMenuItem item = (ToolStripMenuItem)ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems[0];
+                        if (item.Tag != null && item.Tag is string && (string)item.Tag == "NewGroupButton")
+                        {
+                            continue;
+                        }
+                        ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Remove(item);
+                    }
+                }
             };
             if (ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Count > 1)
             {

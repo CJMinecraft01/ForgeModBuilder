@@ -40,6 +40,11 @@ namespace ForgeModBuilder.Forms
             this.configureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,10 +60,21 @@ namespace ForgeModBuilder.Forms
             this.MinecraftVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ForgeVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.MCPMapping = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Path = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Version = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ArchiveBaseName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Group = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Path = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ProjectsContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.newToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.configureToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.buildToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.renameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.newGroupToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.RightTabControl = new System.Windows.Forms.TabControl();
             this.ConsoleTab = new System.Windows.Forms.TabPage();
             this.ConsoleTextBoxPanel = new System.Windows.Forms.Panel();
@@ -72,34 +88,18 @@ namespace ForgeModBuilder.Forms
             this.ConfigureProjectButton = new System.Windows.Forms.Button();
             this.UpdateProjectButton = new System.Windows.Forms.Button();
             this.NewProjectButton = new System.Windows.Forms.Button();
-            this.ProjectsContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.configureToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.updateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.buildToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.renameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.newGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newGroupToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuStrip.SuspendLayout();
             this.BottomPanel.SuspendLayout();
             this.MainPanel.SuspendLayout();
             this.CentrePanel.SuspendLayout();
             this.LeftTabControl.SuspendLayout();
             this.ProjectsTab.SuspendLayout();
+            this.ProjectsContextMenuStrip.SuspendLayout();
             this.RightTabControl.SuspendLayout();
             this.ConsoleTab.SuspendLayout();
             this.ConsoleTextBoxPanel.SuspendLayout();
             this.ConsoleBottomPanel.SuspendLayout();
             this.TopPanel.SuspendLayout();
-            this.ProjectsContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // MenuStrip
@@ -140,32 +140,67 @@ namespace ForgeModBuilder.Forms
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.newToolStripMenuItem.Text = "New";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.openToolStripMenuItem.Text = "Open";
             // 
             // configureToolStripMenuItem
             // 
             this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
-            this.configureToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.configureToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.configureToolStripMenuItem.Text = "Configure";
             // 
             // updateToolStripMenuItem
             // 
             this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            this.updateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.updateToolStripMenuItem.Text = "Update";
             // 
             // buildToolStripMenuItem
             // 
             this.buildToolStripMenuItem.Name = "buildToolStripMenuItem";
-            this.buildToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.buildToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.buildToolStripMenuItem.Text = "Build";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(124, 6);
+            // 
+            // renameToolStripMenuItem
+            // 
+            this.renameToolStripMenuItem.Enabled = false;
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.renameToolStripMenuItem.Text = "Rename";
+            // 
+            // removeToolStripMenuItem
+            // 
+            this.removeToolStripMenuItem.Enabled = false;
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.removeToolStripMenuItem.Text = "Remove";
+            // 
+            // groupToolStripMenuItem
+            // 
+            this.groupToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newGroupToolStripMenuItem});
+            this.groupToolStripMenuItem.Enabled = false;
+            this.groupToolStripMenuItem.Name = "groupToolStripMenuItem";
+            this.groupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.groupToolStripMenuItem.Text = "Group";
+            // 
+            // newGroupToolStripMenuItem
+            // 
+            this.newGroupToolStripMenuItem.Name = "newGroupToolStripMenuItem";
+            this.newGroupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newGroupToolStripMenuItem.Tag = "NewGroupButton";
+            this.newGroupToolStripMenuItem.Text = "New Group...";
             // 
             // viewToolStripMenuItem
             // 
@@ -277,6 +312,7 @@ namespace ForgeModBuilder.Forms
             // 
             // ProjectsListView
             // 
+            this.ProjectsListView.AllowDrop = true;
             this.ProjectsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ProjectName,
             this.MinecraftVersion,
@@ -316,10 +352,6 @@ namespace ForgeModBuilder.Forms
             // 
             this.MCPMapping.Text = "MCP Mapping";
             // 
-            // Path
-            // 
-            this.Path.Text = "Path";
-            // 
             // Version
             // 
             this.Version.Text = "Version";
@@ -331,6 +363,90 @@ namespace ForgeModBuilder.Forms
             // Group
             // 
             this.Group.Text = "Group";
+            // 
+            // Path
+            // 
+            this.Path.Text = "Path";
+            // 
+            // ProjectsContextMenuStrip
+            // 
+            this.ProjectsContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newToolStripMenuItem1,
+            this.openToolStripMenuItem1,
+            this.configureToolStripMenuItem1,
+            this.updateToolStripMenuItem1,
+            this.buildToolStripMenuItem1,
+            this.toolStripSeparator2,
+            this.renameToolStripMenuItem1,
+            this.removeToolStripMenuItem1,
+            this.groupToolStripMenuItem1});
+            this.ProjectsContextMenuStrip.Name = "ProjectsContextMenuStrip";
+            this.ProjectsContextMenuStrip.Size = new System.Drawing.Size(128, 186);
+            // 
+            // newToolStripMenuItem1
+            // 
+            this.newToolStripMenuItem1.Name = "newToolStripMenuItem1";
+            this.newToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
+            this.newToolStripMenuItem1.Text = "New";
+            // 
+            // openToolStripMenuItem1
+            // 
+            this.openToolStripMenuItem1.Name = "openToolStripMenuItem1";
+            this.openToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
+            this.openToolStripMenuItem1.Text = "Open";
+            // 
+            // configureToolStripMenuItem1
+            // 
+            this.configureToolStripMenuItem1.Name = "configureToolStripMenuItem1";
+            this.configureToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
+            this.configureToolStripMenuItem1.Text = "Configure";
+            // 
+            // updateToolStripMenuItem1
+            // 
+            this.updateToolStripMenuItem1.Name = "updateToolStripMenuItem1";
+            this.updateToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
+            this.updateToolStripMenuItem1.Text = "Update";
+            // 
+            // buildToolStripMenuItem1
+            // 
+            this.buildToolStripMenuItem1.Name = "buildToolStripMenuItem1";
+            this.buildToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
+            this.buildToolStripMenuItem1.Text = "Build";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(124, 6);
+            // 
+            // renameToolStripMenuItem1
+            // 
+            this.renameToolStripMenuItem1.Enabled = false;
+            this.renameToolStripMenuItem1.Name = "renameToolStripMenuItem1";
+            this.renameToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
+            this.renameToolStripMenuItem1.Text = "Rename";
+            // 
+            // removeToolStripMenuItem1
+            // 
+            this.removeToolStripMenuItem1.Enabled = false;
+            this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
+            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
+            this.removeToolStripMenuItem1.Text = "Remove";
+            // 
+            // groupToolStripMenuItem1
+            // 
+            this.groupToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newGroupToolStripMenuItem1});
+            this.groupToolStripMenuItem1.Enabled = false;
+            this.groupToolStripMenuItem1.Name = "groupToolStripMenuItem1";
+            this.groupToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
+            this.groupToolStripMenuItem1.Text = "Group";
+            // 
+            // newGroupToolStripMenuItem1
+            // 
+            this.newGroupToolStripMenuItem1.Name = "newGroupToolStripMenuItem1";
+            this.newGroupToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.newGroupToolStripMenuItem1.Tag = "NewGroupButton";
+            this.newGroupToolStripMenuItem1.Text = "New Group...";
             // 
             // RightTabControl
             // 
@@ -388,9 +504,9 @@ namespace ForgeModBuilder.Forms
             // 
             // ExecuteCommandButton
             // 
-            this.ExecuteCommandButton.Location = new System.Drawing.Point(417, 2);
+            this.ExecuteCommandButton.Location = new System.Drawing.Point(379, 2);
             this.ExecuteCommandButton.Name = "ExecuteCommandButton";
-            this.ExecuteCommandButton.Size = new System.Drawing.Size(75, 23);
+            this.ExecuteCommandButton.Size = new System.Drawing.Size(75, 22);
             this.ExecuteCommandButton.TabIndex = 1;
             this.ExecuteCommandButton.Text = "Execute";
             this.ExecuteCommandButton.UseVisualStyleBackColor = true;
@@ -399,7 +515,7 @@ namespace ForgeModBuilder.Forms
             // 
             this.CommandEntryTextBox.Location = new System.Drawing.Point(0, 3);
             this.CommandEntryTextBox.Name = "CommandEntryTextBox";
-            this.CommandEntryTextBox.Size = new System.Drawing.Size(411, 20);
+            this.CommandEntryTextBox.Size = new System.Drawing.Size(373, 20);
             this.CommandEntryTextBox.TabIndex = 0;
             // 
             // TopPanel
@@ -482,119 +598,6 @@ namespace ForgeModBuilder.Forms
             this.NewProjectButton.TabIndex = 0;
             this.NewProjectButton.UseVisualStyleBackColor = false;
             // 
-            // ProjectsContextMenuStrip
-            // 
-            this.ProjectsContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripMenuItem1,
-            this.openToolStripMenuItem1,
-            this.configureToolStripMenuItem1,
-            this.updateToolStripMenuItem1,
-            this.buildToolStripMenuItem1,
-            this.toolStripSeparator2,
-            this.renameToolStripMenuItem1,
-            this.removeToolStripMenuItem1,
-            this.groupToolStripMenuItem1});
-            this.ProjectsContextMenuStrip.Name = "ProjectsContextMenuStrip";
-            this.ProjectsContextMenuStrip.Size = new System.Drawing.Size(153, 208);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // renameToolStripMenuItem
-            // 
-            this.renameToolStripMenuItem.Enabled = false;
-            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.renameToolStripMenuItem.Text = "Rename";
-            // 
-            // removeToolStripMenuItem
-            // 
-            this.removeToolStripMenuItem.Enabled = false;
-            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.removeToolStripMenuItem.Text = "Remove";
-            // 
-            // newToolStripMenuItem1
-            // 
-            this.newToolStripMenuItem1.Name = "newToolStripMenuItem1";
-            this.newToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
-            this.newToolStripMenuItem1.Text = "New";
-            // 
-            // openToolStripMenuItem1
-            // 
-            this.openToolStripMenuItem1.Name = "openToolStripMenuItem1";
-            this.openToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
-            this.openToolStripMenuItem1.Text = "Open";
-            // 
-            // configureToolStripMenuItem1
-            // 
-            this.configureToolStripMenuItem1.Name = "configureToolStripMenuItem1";
-            this.configureToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
-            this.configureToolStripMenuItem1.Text = "Configure";
-            // 
-            // updateToolStripMenuItem1
-            // 
-            this.updateToolStripMenuItem1.Name = "updateToolStripMenuItem1";
-            this.updateToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
-            this.updateToolStripMenuItem1.Text = "Update";
-            // 
-            // buildToolStripMenuItem1
-            // 
-            this.buildToolStripMenuItem1.Name = "buildToolStripMenuItem1";
-            this.buildToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
-            this.buildToolStripMenuItem1.Text = "Build";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(124, 6);
-            // 
-            // renameToolStripMenuItem1
-            // 
-            this.renameToolStripMenuItem1.Enabled = false;
-            this.renameToolStripMenuItem1.Name = "renameToolStripMenuItem1";
-            this.renameToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
-            this.renameToolStripMenuItem1.Text = "Rename";
-            // 
-            // removeToolStripMenuItem1
-            // 
-            this.removeToolStripMenuItem1.Enabled = false;
-            this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
-            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
-            this.removeToolStripMenuItem1.Text = "Remove";
-            // 
-            // groupToolStripMenuItem
-            // 
-            this.groupToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newGroupToolStripMenuItem});
-            this.groupToolStripMenuItem.Enabled = false;
-            this.groupToolStripMenuItem.Name = "groupToolStripMenuItem";
-            this.groupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.groupToolStripMenuItem.Text = "Group";
-            // 
-            // groupToolStripMenuItem1
-            // 
-            this.groupToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newGroupToolStripMenuItem1});
-            this.groupToolStripMenuItem1.Enabled = false;
-            this.groupToolStripMenuItem1.Name = "groupToolStripMenuItem1";
-            this.groupToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.groupToolStripMenuItem1.Text = "Group";
-            // 
-            // newGroupToolStripMenuItem
-            // 
-            this.newGroupToolStripMenuItem.Name = "newGroupToolStripMenuItem";
-            this.newGroupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.newGroupToolStripMenuItem.Text = "New Group...";
-            // 
-            // newGroupToolStripMenuItem1
-            // 
-            this.newGroupToolStripMenuItem1.Name = "newGroupToolStripMenuItem1";
-            this.newGroupToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.newGroupToolStripMenuItem1.Text = "New Group...";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -616,13 +619,13 @@ namespace ForgeModBuilder.Forms
             this.CentrePanel.ResumeLayout(false);
             this.LeftTabControl.ResumeLayout(false);
             this.ProjectsTab.ResumeLayout(false);
+            this.ProjectsContextMenuStrip.ResumeLayout(false);
             this.RightTabControl.ResumeLayout(false);
             this.ConsoleTab.ResumeLayout(false);
             this.ConsoleTextBoxPanel.ResumeLayout(false);
             this.ConsoleBottomPanel.ResumeLayout(false);
             this.ConsoleBottomPanel.PerformLayout();
             this.TopPanel.ResumeLayout(false);
-            this.ProjectsContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

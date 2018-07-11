@@ -32,6 +32,10 @@ namespace ForgeModBuilder.Forms
 
         private void InitialiseEventHandlers()
         {
+            BuildProjectButton.Click += BuildProjectClick;
+            buildToolStripMenuItem.Click += BuildProjectClick;
+            buildToolStripMenuItem1.Click += BuildProjectClick;
+            ProjectsListView.KeyDown += ProjectsListViewKeyDown;
             LastConsoleMessageLabel.TextChanged += LastConsoleMessageLabelTextChanged;
             ExecuteCommandButton.Click += ExecuteCommandButtonClick;
             ConsoleTextBox.LinkClicked += ConsoleTextBoxLinkClicked;
@@ -47,6 +51,19 @@ namespace ForgeModBuilder.Forms
             groupToolStripMenuItem1.Click += NewGroupClick;
             newGroupToolStripMenuItem.Click += NewGroupClick;
             newGroupToolStripMenuItem1.Click += NewGroupClick;
+        }
+
+        private void BuildProjectClick(object sender, EventArgs e)
+        {
+            GradleExecuter.RunGradleCommand("build");
+        }
+
+        private void ProjectsListViewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                RemoveProjectsClick(null, null);
+            }
         }
 
         private void LastConsoleMessageLabelTextChanged(object sender, EventArgs e)
@@ -85,6 +102,8 @@ namespace ForgeModBuilder.Forms
                 removeToolStripMenuItem1.Enabled = true;
                 groupToolStripMenuItem.Enabled = true;
                 groupToolStripMenuItem1.Enabled = true;
+                // Use option to enable?
+                // ClientManager.Output("Switched current project to: " + ProjectManager.CurrentProject.Name);
             }
             else if (ProjectsListView.SelectedItems.Count == 0)
             {
@@ -113,9 +132,9 @@ namespace ForgeModBuilder.Forms
                 int count = ProjectsListView.SelectedItems.Count;
                 for (int i = 0; i < count; i++)
                 {
-                    ProjectManager.Projects.Remove((Project)ProjectsListView.SelectedItems[0].Tag);
-                    ProjectsListView.Items.Remove(ProjectsListView.SelectedItems[0]);
                     // Check?
+                    ProjectManager.Projects.Remove((Project)ProjectsListView.SelectedItems[0].Tag);
+                    ProjectsListView.SelectedItems[0].Remove();
                 }
             }
         }
@@ -159,6 +178,38 @@ namespace ForgeModBuilder.Forms
                         foreach (ListViewItem item in ProjectsListView.SelectedItems)
                         {
                             item.Group = null;
+                        }
+                    }
+                    bool allHaveNoGroup = true;
+                    foreach (ListViewItem item in ProjectsListView.Items)
+                    {
+                        if (item.Group != null)
+                        {
+                            allHaveNoGroup = false;
+                        }
+                    }
+                    if (allHaveNoGroup)
+                    {
+                        ProjectsListView.Groups.Clear();
+                        int count = groupToolStripMenuItem.DropDownItems.Count;
+                        for (int i = 0; i < count; i++)
+                        {
+                            ToolStripMenuItem item = (ToolStripMenuItem)groupToolStripMenuItem.DropDownItems[0];
+                            if (item.Tag != null && item.Tag is string && (string)item.Tag == "NewGroupButton")
+                            {
+                                continue;
+                            }
+                            groupToolStripMenuItem.DropDownItems.Remove(item);
+                        }
+                        count = groupToolStripMenuItem1.DropDownItems.Count;
+                        for (int i = 0; i < count; i++)
+                        {
+                            ToolStripMenuItem item = (ToolStripMenuItem)groupToolStripMenuItem1.DropDownItems[0];
+                            if (item.Tag != null && item.Tag is string && (string)item.Tag == "NewGroupButton")
+                            {
+                                continue;
+                            }
+                            groupToolStripMenuItem1.DropDownItems.Remove(item);
                         }
                     }
                 };

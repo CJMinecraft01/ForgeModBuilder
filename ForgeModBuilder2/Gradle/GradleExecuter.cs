@@ -30,6 +30,7 @@ namespace ForgeModBuilder.Gradle
             }
             if (!CurrentlyExecuting)
             {
+                ClientManager.Output("Running gradle command: " + command);
                 CurrentProcess = new Process();
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;

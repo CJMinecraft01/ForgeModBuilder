@@ -1,6 +1,8 @@
 ﻿using ForgeModBuilder.Gradle;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 
 namespace ForgeModBuilder.Managers
 {
@@ -16,11 +18,139 @@ namespace ForgeModBuilder.Managers
         {
             ClientManager.CreateCustomDataFileIfNotFound(ProjectsFileName);
             Projects = ClientManager.ReadCustomData<List<Project>>(ProjectsFileName);
+            Dictionary<string, ListViewGroup> groups = new Dictionary<string, ListViewGroup>();
+            foreach (Project project in Projects)
+            {
+                ListViewItem item;
+                if (!string.IsNullOrEmpty(project.GroupName))
+                {
+                    if (groups.ContainsKey(project.GroupName))
+                    {
+                        item = new ListViewItem(project.ToArray());
+                        item.Tag = project;
+                        item.Group = groups[project.GroupName];
+                        ForgeModBuilder.MainFormInstance.ProjectsListView.Items.Add(item);
+                        continue;
+                    }
+                    else
+                    {
+                        ListViewGroup group = new ListViewGroup(project.GroupName);
+                        ForgeModBuilder.MainFormInstance.ProjectsListView.Groups.Add(group);
+                        item = new ListViewItem(project.ToArray());
+                        item.Tag = project;
+                        item.Group = group;
+                        ForgeModBuilder.MainFormInstance.ProjectsListView.Items.Add(item);
+                        groups.Add(project.GroupName, group);
+                        continue;
+                    }
+                }
+                item = new ListViewItem(project.ToArray());
+                item.Tag = project;
+                ForgeModBuilder.MainFormInstance.ProjectsListView.Items.Add(item);
+            }
+            foreach (ListViewGroup group in groups.Values)
+            {
+                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Add(group.Header, null, (sender, e) => {
+                    if (ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems.Count > 0)
+                    {
+                        foreach (ListViewItem item in ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems)
+                        {
+                            item.Group = group;
+                        }
+                    }
+                });
+                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Add(group.Header, null, (sender, e) => {
+                    if (ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems.Count > 0)
+                    {
+                        foreach (ListViewItem item in ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems)
+                        {
+                            item.Group = group;
+                        }
+                    }
+                });
+            }
+            if (ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Count > 0)
+            {
+                // TODO localise
+                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Add("No group", null, (sender, e) =>
+                {
+                    if (ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems.Count > 0)
+                    {
+                        foreach (ListViewItem item in ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems)
+                        {
+                            item.Group = null;
+                        }
+                    }
+                });
+            }
+            if (ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Count > 0)
+            {
+                // TODO localise
+                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Add("No group", null, (sender, e) =>
+                {
+                    if (ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems.Count > 0)
+                    {
+                        foreach (ListViewItem item in ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems)
+                        {
+                            item.Group = null;
+                        }
+                    }
+                });
+            }
+            ForgeModBuilder.MainFormInstance.ProjectsListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
         public static void SaveProjects()
         {
+            foreach (ListViewItem item in ForgeModBuilder.MainFormInstance.ProjectsListView.Items)
+            {
+                foreach (Project project in Projects)
+                {
+                    if (((Project)item.Tag).Name == project.Name && ((Project)item.Tag).Path == project.Path)
+                    {
+                        project.Name = item.Text;
+                        if (item.Group != null)
+                        {
+                            project.GroupName = item.Group.Header;
+                        }
+                        else
+                        {
+                            project.GroupName = string.Empty;
+                        }
+                        break;
+                    }
+                }
+            }
             ClientManager.WriteCustomData<List<Project>>(Projects, ProjectsFileName);
+        }
+
+        public static void OpenProject()
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            // TODO Add description
+            fbd.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                string[] pathFolders = fbd.SelectedPath.Split('\\');
+                OpenProject(pathFolders[pathFolders.Length - 1], fbd.SelectedPath);
+            }
+        }
+
+        public static Project GetProject(string Name, string Path)
+        {
+            foreach (Project project in Projects)
+            {
+                if (Name == project.Name || Path == project.Path)
+                {
+                    return project;
+                }
+            }
+            return null;
+        }
+
+        public static bool ProjectExists(string Name, string Path)
+        {
+            return GetProject(Name, Path) != null;
         }
 
         public static void OpenProject(string Name, string Path)
@@ -31,9 +161,28 @@ namespace ForgeModBuilder.Managers
             {
                 Path += "\\";
             }
+            if(ProjectExists(Name, Path))
+            {
+                MessageBox.Show("This project is already open!", "Already open project!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             if (Directory.Exists(Path) && File.Exists(Path + "gradlew.bat") && File.Exists(Path + "build.gradle"))
             {
-                Projects.Add(new Project(Name, Path));
+                Project project = new Project(Name, Path);
+                Projects.Add(project);
+                if (ForgeModBuilder.MainFormInstance != null)
+                {
+                    ListViewItem item = new ListViewItem(project.ToArray());
+                    item.Tag = project;
+                    ForgeModBuilder.MainFormInstance.ProjectsListView.Items.Add(item);
+                }
+            }
+            else
+            {
+                if (MessageBox.Show("Your project must have a build.gradle file and gradlew.bat file!", "Gradle not present!", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning) == DialogResult.Retry)
+                {
+                    OpenProject(Name, Path);
+                }
             }
         }
 
@@ -51,15 +200,16 @@ namespace ForgeModBuilder.Managers
 
     public class Project
     {
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public string Path { get; private set; }
         public string MinecraftVersion { get; private set; }
         public string ForgeVersion { get; private set; }
-        public string MCPMapping { get; private set; }
+        public string MCPMapping { get; private set; } = string.Empty;
         public bool HasMCPMapping { get; private set; }
         public string ModVersion { get; private set; }
         public string ModGroup { get; private set; }
         public string ModArchivesBaseName { get; private set; }
+        public string GroupName { get; set; } = string.Empty;
 
         public Project(string name, string path)
         {
@@ -102,6 +252,11 @@ namespace ForgeModBuilder.Managers
                 }
             }
             return new string[0];
+        }
+
+        public string[] ToArray()
+        {
+            return new string[] { Name, MinecraftVersion, ForgeVersion, MCPMapping, ModVersion, ModArchivesBaseName, ModGroup, Path};
         }
     }
 }

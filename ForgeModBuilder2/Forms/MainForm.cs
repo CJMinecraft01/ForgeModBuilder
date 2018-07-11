@@ -17,12 +17,16 @@ namespace ForgeModBuilder.Forms
             InitializeComponent();
             InitialiseEventHandlers();
             SizeChanged += ResizeForm;
+            Load += (sender, e) => {
+                ResizeForm(null, null);
+            };
         }
 
         private void ResizeForm(object sender, EventArgs e)
         {
             CommandEntryTextBox.Width = ConsoleBottomPanel.Width - ExecuteCommandButton.Width - 4;
             ExecuteCommandButton.Location = new Point(CommandEntryTextBox.Width + 4, ExecuteCommandButton.Location.Y);
+            ForgeModBuilder.MainFormInstance.ProjectsListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
         private void InitialiseEventHandlers()
@@ -30,6 +34,16 @@ namespace ForgeModBuilder.Forms
             LastConsoleMessageLabel.TextChanged += LastConsoleMessageLabelTextChanged;
             ExecuteCommandButton.Click += ExecuteCommandButtonClick;
             ConsoleTextBox.LinkClicked += ConsoleTextBoxLinkClicked;
+            OpenProjectButton.Click += OpenProjectClick;
+            ProjectsListView.SelectedIndexChanged += SelectProject;
+            openToolStripMenuItem.Click += OpenProjectClick;
+            openToolStripMenuItem1.Click += OpenProjectClick;
+            renameToolStripMenuItem.Click += RenameProjectsClick;
+            renameToolStripMenuItem1.Click += RenameProjectsClick;
+            removeToolStripMenuItem.Click += RemoveProjectsClick;
+            removeToolStripMenuItem1.Click += RemoveProjectsClick;
+            groupToolStripMenuItem.Click += NewGroupClick;
+            groupToolStripMenuItem1.Click += NewGroupClick;
         }
 
         private void LastConsoleMessageLabelTextChanged(object sender, EventArgs e)
@@ -49,6 +63,118 @@ namespace ForgeModBuilder.Forms
         private void ConsoleTextBoxLinkClicked(object sender, LinkClickedEventArgs e)
         {
             Process.Start(e.LinkText);
+        }
+
+        private void OpenProjectClick(object sender, EventArgs e)
+        {
+            ProjectManager.OpenProject();
+        }
+
+        private void SelectProject(object sender, EventArgs e)
+        {
+            if (ProjectsListView.SelectedItems.Count == 1)
+            {
+                // Add check?
+                ProjectManager.CurrentProject = (Project) ProjectsListView.SelectedItems[0].Tag;
+                renameToolStripMenuItem.Enabled = true;
+                renameToolStripMenuItem1.Enabled = true;
+                removeToolStripMenuItem.Enabled = true;
+                removeToolStripMenuItem1.Enabled = true;
+                groupToolStripMenuItem.Enabled = true;
+                groupToolStripMenuItem1.Enabled = true;
+            }
+            else if (ProjectsListView.SelectedItems.Count == 0)
+            {
+                ProjectManager.CurrentProject = null;
+                renameToolStripMenuItem.Enabled = false;
+                renameToolStripMenuItem1.Enabled = false;
+                removeToolStripMenuItem.Enabled = false;
+                removeToolStripMenuItem1.Enabled = false;
+                groupToolStripMenuItem.Enabled = false;
+                groupToolStripMenuItem1.Enabled = false;
+            }
+        }
+
+        private void RenameProjectsClick(object sender, EventArgs e)
+        {
+            if (ProjectsListView.SelectedItems.Count > 0)
+            {
+                ProjectsListView.SelectedItems[0].BeginEdit();
+            }
+        }
+
+        private void RemoveProjectsClick(object sender, EventArgs e)
+        {
+            if (ProjectsListView.SelectedItems.Count > 0)
+            {
+                int count = ProjectsListView.SelectedItems.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    ProjectManager.Projects.Remove((Project)ProjectsListView.SelectedItems[0].Tag);
+                    ProjectsListView.Items.Remove(ProjectsListView.SelectedItems[0]);
+                    // Check?
+                }
+            }
+        }
+
+        private void NewGroupClick(object sender, EventArgs e)
+        {
+            if (ProjectsListView.SelectedItems.Count > 0)
+            {
+                ListViewGroup group = new ListViewGroup("Test");
+                // TODO Open form
+                ProjectsListView.Groups.Add(group);
+                foreach (ListViewItem item in ProjectsListView.SelectedItems)
+                {
+                    item.Group = group;
+                }
+
+                groupToolStripMenuItem.DropDownItems.Add(group.Header, null, (sender1, e1) => {
+                    if (ProjectsListView.SelectedItems.Count > 0)
+                    {
+                        foreach (ListViewItem item in ProjectsListView.SelectedItems)
+                        {
+                            item.Group = group;
+                        }
+                    }
+                });
+                groupToolStripMenuItem1.DropDownItems.Add(group.Header, null, (sender1, e1) => {
+                    if (ProjectsListView.SelectedItems.Count > 0)
+                    {
+                        foreach (ListViewItem item in ProjectsListView.SelectedItems)
+                        {
+                            item.Group = group;
+                        }
+                    }
+                });
+
+                if (groupToolStripMenuItem.DropDownItems.Count == 1)
+                {
+                    groupToolStripMenuItem.DropDownItems.Add("No group", null, (sender1, e1) =>
+                    {
+                        if (ProjectsListView.SelectedItems.Count > 0)
+                        {
+                            foreach (ListViewItem item in ProjectsListView.SelectedItems)
+                            {
+                                item.Group = null;
+                            }
+                        }
+                    });
+                }
+                if (groupToolStripMenuItem1.DropDownItems.Count == 1)
+                {
+                    groupToolStripMenuItem1.DropDownItems.Add("No group", null, (sender1, e1) =>
+                    {
+                        if (ProjectsListView.SelectedItems.Count > 0)
+                        {
+                            foreach (ListViewItem item in ProjectsListView.SelectedItems)
+                            {
+                                item.Group = null;
+                            }
+                        }
+                    });
+                }
+            }
         }
     }
 }

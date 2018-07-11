@@ -38,6 +38,9 @@ namespace ForgeModBuilder
             ForgeVersionManager.LoadVersions();
             if (LanguageManager.InitLanguages()) return true;
 
+            MainFormInstance = new MainForm();
+            MainFormInstance.FormClosed += CloseForm;
+
             return false;
         }
 
@@ -46,26 +49,13 @@ namespace ForgeModBuilder
             if (InstallationManager.CheckForUpdates()) return true;
             ForgeVersionManager.UpdateVersionLists();
 
-            ProjectManager.LoadProjects();            
+            ProjectManager.LoadProjects();        
 
             return false;
         }
 
         public static void PostInit()
         {
-            MainFormInstance = new MainForm();
-            MainFormInstance.FormClosed += CloseForm;
-
-            MainFormInstance.NewProjectButton.Click += (sender, e) => {
-                ClientManager.Output("Hello?");
-            };
-
-            MainFormInstance.OpenProjectButton.Click += (sender, e) => {
-                ProjectManager.OpenProject("CJCore 1.12.2", @"C:\Users\Callum\Coding\Minecraft\Minecraft Mods\CJMinecraft Core\1.12.2\");
-                ProjectManager.CurrentProject = ProjectManager.Projects[0];
-                GradleExecuter.RunGradleCommand("build");
-            };
-
             Application.Run(MainFormInstance);
         }
 

@@ -23,9 +23,17 @@ namespace ForgeModBuilder
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (PreInit()) return;
-            if (Init()) return;
-            PostInit();
+            try
+            {
+                if (PreInit()) return;
+                if (Init()) return;
+                PostInit();
+            }
+            catch (Exception e)
+            {
+                CloseForm(null, null);
+                throw e;
+            }
         }
 
         public static bool PreInit()

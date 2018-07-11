@@ -36,10 +36,6 @@ namespace ForgeModBuilder.Gradle
                             // A comment so contains no useful data for the program
                             break;
                         }
-                        else if (info.StartsWith("/*") || info.StartsWith("*/"))
-                        {
-                            continue;
-                        }
                         else
                         {
                             dataChunk.Add(info);

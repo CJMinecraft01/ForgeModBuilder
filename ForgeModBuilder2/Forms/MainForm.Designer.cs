@@ -86,6 +86,8 @@ namespace ForgeModBuilder.Forms
             this.removeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.groupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.newGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newGroupToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuStrip.SuspendLayout();
             this.BottomPanel.SuspendLayout();
             this.MainPanel.SuspendLayout();
@@ -493,7 +495,7 @@ namespace ForgeModBuilder.Forms
             this.removeToolStripMenuItem1,
             this.groupToolStripMenuItem1});
             this.ProjectsContextMenuStrip.Name = "ProjectsContextMenuStrip";
-            this.ProjectsContextMenuStrip.Size = new System.Drawing.Size(128, 186);
+            this.ProjectsContextMenuStrip.Size = new System.Drawing.Size(153, 208);
             // 
             // toolStripSeparator1
             // 
@@ -565,6 +567,8 @@ namespace ForgeModBuilder.Forms
             // 
             // groupToolStripMenuItem
             // 
+            this.groupToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newGroupToolStripMenuItem});
             this.groupToolStripMenuItem.Enabled = false;
             this.groupToolStripMenuItem.Name = "groupToolStripMenuItem";
             this.groupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
@@ -572,10 +576,24 @@ namespace ForgeModBuilder.Forms
             // 
             // groupToolStripMenuItem1
             // 
+            this.groupToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newGroupToolStripMenuItem1});
             this.groupToolStripMenuItem1.Enabled = false;
             this.groupToolStripMenuItem1.Name = "groupToolStripMenuItem1";
             this.groupToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.groupToolStripMenuItem1.Text = "Group";
+            // 
+            // newGroupToolStripMenuItem
+            // 
+            this.newGroupToolStripMenuItem.Name = "newGroupToolStripMenuItem";
+            this.newGroupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newGroupToolStripMenuItem.Text = "New Group...";
+            // 
+            // newGroupToolStripMenuItem1
+            // 
+            this.newGroupToolStripMenuItem1.Name = "newGroupToolStripMenuItem1";
+            this.newGroupToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.newGroupToolStripMenuItem1.Text = "New Group...";
             // 
             // MainForm
             // 
@@ -666,6 +684,8 @@ namespace ForgeModBuilder.Forms
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem1;
         public System.Windows.Forms.ToolStripMenuItem groupToolStripMenuItem1;
         public System.Windows.Forms.ToolStripMenuItem groupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newGroupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newGroupToolStripMenuItem1;
     }
 }
 

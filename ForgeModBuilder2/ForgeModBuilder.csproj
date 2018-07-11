@@ -85,11 +85,11 @@
     <Compile Include="Forms\LanguageSelectionForm.Designer.cs">
       <DependentUpon>LanguageSelectionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SelectGroupForm.cs">
+    <Compile Include="Forms\AddGroupForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SelectGroupForm.Designer.cs">
-      <DependentUpon>SelectGroupForm.cs</DependentUpon>
+    <Compile Include="Forms\AddGroupForm.Designer.cs">
+      <DependentUpon>AddGroupForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Gradle\GradleExecuter.cs" />
     <Compile Include="Gradle\GradleObjects.cs" />
@@ -115,6 +115,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddGroupForm.resx">
+      <DependentUpon>AddGroupForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

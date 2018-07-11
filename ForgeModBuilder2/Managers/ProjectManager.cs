@@ -48,9 +48,13 @@ namespace ForgeModBuilder.Managers
                 item.Tag = project;
                 ForgeModBuilder.MainFormInstance.ProjectsListView.Items.Add(item);
             }
+            ToolStripMenuItem menuItem;
             foreach (ListViewGroup group in groups.Values)
             {
-                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Add(group.Header, null, (sender, e) => {
+                menuItem = new ToolStripMenuItem();
+                menuItem.Text = group.Header;
+                menuItem.Click += (sender, e) =>
+                {
                     if (ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems.Count > 0)
                     {
                         foreach (ListViewItem item in ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems)
@@ -58,44 +62,33 @@ namespace ForgeModBuilder.Managers
                             item.Group = group;
                         }
                     }
-                });
-                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Add(group.Header, null, (sender, e) => {
-                    if (ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems.Count > 0)
-                    {
-                        foreach (ListViewItem item in ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems)
-                        {
-                            item.Group = group;
-                        }
-                    }
-                });
+                };
+                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Insert(0, menuItem);
+                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Insert(0, menuItem);
             }
-            if (ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Count > 0)
+            menuItem = new ToolStripMenuItem();
+            menuItem.Text = "No group";
+            menuItem.Click += (sender1, e1) =>
+            {
+                if (ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems.Count > 0)
+                {
+                    foreach (ListViewItem item in ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems)
+                    {
+                        item.Group = null;
+                    }
+                }
+            };
+            if (ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Count > 1)
             {
                 // TODO localise
-                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Add("No group", null, (sender, e) =>
-                {
-                    if (ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems.Count > 0)
-                    {
-                        foreach (ListViewItem item in ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems)
-                        {
-                            item.Group = null;
-                        }
-                    }
-                });
+                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Insert(ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Count - 1, new ToolStripSeparator());
+                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Insert(ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Count - 1, menuItem);
             }
-            if (ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Count > 0)
+            if (ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Count > 1)
             {
                 // TODO localise
-                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Add("No group", null, (sender, e) =>
-                {
-                    if (ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems.Count > 0)
-                    {
-                        foreach (ListViewItem item in ForgeModBuilder.MainFormInstance.ProjectsListView.SelectedItems)
-                        {
-                            item.Group = null;
-                        }
-                    }
-                });
+                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Insert(ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Count - 1, new ToolStripSeparator());
+                ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Insert(ForgeModBuilder.MainFormInstance.groupToolStripMenuItem1.DropDownItems.Count - 1, menuItem);
             }
             ForgeModBuilder.MainFormInstance.ProjectsListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }

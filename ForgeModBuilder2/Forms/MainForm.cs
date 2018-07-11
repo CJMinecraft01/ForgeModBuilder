@@ -17,7 +17,8 @@ namespace ForgeModBuilder.Forms
             InitializeComponent();
             InitialiseEventHandlers();
             SizeChanged += ResizeForm;
-            Load += (sender, e) => {
+            Load += (sender, e) =>
+            {
                 ResizeForm(null, null);
             };
         }
@@ -44,6 +45,8 @@ namespace ForgeModBuilder.Forms
             removeToolStripMenuItem1.Click += RemoveProjectsClick;
             groupToolStripMenuItem.Click += NewGroupClick;
             groupToolStripMenuItem1.Click += NewGroupClick;
+            newGroupToolStripMenuItem.Click += NewGroupClick;
+            newGroupToolStripMenuItem1.Click += NewGroupClick;
         }
 
         private void LastConsoleMessageLabelTextChanged(object sender, EventArgs e)
@@ -75,7 +78,7 @@ namespace ForgeModBuilder.Forms
             if (ProjectsListView.SelectedItems.Count == 1)
             {
                 // Add check?
-                ProjectManager.CurrentProject = (Project) ProjectsListView.SelectedItems[0].Tag;
+                ProjectManager.CurrentProject = (Project)ProjectsListView.SelectedItems[0].Tag;
                 renameToolStripMenuItem.Enabled = true;
                 renameToolStripMenuItem1.Enabled = true;
                 removeToolStripMenuItem.Enabled = true;
@@ -121,58 +124,54 @@ namespace ForgeModBuilder.Forms
         {
             if (ProjectsListView.SelectedItems.Count > 0)
             {
-                ListViewGroup group = new ListViewGroup("Test");
-                // TODO Open form
+                AddGroupForm form = new AddGroupForm();
+                if (form.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
+                ListViewGroup group = new ListViewGroup(form.GroupNameTextBox.Text);
                 ProjectsListView.Groups.Add(group);
                 foreach (ListViewItem item in ProjectsListView.SelectedItems)
                 {
                     item.Group = group;
                 }
-
-                groupToolStripMenuItem.DropDownItems.Add(group.Header, null, (sender1, e1) => {
-                    if (ProjectsListView.SelectedItems.Count > 0)
-                    {
-                        foreach (ListViewItem item in ProjectsListView.SelectedItems)
-                        {
-                            item.Group = group;
-                        }
-                    }
-                });
-                groupToolStripMenuItem1.DropDownItems.Add(group.Header, null, (sender1, e1) => {
-                    if (ProjectsListView.SelectedItems.Count > 0)
-                    {
-                        foreach (ListViewItem item in ProjectsListView.SelectedItems)
-                        {
-                            item.Group = group;
-                        }
-                    }
-                });
-
-                if (groupToolStripMenuItem.DropDownItems.Count == 1)
+                ToolStripMenuItem menuItem = new ToolStripMenuItem();
+                menuItem.Text = group.Header;
+                menuItem.Click += (sender1, e1) =>
                 {
-                    groupToolStripMenuItem.DropDownItems.Add("No group", null, (sender1, e1) =>
+                    if (ProjectsListView.SelectedItems.Count > 0)
                     {
-                        if (ProjectsListView.SelectedItems.Count > 0)
+                        foreach (ListViewItem item in ProjectsListView.SelectedItems)
                         {
-                            foreach (ListViewItem item in ProjectsListView.SelectedItems)
-                            {
-                                item.Group = null;
-                            }
+                            item.Group = group;
                         }
-                    });
+                    }
+                };
+                groupToolStripMenuItem.DropDownItems.Insert(0, menuItem);
+                groupToolStripMenuItem1.DropDownItems.Insert(0, menuItem);
+
+                menuItem = new ToolStripMenuItem();
+                menuItem.Text = "No group";
+                menuItem.Click += (sender1, e1) =>
+                {
+                    if (ProjectsListView.SelectedItems.Count > 0)
+                    {
+                        foreach (ListViewItem item in ProjectsListView.SelectedItems)
+                        {
+                            item.Group = null;
+                        }
+                    }
+                };
+
+                if (groupToolStripMenuItem.DropDownItems.Count == 2)
+                {
+                    groupToolStripMenuItem.DropDownItems.Insert(1, new ToolStripSeparator());
+                    groupToolStripMenuItem.DropDownItems.Insert(2, menuItem);
                 }
-                if (groupToolStripMenuItem1.DropDownItems.Count == 1)
+                if (groupToolStripMenuItem1.DropDownItems.Count == 2)
                 {
-                    groupToolStripMenuItem1.DropDownItems.Add("No group", null, (sender1, e1) =>
-                    {
-                        if (ProjectsListView.SelectedItems.Count > 0)
-                        {
-                            foreach (ListViewItem item in ProjectsListView.SelectedItems)
-                            {
-                                item.Group = null;
-                            }
-                        }
-                    });
+                    groupToolStripMenuItem1.DropDownItems.Insert(1, new ToolStripSeparator());
+                    groupToolStripMenuItem1.DropDownItems.Insert(2, menuItem);
                 }
             }
         }

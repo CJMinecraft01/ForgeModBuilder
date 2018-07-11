@@ -35,6 +35,9 @@ namespace ForgeModBuilder.Forms
             BuildProjectButton.Click += BuildProjectClick;
             buildToolStripMenuItem.Click += BuildProjectClick;
             buildToolStripMenuItem1.Click += BuildProjectClick;
+            NewProjectButton.Click += NewProjectClick;
+            newToolStripMenuItem.Click += NewProjectClick;
+            newToolStripMenuItem1.Click += NewProjectClick;
             ProjectsListView.KeyDown += ProjectsListViewKeyDown;
             LastConsoleMessageLabel.TextChanged += LastConsoleMessageLabelTextChanged;
             ExecuteCommandButton.Click += ExecuteCommandButtonClick;
@@ -51,11 +54,6 @@ namespace ForgeModBuilder.Forms
             groupToolStripMenuItem1.Click += NewGroupClick;
             newGroupToolStripMenuItem.Click += NewGroupClick;
             newGroupToolStripMenuItem1.Click += NewGroupClick;
-        }
-
-        private void BuildProjectClick(object sender, EventArgs e)
-        {
-            GradleExecuter.RunGradleCommand("build");
         }
 
         private void ProjectsListViewKeyDown(object sender, KeyEventArgs e)
@@ -76,8 +74,10 @@ namespace ForgeModBuilder.Forms
 
         private void ExecuteCommandButtonClick(object sender, EventArgs e)
         {
-            GradleExecuter.RunGradleCommand(CommandEntryTextBox.Text);
-            CommandEntryTextBox.Text = "";
+            if (GradleExecuter.RunGradleCommand(CommandEntryTextBox.Text))
+            {
+                CommandEntryTextBox.Text = "";
+            }
         }
 
         private void ConsoleTextBoxLinkClicked(object sender, LinkClickedEventArgs e)
@@ -88,6 +88,16 @@ namespace ForgeModBuilder.Forms
         private void OpenProjectClick(object sender, EventArgs e)
         {
             ProjectManager.OpenProject();
+        }
+
+        private void BuildProjectClick(object sender, EventArgs e)
+        {
+            ProjectManager.BuildProject();
+        }
+
+        private void NewProjectClick(object sender, EventArgs e)
+        {
+            ProjectManager.NewProject();
         }
 
         private void SelectProject(object sender, EventArgs e)

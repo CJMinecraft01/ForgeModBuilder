@@ -16,12 +16,12 @@ namespace ForgeModBuilder.Gradle
         private static Process CurrentProcess;
         private static bool UsingDelegate = false;
 
-        public static void RunGradleCommand(string command)
+        public static bool RunGradleCommand(string command)
         {
             if (ProjectManager.CurrentProject == null)
             {
                 MessageBox.Show("You don't have a project selected!", "Please select a project", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                return false;
             }
 
             if (command.StartsWith("gradlew"))
@@ -52,6 +52,7 @@ namespace ForgeModBuilder.Gradle
                 }
                 CurrentProcess.BeginOutputReadLine();
                 CurrentProcess.BeginErrorReadLine();
+                return true;
             }
             else
             {
@@ -60,6 +61,7 @@ namespace ForgeModBuilder.Gradle
                     RunGradleCommand(command);
                 }
             }
+            return false;
         }
 
         delegate void GradleOutputReceivedCallback(object sender, DataReceivedEventArgs e);

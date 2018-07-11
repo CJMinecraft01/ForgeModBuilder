@@ -1,4 +1,5 @@
-﻿using ForgeModBuilder.Gradle;
+﻿using ForgeModBuilder.Forms;
+using ForgeModBuilder.Gradle;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -159,6 +160,17 @@ namespace ForgeModBuilder.Managers
                 string[] pathFolders = fbd.SelectedPath.Split('\\');
                 OpenProject(pathFolders[pathFolders.Length - 1], fbd.SelectedPath);
             }
+        }
+
+        public static void BuildProject()
+        {
+            GradleExecuter.RunGradleCommand("build");
+        }
+
+        public static void NewProject()
+        {
+            NewProjectForm form = new NewProjectForm();
+            form.Show();
         }
 
         public static Project GetProject(string Name, string Path)

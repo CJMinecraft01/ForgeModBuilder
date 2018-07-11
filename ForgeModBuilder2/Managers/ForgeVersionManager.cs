@@ -21,20 +21,24 @@ namespace ForgeModBuilder.Managers
         public static string MCPVersionsURL { get; private set; } = "http://files.minecraftforge.net/maven/de/oceanlabs/mcp/versions.json";
         public static string ForgeVersionsURL { get; private set; } = "http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_MCVERSION.json";
         public static string MCVersionsURL { get; private set; } = "https://raw.githubusercontent.com/CJMinecraft01/ForgeModBuilder/rewrite/mc_versions.json";
+        public static string PromotionsSlimURL { get; private set; } = "http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json";
 
         public static string MCPVersionsFileName { get; private set; } = "mcp_versions.json";
         public static string ForgeVersionsFileName { get; private set; } = "forge_versions.json";
         public static string MCVersionsFileName { get; private set; } = "mc_versions.json";
+        public static string RecommendedVersionsFileName { get; private set; } = "recommended_versions.json";
 
         public static Dictionary<string, Dictionary<string, List<string>>> MCPVersions { get; private set; }
         public static Dictionary<string, List<string>> ForgeVersions { get; private set; }
         public static List<string> MCVersions { get; private set; }
+        public static List<string> RecommendedVersions { get; private set; }
 
         public static void SaveVersions()
         {
             ClientManager.WriteCustomData<Dictionary<string, Dictionary<string, List<string>>>>(MCPVersions, MCPVersionsFileName);
             ClientManager.WriteCustomData<Dictionary<string, List<string>>>(ForgeVersions, ForgeVersionsFileName);
             ClientManager.WriteCustomData<List<string>>(MCVersions, MCVersionsFileName);
+            ClientManager.WriteCustomData<List<string>>(RecommendedVersions, RecommendedVersionsFileName);
         }
 
         public static void LoadVersions()
@@ -42,15 +46,17 @@ namespace ForgeModBuilder.Managers
             ClientManager.CreateCustomDataFileIfNotFound(MCPVersionsFileName);
             ClientManager.CreateCustomDataFileIfNotFound(ForgeVersionsFileName);
             ClientManager.CreateCustomDataFileIfNotFound(MCVersionsFileName);
+            ClientManager.CreateCustomDataFileIfNotFound(RecommendedVersionsFileName);
             MCPVersions = ClientManager.ReadCustomData<Dictionary<string, Dictionary<string, List<string>>>>(MCPVersionsFileName);
             ForgeVersions = ClientManager.ReadCustomData<Dictionary<string, List<string>>>(ForgeVersionsFileName);
             MCVersions = ClientManager.ReadCustomData<List<string>>(MCVersionsFileName);
+            RecommendedVersions = ClientManager.ReadCustomData<List<string>>(RecommendedVersionsFileName);
         }
 
         public static void UpdateVersionLists()
         {
             InstallingUpdateForm form = new InstallingUpdateForm();
-            form.ProgressBar.Maximum = 200;
+            form.ProgressBar.Maximum = 300;
             form.TaskDetailsLabel.Text = LanguageManager.CurrentLanguage.Localize("form.update.label.task_details.version_syncing");
             form.CancelButton.Click += (sender, e) =>
             {
@@ -72,6 +78,7 @@ namespace ForgeModBuilder.Managers
         {
             DownloadMCPVersionList(form);
             DownloadMCVersionList(form);
+            DownloadRecommendedVersionList(form);
             DownloadForgeVersionList(form);
             return true;
         }
@@ -95,6 +102,28 @@ namespace ForgeModBuilder.Managers
             using (JsonReader jr = new JsonTextReader(sr))
             {
                 MCVersions = js.Deserialize<List<string>>(jr);
+                jr.Close();
+            }
+            form.ProgressBar.Value += 100;
+        }
+
+        private static void DownloadRecommendedVersionList(InstallingUpdateForm form)
+        {
+            JsonSerializer js = new JsonSerializer();
+            using (StreamReader sr = new StreamReader(WebRequest.Create(PromotionsSlimURL).GetResponse().GetResponseStream()))
+            using (JsonReader jr = new JsonTextReader(sr))
+            {
+                JObject data = js.Deserialize<JObject>(jr);
+                Dictionary<string, string> promos = JsonConvert.DeserializeObject<Dictionary<string, string>>(data.SelectToken("promos").ToString());
+                RecommendedVersions = new List<string>();
+                foreach (string MinecraftVersion in promos.Keys)
+                {
+                    if (MinecraftVersion.Contains("-recommended"))
+                    {
+                        RecommendedVersions.Add(promos[MinecraftVersion]);
+                        continue;
+                    }
+                }
                 jr.Close();
             }
             form.ProgressBar.Value += 100;

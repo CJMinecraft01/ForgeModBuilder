@@ -80,7 +80,7 @@ namespace ForgeModBuilder.Managers
                 string SelectedLanguage = AvailableLanguages[(string)form.LanguagesComboBox.SelectedItem];
                 OptionsManager.SetOption<string>("CurrentLanguage", (string)form.LanguagesComboBox.SelectedItem);
 
-                client.DownloadFile(InstallationManager.UpdateLanguagesURL + SelectedLanguage + ".lang", LanguagesFilePath + SelectedLanguage + ".lang");
+                client.DownloadFile(InstallationManager.UpdateLanguagesURL + SelectedLanguage + ".json", LanguagesFilePath + SelectedLanguage + ".json");
                 client.Dispose();
 
                 CurrentLanguage = new Language(SelectedLanguage);
@@ -122,7 +122,7 @@ namespace ForgeModBuilder.Managers
                     // The language file doesn't exist
                     WebClient client = new WebClient();
 
-                    client.DownloadFile(InstallationManager.UpdateLanguagesURL + AvailableLanguages[CurrentLanguageName] + ".json", LanguagesFilePath + AvailableLanguages[CurrentLanguageName] + ".lang");
+                    client.DownloadFile(InstallationManager.UpdateLanguagesURL + AvailableLanguages[CurrentLanguageName] + ".json", LanguagesFilePath + AvailableLanguages[CurrentLanguageName] + ".json");
                     client.Dispose();
 
                     CurrentLanguage = new Language(AvailableLanguages[CurrentLanguageName]);

@@ -240,6 +240,8 @@ namespace ForgeModBuilder.Managers
                 File.Delete(ParentDirectory.FullName + "\\temp.zip");
                 OpenProject(path);
                 progressBarForm.Close();
+
+                // TODO replace files in build.gradle appropriately
             };
             client.DownloadFileAsync(new Uri(url), ParentDirectory.FullName + "\\temp.zip");
             

@@ -261,7 +261,7 @@ namespace ForgeModBuilder.Managers
         }
 
         public static bool ProjectExists(string Name, string Path)
-        {
+       {
             return GetProject(Name, Path) != null;
         }
 

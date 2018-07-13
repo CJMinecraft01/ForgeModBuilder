@@ -113,7 +113,7 @@ namespace ForgeModBuilder.Managers
             string CurrentLanguageName = OptionsManager.GetOption("CurrentLanguage", AvailableLanguages.Keys.First());
             if (AvailableLanguages.ContainsKey(CurrentLanguageName))
             {
-                if (File.Exists(LanguagesFilePath + AvailableLanguages[CurrentLanguageName] + ".lang"))
+                if (File.Exists(LanguagesFilePath + AvailableLanguages[CurrentLanguageName] + ".json"))
                 {
                     CurrentLanguage = new Language(AvailableLanguages[CurrentLanguageName]);
                 }
@@ -122,7 +122,7 @@ namespace ForgeModBuilder.Managers
                     // The language file doesn't exist
                     WebClient client = new WebClient();
 
-                    client.DownloadFile(InstallationManager.UpdateLanguagesURL + AvailableLanguages[CurrentLanguageName] + ".lang", LanguagesFilePath + AvailableLanguages[CurrentLanguageName] + ".lang");
+                    client.DownloadFile(InstallationManager.UpdateLanguagesURL + AvailableLanguages[CurrentLanguageName] + ".json", LanguagesFilePath + AvailableLanguages[CurrentLanguageName] + ".lang");
                     client.Dispose();
 
                     CurrentLanguage = new Language(AvailableLanguages[CurrentLanguageName]);
@@ -146,7 +146,7 @@ namespace ForgeModBuilder.Managers
         public Language(string name)
         {
             this.Name = name;
-            this.Path = LanguageManager.LanguagesFilePath + this.Name + ".lang";
+            this.Path = LanguageManager.LanguagesFilePath + this.Name + ".json";
             LoadLanguage();
         }
 
@@ -154,15 +154,12 @@ namespace ForgeModBuilder.Managers
         {
             if (File.Exists(this.Path))
             {
-                foreach (string line in File.ReadAllLines(this.Path))
+                JsonSerializer js = new JsonSerializer();
+                using (StreamReader sr = new StreamReader(this.Path))
+                using (JsonReader jr = new JsonTextReader(sr))
                 {
-                    if (!line.StartsWith("##") && line.Contains('='))
-                    {
-                        int equalSignIndex = line.IndexOf('=') + 1;
-                        string key = line.Substring(0, equalSignIndex - 1);
-                        string value = line.Substring(equalSignIndex, line.Length - equalSignIndex);
-                        TranslationKeys.Add(key, value);
-                    }
+                    this.TranslationKeys = js.Deserialize<Dictionary<string, string>>(jr);
+                    jr.Close();
                 }
             }
         }

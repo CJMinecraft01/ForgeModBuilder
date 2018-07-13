@@ -2,7 +2,7 @@
 
 namespace ForgeModBuilder.Forms
 {
-    partial class InstallingUpdateForm
+    partial class ProgressBarForm
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace ForgeModBuilder.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InstallingUpdateForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProgressBarForm));
             this.CancelButton = new System.Windows.Forms.Button();
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.TitleLabel = new System.Windows.Forms.Label();

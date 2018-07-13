@@ -55,7 +55,7 @@ namespace ForgeModBuilder.Managers
 
         public static void UpdateVersionLists()
         {
-            InstallingUpdateForm form = new InstallingUpdateForm();
+            ProgressBarForm form = new ProgressBarForm();
             form.ProgressBar.Maximum = 300;
             form.TaskDetailsLabel.Text = LanguageManager.CurrentLanguage.Localize("form.update.label.task_details.version_syncing");
             form.CancelButton.Click += (sender, e) =>
@@ -74,7 +74,7 @@ namespace ForgeModBuilder.Managers
             form.Dispose();
         }
 
-        private static async Task<bool> UpdateLists(InstallingUpdateForm form)
+        private static async Task<bool> UpdateLists(ProgressBarForm form)
         {
             DownloadMCPVersionList(form);
             DownloadMCVersionList(form);
@@ -83,7 +83,7 @@ namespace ForgeModBuilder.Managers
             return true;
         }
 
-        private static void DownloadMCPVersionList(InstallingUpdateForm form)
+        private static void DownloadMCPVersionList(ProgressBarForm form)
         {
             JsonSerializer js = new JsonSerializer();
             using (StreamReader sr = new StreamReader(WebRequest.Create(MCPVersionsURL).GetResponse().GetResponseStream()))
@@ -95,7 +95,7 @@ namespace ForgeModBuilder.Managers
             form.ProgressBar.Value += 100;
         }
 
-        private static void DownloadMCVersionList(InstallingUpdateForm form)
+        private static void DownloadMCVersionList(ProgressBarForm form)
         {
             JsonSerializer js = new JsonSerializer();
             using (StreamReader sr = new StreamReader(WebRequest.Create(MCVersionsURL).GetResponse().GetResponseStream()))
@@ -107,7 +107,7 @@ namespace ForgeModBuilder.Managers
             form.ProgressBar.Value += 100;
         }
 
-        private static void DownloadRecommendedVersionList(InstallingUpdateForm form)
+        private static void DownloadRecommendedVersionList(ProgressBarForm form)
         {
             JsonSerializer js = new JsonSerializer();
             using (StreamReader sr = new StreamReader(WebRequest.Create(PromotionsSlimURL).GetResponse().GetResponseStream()))
@@ -129,7 +129,7 @@ namespace ForgeModBuilder.Managers
             form.ProgressBar.Value += 100;
         }
 
-        private static void DownloadForgeVersionList(InstallingUpdateForm form)
+        private static void DownloadForgeVersionList(ProgressBarForm form)
         {
             List<string> VersionsToSync = OptionsManager.GetOption<List<string>>("VersionsToSync", MCVersions);
             form.ProgressBar.Value = 0;

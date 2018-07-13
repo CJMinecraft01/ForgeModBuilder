@@ -73,11 +73,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ForgeModBuilder.cs" />
-    <Compile Include="Forms\InstallingUpdateForm.cs">
+    <Compile Include="Forms\ProgressBarForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\InstallingUpdateForm.Designer.cs">
-      <DependentUpon>InstallingUpdateForm.cs</DependentUpon>
+    <Compile Include="Forms\ProgressBarForm.Designer.cs">
+      <DependentUpon>ProgressBarForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\LanguageSelectionForm.cs">
       <SubType>Form</SubType>
@@ -113,8 +113,8 @@
     <Compile Include="Managers\OptionsManager.cs" />
     <Compile Include="Managers\ProjectManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\InstallingUpdateForm.resx">
-      <DependentUpon>InstallingUpdateForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ProgressBarForm.resx">
+      <DependentUpon>ProgressBarForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LanguageSelectionForm.resx">
       <DependentUpon>LanguageSelectionForm.cs</DependentUpon>

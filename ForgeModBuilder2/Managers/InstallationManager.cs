@@ -34,7 +34,7 @@ namespace ForgeModBuilder.Managers
                 {
                     // The user wants to update so let's do it!
 
-                    InstallingUpdateForm form = new InstallingUpdateForm();
+                    ProgressBarForm form = new ProgressBarForm();
                     form.ProgressBar.Maximum = 200;
                     Task<bool> task = InstallUpdates(form, client, update);
                     Application.Run(form);
@@ -44,7 +44,7 @@ namespace ForgeModBuilder.Managers
             return false;
         }
 
-        private static async Task<bool> InstallUpdates(InstallingUpdateForm form, WebClient client, Update update)
+        private static async Task<bool> InstallUpdates(ProgressBarForm form, WebClient client, Update update)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace ForgeModBuilder.Managers
             return true;
         }
 
-        private static async Task<bool> InstallLanguages(InstallingUpdateForm form)
+        private static async Task<bool> InstallLanguages(ProgressBarForm form)
         {
             // Update languages
             WebClient client = new WebClient();

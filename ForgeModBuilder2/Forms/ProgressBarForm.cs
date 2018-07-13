@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace ForgeModBuilder.Forms
 {
-    public partial class InstallingUpdateForm : Form
+    public partial class ProgressBarForm : Form
     {
-        public InstallingUpdateForm()
+        public ProgressBarForm()
         {
             InitializeComponent();
         }

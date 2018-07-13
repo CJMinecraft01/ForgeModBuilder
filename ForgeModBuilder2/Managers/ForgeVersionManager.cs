@@ -58,20 +58,18 @@ namespace ForgeModBuilder.Managers
             ProgressBarForm form = new ProgressBarForm();
             form.ProgressBar.Maximum = 300;
             form.TaskDetailsLabel.Text = LanguageManager.CurrentLanguage.Localize("form.update.label.task_details.version_syncing");
-            form.CancelButton.Click += (sender, e) =>
-            {
-                form.Close();
-            };
             form.Paint += (sender, e) => {
                 if(form.ProgressBar.Value == form.ProgressBar.Maximum)
                 {
                     form.Close();
                 }
             };
+            form.CancelButton.Click += (sender, e) =>
+            {
+                form.Close();
+            };
             Task<bool> task = UpdateLists(form);
             Application.Run(form);
-            task.Dispose();
-            form.Dispose();
         }
 
         private static async Task<bool> UpdateLists(ProgressBarForm form)

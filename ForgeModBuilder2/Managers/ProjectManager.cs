@@ -3,12 +3,19 @@ using ForgeModBuilder.Gradle;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ForgeModBuilder.Managers
 {
     public static class ProjectManager
     {
+        public static string NewProjectDownloadURL { get; private set; } = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/MC-FORGE/forge-MC-FORGE-SRC.zip";
+
         public static List<Project> Projects { get; private set; } = new List<Project>();
 
         public static Project CurrentProject { get; set; }
@@ -90,10 +97,10 @@ namespace ForgeModBuilder.Managers
                 {
                     ForgeModBuilder.MainFormInstance.ProjectsListView.Groups.Clear();
                     int count = ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Count;
-                    for(int i = 0; i < count; i++)
+                    for (int i = 0; i < count; i++)
                     {
-                        ToolStripMenuItem item = (ToolStripMenuItem) ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems[0];
-                        if (item.Tag != null && item.Tag is string && (string) item.Tag == "NewGroupButton")
+                        ToolStripMenuItem item = (ToolStripMenuItem)ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems[0];
+                        if (item.Tag != null && item.Tag is string && (string)item.Tag == "NewGroupButton")
                         {
                             continue;
                         }
@@ -154,23 +161,89 @@ namespace ForgeModBuilder.Managers
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             // TODO Add description
-            fbd.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            fbd.ShowNewFolderButton = false;
             if (fbd.ShowDialog() == DialogResult.OK)
             {
-                string[] pathFolders = fbd.SelectedPath.Split('\\');
-                OpenProject(pathFolders[pathFolders.Length - 1], fbd.SelectedPath);
+                OpenProject(fbd.SelectedPath);
             }
         }
 
         public static void BuildProject()
         {
             GradleExecuter.RunGradleCommand("build");
+            // option to add extra bits to the command
         }
 
         public static void NewProject()
         {
-            NewProjectForm form = new NewProjectForm();
-            form.Show();
+            NewProjectForm form1 = new NewProjectForm();
+            if (form1.ShowDialog() != DialogResult.Cancel)
+            {
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
+                // add description
+                if (fbd.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+
+                if (Directory.EnumerateFileSystemEntries(fbd.SelectedPath).Any())
+                {
+                    // Make sure the folder is empty
+                    // TODO localise
+                    MessageBox.Show("The folder you selected has files in, please select another folder", "Invalid Folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                ProgressBarForm form2 = new ProgressBarForm();
+                form2.ProgressBar.Maximum = 100;
+                form2.TaskDetailsLabel.Text = LanguageManager.CurrentLanguage.Localize("form.new_project_download.label.task_details");
+                form2.TitleLabel.Text = LanguageManager.CurrentLanguage.Localize("form.new_project_download.label.title");
+                form2.Text = LanguageManager.CurrentLanguage.Localize("form.new_project_download.label.title");
+                form2.CancelButton.Click += (sender, e) =>
+                {
+                    form2.Close();
+                };
+                Task<bool> task = DownloadNewProject(form1, form2, fbd.SelectedPath);
+                if (form2.ShowDialog() == DialogResult.Cancel)
+                {
+
+                }
+            }
+        }
+
+        private static async Task<bool> DownloadNewProject(NewProjectForm newProjectForm, ProgressBarForm progressBarForm, string path)
+        {
+            string url;
+            if ((string)newProjectForm.MinecraftVerionsListBox.SelectedItem == "1.7.10")
+            {
+                url = NewProjectDownloadURL.Replace("MC", (string)newProjectForm.MinecraftVerionsListBox.SelectedItem).Replace("FORGE", ((string)newProjectForm.ForgeVersionsListBox.SelectedItem).Replace("★", string.Empty) + "-" + (string)newProjectForm.MinecraftVerionsListBox.SelectedItem);
+            }
+            else
+            {
+                url = NewProjectDownloadURL.Replace("MC", (string)newProjectForm.MinecraftVerionsListBox.SelectedItem).Replace("FORGE", ((string)newProjectForm.ForgeVersionsListBox.SelectedItem).Replace("★", string.Empty));
+            }
+            if (new Version((string)newProjectForm.MinecraftVerionsListBox.SelectedItem).CompareTo(new Version("1.8")) < 0)
+            {
+                url = url.Replace("SRC", "src");
+            }
+            else
+            {
+                url = url.Replace("SRC", "mdk");
+            }
+
+            WebClient client = new WebClient();
+            client.DownloadProgressChanged += (sender, e) => progressBarForm.ProgressBar.Value = e.ProgressPercentage;
+            DirectoryInfo ParentDirectory = Directory.GetParent(path);
+            client.DownloadFileCompleted += (sender, e) => {
+                ZipFile.ExtractToDirectory(ParentDirectory.FullName + "\\temp.zip", path);
+
+                File.Delete(ParentDirectory.FullName + "\\temp.zip");
+                OpenProject(path);
+                progressBarForm.Close();
+            };
+            client.DownloadFileAsync(new Uri(url), ParentDirectory.FullName + "\\temp.zip");
+            
+            return true;
         }
 
         public static Project GetProject(string Name, string Path)
@@ -190,6 +263,12 @@ namespace ForgeModBuilder.Managers
             return GetProject(Name, Path) != null;
         }
 
+        public static void OpenProject(string Path)
+        {
+            string[] pathFolders = Path.Split('\\');
+            OpenProject(pathFolders[pathFolders.Length - 1], Path);
+        }
+
         public static void OpenProject(string Name, string Path)
         {
             // TODO ensure each variable is correct type
@@ -198,7 +277,7 @@ namespace ForgeModBuilder.Managers
             {
                 Path += "\\";
             }
-            if(ProjectExists(Name, Path))
+            if (ProjectExists(Name, Path))
             {
                 MessageBox.Show("This project is already open!", "Already open project!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -225,7 +304,7 @@ namespace ForgeModBuilder.Managers
 
         public static void UpdateProjectInfo(Project originalProject)
         {
-            if (Directory.Exists(originalProject.Path) && File.Exists(originalProject.Path + "gradlew.bat") && File.Exists(originalProject.Path + "build.gradle"))
+            if (Directory.Exists(originalProject.Path.Substring(0, originalProject.Path.Length - 2)) && File.Exists(originalProject.Path + "gradlew.bat") && File.Exists(originalProject.Path + "build.gradle"))
             {
                 Project newProject = new Project(originalProject.Name, originalProject.Path);
                 Projects.Remove(originalProject);
@@ -293,7 +372,7 @@ namespace ForgeModBuilder.Managers
 
         public string[] ToArray()
         {
-            return new string[] { Name, MinecraftVersion, ForgeVersion, MCPMapping, ModVersion, ModArchivesBaseName, ModGroup, Path};
+            return new string[] { Name, MinecraftVersion, ForgeVersion, MCPMapping, ModVersion, ModArchivesBaseName, ModGroup, Path };
         }
     }
 }

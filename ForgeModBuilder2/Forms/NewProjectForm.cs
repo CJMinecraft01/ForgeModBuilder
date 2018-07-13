@@ -39,7 +39,15 @@ namespace ForgeModBuilder.Forms
 
         private void CheckValidity(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(ArchiveBaseNameTextBox.Text) || string.IsNullOrWhiteSpace(VersionTextBox.Text) || string.IsNullOrWhiteSpace(GroupTextBox.Text) || string.IsNullOrWhiteSpace(JavaVersionComboBox.Text) || ForgeVersionsListBox.SelectedItem == null)
+            if (string.IsNullOrWhiteSpace(ArchiveBaseNameTextBox.Text) || 
+                string.IsNullOrWhiteSpace(VersionTextBox.Text) || 
+                string.IsNullOrWhiteSpace(GroupTextBox.Text) || 
+                string.IsNullOrWhiteSpace(JavaVersionComboBox.Text) || 
+                ForgeVersionsListBox.SelectedItem == null ||
+                ArchiveBaseNameTextBox.Text == "ArchiveBaseName" ||
+                JavaVersionComboBox.Text == "Java Version" ||
+                VersionTextBox.Text == "Version" ||
+                GroupTextBox.Text == "Group" || !JavaVersionComboBox.Items.Contains(JavaVersionComboBox.Text))
             {
                 CreateButton.Enabled = false;
             }

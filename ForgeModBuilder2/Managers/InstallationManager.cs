@@ -36,6 +36,10 @@ namespace ForgeModBuilder.Managers
 
                     ProgressBarForm form = new ProgressBarForm();
                     form.ProgressBar.Maximum = 200;
+                    form.CancelButton.Click += (sender, e) =>
+                    {
+                        form.Close();
+                    };
                     Task<bool> task = InstallUpdates(form, client, update);
                     Application.Run(form);
                     return true;

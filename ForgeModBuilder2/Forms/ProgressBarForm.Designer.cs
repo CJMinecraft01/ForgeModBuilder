@@ -46,6 +46,7 @@ namespace ForgeModBuilder.Forms
             this.CancelButton.TabIndex = 0;
             this.CancelButton.Text = LanguageManager.CurrentLanguage.Localize("button.cancel");
             this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             // 
             // ProgressBar
             // 
@@ -98,7 +99,7 @@ namespace ForgeModBuilder.Forms
 
         #endregion
 
-        public System.Windows.Forms.Button CancelButton;
+        public new System.Windows.Forms.Button CancelButton;
         public System.Windows.Forms.ProgressBar ProgressBar;
         public System.Windows.Forms.Label TaskDetailsLabel;
         public System.Windows.Forms.Label TitleLabel;

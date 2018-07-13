@@ -69,7 +69,7 @@ namespace ForgeModBuilder.Forms
             Image fakeImage = new Bitmap(1, 1);
             Graphics graphics = Graphics.FromImage(fakeImage);
             SizeF size = graphics.MeasureString(LastConsoleMessageLabel.Text, LastConsoleMessageLabel.Font);
-            LastConsoleMessageLabel.Location = new Point(ClientRectangle.Width - (int)size.Width - 5, LastConsoleMessageLabel.Location.Y);
+            LastConsoleMessageLabel.Location = new Point(ClientRectangle.Width - (int)size.Width + 5, LastConsoleMessageLabel.Location.Y);
         }
 
         private void ExecuteCommandButtonClick(object sender, EventArgs e)

@@ -22,11 +22,26 @@ namespace ForgeModBuilder.Gradle
             }
             return tab;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is GObject)
+            {
+                GObject gobject = (GObject)obj;
+                return gobject.Name == this.Name && gobject.NestedLevel == this.NestedLevel;
+            }
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     public class GVariable : GObject
     {
-        public object Value { get; private set; }
+        public object Value { get; set; }
 
         public GVariable(string name, object value)
         {
@@ -37,6 +52,21 @@ namespace ForgeModBuilder.Gradle
         public override string ToString()
         {
             return GetTab() + Name + " = " + Value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is GVariable)
+            {
+                GVariable gvariable = (GVariable)obj;
+                return gvariable.Name == this.Name && gvariable.NestedLevel == this.NestedLevel && gvariable.Value == this.Value;
+            }
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 
@@ -86,10 +116,23 @@ namespace ForgeModBuilder.Gradle
             {
                 if (child.Name == Name && child is T)
                 {
-                    return (T) child;
+                    return (T)child;
                 }
             }
             return null;
+        }
+
+        public List<T> SelectChildren<T>() where T : GObject
+        {
+            List<T> selectedChildren = new List<T>();
+            foreach (GObject child in Children)
+            {
+                if (child is T)
+                {
+                    selectedChildren.Add((T)child);
+                }
+            }
+            return selectedChildren;
         }
     }
 

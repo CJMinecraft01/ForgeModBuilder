@@ -29,6 +29,11 @@ namespace ForgeModBuilder.Managers
             Dictionary<string, ListViewGroup> groups = new Dictionary<string, ListViewGroup>();
             foreach (Project project in Projects)
             {
+                if (!File.Exists(project.Path + "build.gradle"))
+                {
+                    Projects.Remove(project);
+                    continue;
+                }
                 ListViewItem item;
                 if (!string.IsNullOrEmpty(project.GroupName))
                 {
@@ -38,7 +43,6 @@ namespace ForgeModBuilder.Managers
                         item.Tag = project;
                         item.Group = groups[project.GroupName];
                         ForgeModBuilder.MainFormInstance.ProjectsListView.Items.Add(item);
-                        continue;
                     }
                     else
                     {
@@ -49,8 +53,8 @@ namespace ForgeModBuilder.Managers
                         item.Group = group;
                         ForgeModBuilder.MainFormInstance.ProjectsListView.Items.Add(item);
                         groups.Add(project.GroupName, group);
-                        continue;
                     }
+                    continue;
                 }
                 item = new ListViewItem(project.ToArray());
                 item.Tag = project;
@@ -238,6 +242,18 @@ namespace ForgeModBuilder.Managers
                 ZipFile.ExtractToDirectory(ParentDirectory.FullName + "\\temp.zip", path);
 
                 File.Delete(ParentDirectory.FullName + "\\temp.zip");
+
+                GBlock file = GradleParser.ReadFile(path + "\\build.gradle");
+                file.SelectChild<GVariable>("version").Value = newProjectForm.VersionTextBox.Text;
+                file.SelectChild<GVariable>("archiveBaseName").Value = newProjectForm.ArchiveBaseNameTextBox.Text;
+                file.SelectChild<GVariable>("group").Value = newProjectForm.GroupTextBox.Text;
+                file.SelectChild<GVariable>("sourceCompatability").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
+                file.SelectChild<GVariable>("targetCompatability").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
+                file.SelectChild<GBlock>("compileJava").SelectChild<GVariable>("sourceCompatability").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
+                file.SelectChild<GBlock>("compileJava").SelectChild<GVariable>("targetCompatability").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
+
+                GradleWriter.WriteFile(path + "\\build.gradle", file);
+
                 OpenProject(path);
                 progressBarForm.Close();
 
@@ -333,7 +349,7 @@ namespace ForgeModBuilder.Managers
         {
             Name = name;
             Path = path;
-            GBlock file = GradleParser.ReadBuildFile(Path + "build.gradle");
+            GBlock file = GradleParser.ReadFile(Path + "build.gradle");
             ModVersion = (string)file.SelectChild<GVariable>("version").Value;
             ModGroup = (string)file.SelectChild<GVariable>("group").Value;
             ModArchivesBaseName = (string)file.SelectChild<GVariable>("archivesBaseName").Value;

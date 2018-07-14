@@ -6,12 +6,12 @@ namespace ForgeModBuilder.Gradle
 {
     public static class GradleParser
     {
-        public static GBlock ReadBuildFile(string Path)
+        public static GBlock ReadFile(string Path)
         {
             return Decode(GetDataFromLines(File.ReadAllLines(Path)));
         }
 
-        private static List<List<string>> GetDataFromLines(string[] lines)
+        internal static List<List<string>> GetDataFromLines(string[] lines)
         {
             List<List<string>> data = new List<List<string>>();
             foreach (string line in lines)
@@ -115,7 +115,7 @@ namespace ForgeModBuilder.Gradle
             return data;
         }
 
-        private static GBlock Decode(List<List<string>> data, int NestedLevel = -1)
+        internal static GBlock Decode(List<List<string>> data, int NestedLevel = -1)
         {
             GBlock block = new GBlock();
             block.NestedLevel = NestedLevel;
@@ -244,7 +244,7 @@ namespace ForgeModBuilder.Gradle
             return block;
         }
 
-        private static GVariable DecodeVariable(int equalChunkIndex, List<string> dataChunk, GBlock parentBlock)
+        internal static GVariable DecodeVariable(int equalChunkIndex, List<string> dataChunk, GBlock parentBlock)
         {
             object value = DecodeVariableValue(dataChunk[equalChunkIndex + 1]);
             if (value != null)
@@ -263,7 +263,7 @@ namespace ForgeModBuilder.Gradle
             return null;
         }
 
-        private static object DecodeVariableValue(string chunk)
+        internal static object DecodeVariableValue(string chunk)
         {
             int _int;
             if (int.TryParse(chunk, out _int))

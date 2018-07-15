@@ -212,13 +212,6 @@ namespace ForgeModBuilder.Managers
                 {
                     form2.Close();
                 };
-                form2.Paint += (sender, e) =>
-                {
-                    if (form2.ProgressBar.Value == form2.ProgressBar.Maximum)
-                    {
-                        form2.Close();
-                    }
-                };
                 Task<bool> task = DownloadNewProject(form1, form2, fbd.SelectedPath);
                 if (form2.ShowDialog() == DialogResult.Cancel)
                 {
@@ -267,8 +260,9 @@ namespace ForgeModBuilder.Managers
 
                 GradleWriter.WriteFile(path + "\\build.gradle", file);
 
-
                 OpenProject(path);
+
+                progressBarForm.Close();
             };
             client.DownloadFileAsync(new Uri(url), ParentDirectory.FullName + "\\temp.zip");
 

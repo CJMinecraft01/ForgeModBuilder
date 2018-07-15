@@ -16,6 +16,7 @@ namespace ForgeModBuilder.Forms
         public NewProjectForm()
         {
             InitializeComponent();
+            AcceptButton = CreateButton;
             InitialiseEvents();
             MinecraftVerionsListBox.Items.AddRange(ForgeVersionManager.MCVersions.ToArray());
             MinecraftVerionsListBox.SelectedIndex = 0;
@@ -24,7 +25,7 @@ namespace ForgeModBuilder.Forms
         private void InitialiseEvents()
         {
             MinecraftVerionsListBox.SelectedIndexChanged += SelectMinecraftVersion;
-            ArchiveBaseNameTextBox.TextChanged += GeneratedArchiveNameTextChanged;
+            ArchivesBaseNameTextBox.TextChanged += GeneratedArchiveNameTextChanged;
             VersionTextBox.TextChanged += GeneratedArchiveNameTextChanged;
             GroupTextBox.TextChanged += CheckValidity;
             JavaVersionComboBox.TextChanged += CheckValidity;
@@ -33,18 +34,18 @@ namespace ForgeModBuilder.Forms
 
         private void GeneratedArchiveNameTextChanged(object sender, EventArgs e)
         {
-            GeneratedArchiveNameLabel.Text = ArchiveBaseNameTextBox.Text + "-" + VersionTextBox.Text + ".jar";
+            GeneratedArchiveNameLabel.Text = ArchivesBaseNameTextBox.Text + "-" + VersionTextBox.Text + ".jar";
             CheckValidity(sender, e);
         }
 
         private void CheckValidity(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(ArchiveBaseNameTextBox.Text) || 
+            if (string.IsNullOrWhiteSpace(ArchivesBaseNameTextBox.Text) || 
                 string.IsNullOrWhiteSpace(VersionTextBox.Text) || 
                 string.IsNullOrWhiteSpace(GroupTextBox.Text) || 
                 string.IsNullOrWhiteSpace(JavaVersionComboBox.Text) || 
                 ForgeVersionsListBox.SelectedItem == null ||
-                ArchiveBaseNameTextBox.Text == "ArchiveBaseName" ||
+                ArchivesBaseNameTextBox.Text == "ArchiveBaseName" ||
                 JavaVersionComboBox.Text == "Java Version" ||
                 VersionTextBox.Text == "Version" ||
                 GroupTextBox.Text == "Group" || !JavaVersionComboBox.Items.Contains(JavaVersionComboBox.Text))

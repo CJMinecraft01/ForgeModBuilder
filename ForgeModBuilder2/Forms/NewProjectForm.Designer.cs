@@ -35,12 +35,12 @@
             this.GeneratedArchiveNameLabel = new System.Windows.Forms.Label();
             this.ForgeVersionsListBox = new System.Windows.Forms.ListBox();
             this.MinecraftVerionsListBox = new System.Windows.Forms.ListBox();
+            this.ExampleArchiveLabel = new System.Windows.Forms.Label();
+            this.ArchivesBaseNameTextBox = new System.Windows.Forms.TextBox();
+            this.JavaVersionComboBox = new System.Windows.Forms.ComboBox();
             this.ButtonsPanel = new System.Windows.Forms.Panel();
             this.CreateButton = new System.Windows.Forms.Button();
             this.CancelButton = new System.Windows.Forms.Button();
-            this.ExampleArchiveLabel = new System.Windows.Forms.Label();
-            this.ArchiveBaseNameTextBox = new System.Windows.Forms.TextBox();
-            this.JavaVersionComboBox = new System.Windows.Forms.ComboBox();
             this.NewProjectPanel.SuspendLayout();
             this.ButtonsPanel.SuspendLayout();
             this.SuspendLayout();
@@ -56,7 +56,7 @@
             this.NewProjectPanel.Controls.Add(this.ForgeVersionsListBox, 1, 0);
             this.NewProjectPanel.Controls.Add(this.MinecraftVerionsListBox, 0, 0);
             this.NewProjectPanel.Controls.Add(this.ExampleArchiveLabel, 0, 1);
-            this.NewProjectPanel.Controls.Add(this.ArchiveBaseNameTextBox, 0, 2);
+            this.NewProjectPanel.Controls.Add(this.ArchivesBaseNameTextBox, 0, 2);
             this.NewProjectPanel.Controls.Add(this.JavaVersionComboBox, 1, 3);
             this.NewProjectPanel.Controls.Add(this.ButtonsPanel, 1, 4);
             this.NewProjectPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -69,44 +69,44 @@
             this.NewProjectPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.NewProjectPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.NewProjectPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.NewProjectPanel.Size = new System.Drawing.Size(315, 272);
+            this.NewProjectPanel.Size = new System.Drawing.Size(325, 272);
             this.NewProjectPanel.TabIndex = 0;
             // 
             // GroupTextBox
             // 
             this.GroupTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GroupTextBox.Location = new System.Drawing.Point(8, 216);
+            this.GroupTextBox.Location = new System.Drawing.Point(8, 213);
             this.GroupTextBox.Name = "GroupTextBox";
-            this.GroupTextBox.Size = new System.Drawing.Size(146, 20);
-            this.GroupTextBox.TabIndex = 17;
+            this.GroupTextBox.Size = new System.Drawing.Size(151, 20);
+            this.GroupTextBox.TabIndex = 5;
             this.GroupTextBox.Text = "Group";
             // 
             // VersionTextBox
             // 
             this.VersionTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.VersionTextBox.Location = new System.Drawing.Point(160, 190);
+            this.VersionTextBox.Location = new System.Drawing.Point(165, 187);
             this.VersionTextBox.Name = "VersionTextBox";
-            this.VersionTextBox.Size = new System.Drawing.Size(147, 20);
-            this.VersionTextBox.TabIndex = 16;
+            this.VersionTextBox.Size = new System.Drawing.Size(152, 20);
+            this.VersionTextBox.TabIndex = 4;
             this.VersionTextBox.Text = "Version";
             // 
             // GeneratedArchiveNameLabel
             // 
             this.GeneratedArchiveNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.GeneratedArchiveNameLabel.AutoSize = true;
-            this.GeneratedArchiveNameLabel.Location = new System.Drawing.Point(160, 168);
+            this.GeneratedArchiveNameLabel.Location = new System.Drawing.Point(165, 165);
             this.GeneratedArchiveNameLabel.Name = "GeneratedArchiveNameLabel";
-            this.GeneratedArchiveNameLabel.Size = new System.Drawing.Size(147, 13);
+            this.GeneratedArchiveNameLabel.Size = new System.Drawing.Size(152, 13);
             this.GeneratedArchiveNameLabel.TabIndex = 14;
-            this.GeneratedArchiveNameLabel.Text = "ArchiveBaseName-Version.jar";
+            this.GeneratedArchiveNameLabel.Text = "ArchivesBaseName-Version.jar";
             // 
             // ForgeVersionsListBox
             // 
             this.ForgeVersionsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ForgeVersionsListBox.FormattingEnabled = true;
-            this.ForgeVersionsListBox.Location = new System.Drawing.Point(160, 8);
+            this.ForgeVersionsListBox.Location = new System.Drawing.Point(165, 8);
             this.ForgeVersionsListBox.Name = "ForgeVersionsListBox";
-            this.ForgeVersionsListBox.Size = new System.Drawing.Size(147, 151);
+            this.ForgeVersionsListBox.Size = new System.Drawing.Size(152, 148);
             this.ForgeVersionsListBox.TabIndex = 2;
             // 
             // MinecraftVerionsListBox
@@ -115,17 +115,50 @@
             this.MinecraftVerionsListBox.FormattingEnabled = true;
             this.MinecraftVerionsListBox.Location = new System.Drawing.Point(8, 8);
             this.MinecraftVerionsListBox.Name = "MinecraftVerionsListBox";
-            this.MinecraftVerionsListBox.Size = new System.Drawing.Size(146, 151);
+            this.MinecraftVerionsListBox.Size = new System.Drawing.Size(151, 148);
             this.MinecraftVerionsListBox.TabIndex = 1;
+            // 
+            // ExampleArchiveLabel
+            // 
+            this.ExampleArchiveLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.ExampleArchiveLabel.AutoSize = true;
+            this.ExampleArchiveLabel.Location = new System.Drawing.Point(70, 165);
+            this.ExampleArchiveLabel.Name = "ExampleArchiveLabel";
+            this.ExampleArchiveLabel.Size = new System.Drawing.Size(89, 13);
+            this.ExampleArchiveLabel.TabIndex = 13;
+            this.ExampleArchiveLabel.Text = "Example Archive:";
+            // 
+            // ArchivesBaseNameTextBox
+            // 
+            this.ArchivesBaseNameTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ArchivesBaseNameTextBox.Location = new System.Drawing.Point(8, 187);
+            this.ArchivesBaseNameTextBox.Name = "ArchivesBaseNameTextBox";
+            this.ArchivesBaseNameTextBox.Size = new System.Drawing.Size(151, 20);
+            this.ArchivesBaseNameTextBox.TabIndex = 3;
+            this.ArchivesBaseNameTextBox.Text = "ArchivesBaseName";
+            // 
+            // JavaVersionComboBox
+            // 
+            this.JavaVersionComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.JavaVersionComboBox.FormattingEnabled = true;
+            this.JavaVersionComboBox.Items.AddRange(new object[] {
+            "8",
+            "7",
+            "6"});
+            this.JavaVersionComboBox.Location = new System.Drawing.Point(165, 213);
+            this.JavaVersionComboBox.Name = "JavaVersionComboBox";
+            this.JavaVersionComboBox.Size = new System.Drawing.Size(152, 21);
+            this.JavaVersionComboBox.TabIndex = 6;
+            this.JavaVersionComboBox.Text = "Java Version";
             // 
             // ButtonsPanel
             // 
             this.ButtonsPanel.Controls.Add(this.CreateButton);
             this.ButtonsPanel.Controls.Add(this.CancelButton);
             this.ButtonsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ButtonsPanel.Location = new System.Drawing.Point(160, 246);
+            this.ButtonsPanel.Location = new System.Drawing.Point(165, 240);
             this.ButtonsPanel.Name = "ButtonsPanel";
-            this.ButtonsPanel.Size = new System.Drawing.Size(147, 24);
+            this.ButtonsPanel.Size = new System.Drawing.Size(152, 24);
             this.ButtonsPanel.TabIndex = 12;
             // 
             // CreateButton
@@ -136,7 +169,7 @@
             this.CreateButton.Location = new System.Drawing.Point(3, 1);
             this.CreateButton.Name = "CreateButton";
             this.CreateButton.Size = new System.Drawing.Size(66, 23);
-            this.CreateButton.TabIndex = 10;
+            this.CreateButton.TabIndex = 7;
             this.CreateButton.Text = "Create";
             this.CreateButton.UseVisualStyleBackColor = true;
             // 
@@ -144,51 +177,18 @@
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(82, 1);
+            this.CancelButton.Location = new System.Drawing.Point(87, 1);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(66, 23);
-            this.CancelButton.TabIndex = 11;
+            this.CancelButton.TabIndex = 8;
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
-            // 
-            // ExampleArchiveLabel
-            // 
-            this.ExampleArchiveLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.ExampleArchiveLabel.AutoSize = true;
-            this.ExampleArchiveLabel.Location = new System.Drawing.Point(65, 168);
-            this.ExampleArchiveLabel.Name = "ExampleArchiveLabel";
-            this.ExampleArchiveLabel.Size = new System.Drawing.Size(89, 13);
-            this.ExampleArchiveLabel.TabIndex = 13;
-            this.ExampleArchiveLabel.Text = "Example Archive:";
-            // 
-            // ArchiveBaseNameTextBox
-            // 
-            this.ArchiveBaseNameTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ArchiveBaseNameTextBox.Location = new System.Drawing.Point(8, 190);
-            this.ArchiveBaseNameTextBox.Name = "ArchiveBaseNameTextBox";
-            this.ArchiveBaseNameTextBox.Size = new System.Drawing.Size(146, 20);
-            this.ArchiveBaseNameTextBox.TabIndex = 15;
-            this.ArchiveBaseNameTextBox.Text = "ArchiveBaseName";
-            // 
-            // JavaVersionComboBox
-            // 
-            this.JavaVersionComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.JavaVersionComboBox.FormattingEnabled = true;
-            this.JavaVersionComboBox.Items.AddRange(new object[] {
-            "8",
-            "7",
-            "6"});
-            this.JavaVersionComboBox.Location = new System.Drawing.Point(160, 216);
-            this.JavaVersionComboBox.Name = "JavaVersionComboBox";
-            this.JavaVersionComboBox.Size = new System.Drawing.Size(147, 21);
-            this.JavaVersionComboBox.TabIndex = 18;
-            this.JavaVersionComboBox.Text = "Java Version";
             // 
             // NewProjectForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(315, 272);
+            this.ClientSize = new System.Drawing.Size(325, 272);
             this.Controls.Add(this.NewProjectPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -215,7 +215,7 @@
         public System.Windows.Forms.ListBox MinecraftVerionsListBox;
         public System.Windows.Forms.TextBox GroupTextBox;
         public System.Windows.Forms.TextBox VersionTextBox;
-        public System.Windows.Forms.TextBox ArchiveBaseNameTextBox;
+        public System.Windows.Forms.TextBox ArchivesBaseNameTextBox;
         public System.Windows.Forms.ComboBox JavaVersionComboBox;
     }
 }

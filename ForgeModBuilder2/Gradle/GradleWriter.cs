@@ -43,51 +43,60 @@ namespace ForgeModBuilder.Gradle
 
             foreach (string line in lines)
             {
-                if (line.Contains('='))
+                List<string> dataChunk = GradleParser.GetDataFromLine(line, false, false);
+                string newLine = "";
+                bool comment = false;
+                for (int i = 0; i < dataChunk.Count; i++)
                 {
-                    int beginVariableIndex = -1;
-                    int equalSignIndex = line.IndexOf('=');
-                    string variableName = "";
-                    for (int i = equalSignIndex - 1; i > 0; i--)
+                    string chunk = dataChunk[i];
+                    if (comment)
                     {
-                        if (char.IsWhiteSpace(line[i]) && i != equalSignIndex - 1)
+                        newLine += chunk + " ";
+                    }
+                    else if (chunk == "//")
+                    {
+                        // Comment, should still be added. The rest of the lines is the comment
+                        comment = true;
+                        newLine += chunk + " ";
+                    }
+                    else if (i < dataChunk.Count - 2 && dataChunk[i + 1] == "=")
+                    {
+                        string variableName = chunk;
+                        bool neededToBeChanged = false;
+                        for (int j = 0; j < changedVariables.Count; j++)
                         {
-                            variableName = line.Substring(i, equalSignIndex - i - 1);
-                            beginVariableIndex = i;
-                            break;
+                            if (changedVariables[j].Name == variableName)
+                            {
+                                if (changedVariables[j].Value is string)
+                                {
+                                    string variable = variableName + " = " + "\"" + changedVariables[j].Value + "\"";
+                                    newLine += variable + " ";
+                                }
+                                else
+                                {
+                                    string variable = variableName + " = " + changedVariables[j].Value;
+                                    newLine += variable + " ";
+                                }
+                                neededToBeChanged = true;
+                                changedVariables.Remove(changedVariables[j]);
+                                break;
+                            }
+                        }
+                        if (!neededToBeChanged)
+                        {
+                            newLine += chunk + " = " + dataChunk[i + 2] + " ";
                         }
                     }
-                    if (string.IsNullOrWhiteSpace(variableName) || beginVariableIndex == -1)
+                    else if (chunk != "=")
                     {
-                        newLines.Add(line);
-                        continue;
-                    }
-                    for (int i = 0; i < changedVariables.Count; i++)
-                    {
-                        if (changedVariables[i].Name == variableName)
+                        if (i > 1 && dataChunk[i - 1] == "=")
                         {
-                            if (changedVariables[i].Value is string)
-                            {
-                                string newLine = line.Substring(0, beginVariableIndex);
-                                string variable = variableName + " = " + "\"" + changedVariables[i].Value + "\"";
-                                Console.WriteLine(newLine + variable);
-                                newLines.Add(newLine + variable);
-                            }
-                            else
-                            {
-                                string newLine = line.Substring(0, beginVariableIndex);
-                                string variable = variableName + " = " + changedVariables[i].Value;
-                                Console.WriteLine(newLine + variable);
-                                newLines.Add(newLine + variable);
-                            }
-                            break;
+                            continue;
                         }
+                        newLine += chunk + " ";
                     }
                 }
-                else
-                {
-                    newLines.Add(line);
-                }
+                newLines.Add(newLine);
             }
 
             File.WriteAllLines(Path, newLines.ToArray());

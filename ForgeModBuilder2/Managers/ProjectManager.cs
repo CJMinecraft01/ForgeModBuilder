@@ -27,11 +27,15 @@ namespace ForgeModBuilder.Managers
             ClientManager.CreateCustomDataFileIfNotFound(ProjectsFileName);
             Projects = ClientManager.ReadCustomData<List<Project>>(ProjectsFileName);
             Dictionary<string, ListViewGroup> groups = new Dictionary<string, ListViewGroup>();
+            List<Project> UpdatedProjectList = new List<Project>();
             foreach (Project project in Projects)
             {
-                if (!File.Exists(project.Path + "build.gradle"))
+                if (File.Exists(project.Path + "build.gradle"))
                 {
-                    Projects.Remove(project);
+                    UpdatedProjectList.Add(project);
+                }
+                else
+                {
                     continue;
                 }
                 ListViewItem item;
@@ -122,6 +126,7 @@ namespace ForgeModBuilder.Managers
                     }
                 }
             };
+            Projects = UpdatedProjectList;
             if (ForgeModBuilder.MainFormInstance.groupToolStripMenuItem.DropDownItems.Count > 1)
             {
                 // TODO localise
@@ -207,6 +212,13 @@ namespace ForgeModBuilder.Managers
                 {
                     form2.Close();
                 };
+                form2.Paint += (sender, e) =>
+                {
+                    if (form2.ProgressBar.Value == form2.ProgressBar.Maximum)
+                    {
+                        form2.Close();
+                    }
+                };
                 Task<bool> task = DownloadNewProject(form1, form2, fbd.SelectedPath);
                 if (form2.ShowDialog() == DialogResult.Cancel)
                 {
@@ -238,29 +250,28 @@ namespace ForgeModBuilder.Managers
             WebClient client = new WebClient();
             client.DownloadProgressChanged += (sender, e) => progressBarForm.ProgressBar.Value = e.ProgressPercentage;
             DirectoryInfo ParentDirectory = Directory.GetParent(path);
-            client.DownloadFileCompleted += (sender, e) => {
+            client.DownloadFileCompleted += (sender, e) =>
+            {
                 ZipFile.ExtractToDirectory(ParentDirectory.FullName + "\\temp.zip", path);
 
                 File.Delete(ParentDirectory.FullName + "\\temp.zip");
 
                 GBlock file = GradleParser.ReadFile(path + "\\build.gradle");
                 file.SelectChild<GVariable>("version").Value = newProjectForm.VersionTextBox.Text;
-                file.SelectChild<GVariable>("archiveBaseName").Value = newProjectForm.ArchiveBaseNameTextBox.Text;
+                file.SelectChild<GVariable>("archivesBaseName").Value = newProjectForm.ArchivesBaseNameTextBox.Text;
                 file.SelectChild<GVariable>("group").Value = newProjectForm.GroupTextBox.Text;
-                file.SelectChild<GVariable>("sourceCompatability").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
-                file.SelectChild<GVariable>("targetCompatability").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
-                file.SelectChild<GBlock>("compileJava").SelectChild<GVariable>("sourceCompatability").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
-                file.SelectChild<GBlock>("compileJava").SelectChild<GVariable>("targetCompatability").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
+                file.SelectChild<GVariable>("sourceCompatibility").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
+                file.SelectChild<GVariable>("targetCompatibility").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
+                file.SelectChild<GBlock>("compileJava").SelectChild<GVariable>("sourceCompatibility").Value = "\"1." + newProjectForm.JavaVersionComboBox.Text + "\"";
+                file.SelectChild<GBlock>("compileJava").SelectChild<GVariable>("targetCompatibility").Value = "\"1." + newProjectForm.JavaVersionComboBox.Text + "\"";
 
                 GradleWriter.WriteFile(path + "\\build.gradle", file);
 
-                OpenProject(path);
-                progressBarForm.Close();
 
-                // TODO replace files in build.gradle appropriately
+                OpenProject(path);
             };
             client.DownloadFileAsync(new Uri(url), ParentDirectory.FullName + "\\temp.zip");
-            
+
             return true;
         }
 
@@ -277,7 +288,7 @@ namespace ForgeModBuilder.Managers
         }
 
         public static bool ProjectExists(string Name, string Path)
-       {
+        {
             return GetProject(Name, Path) != null;
         }
 
@@ -349,6 +360,10 @@ namespace ForgeModBuilder.Managers
         {
             Name = name;
             Path = path;
+            if (!File.Exists(Path + "build.gradle"))
+            {
+                return;
+            }
             GBlock file = GradleParser.ReadFile(Path + "build.gradle");
             ModVersion = (string)file.SelectChild<GVariable>("version").Value;
             ModGroup = (string)file.SelectChild<GVariable>("group").Value;

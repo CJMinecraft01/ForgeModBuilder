@@ -11,108 +11,117 @@ namespace ForgeModBuilder.Gradle
             return Decode(GetDataFromLines(File.ReadAllLines(Path)));
         }
 
-        internal static List<List<string>> GetDataFromLines(string[] lines)
+        internal static List<List<string>> GetDataFromLines(string[] lines, bool skipBlankLines = true)
         {
             List<List<string>> data = new List<List<string>>();
             foreach (string line in lines)
             {
-                if (string.IsNullOrEmpty(line) || string.IsNullOrWhiteSpace(line))
+                if (skipBlankLines && (string.IsNullOrEmpty(line) || string.IsNullOrWhiteSpace(line)))
                 {
                     continue;
                 }
-                string _line = line.TrimStart();
-                List<string> dataChunk = new List<string>();
-                int dataBegin = 0;
-                bool insideApostropheQuotes = false;
-                bool insideSpeechQuotes = false;
-                for (int i = 0; i < _line.Length; i++)
-                {
-                    char c = _line[i];
-                    if (char.IsWhiteSpace(c))
-                    {
-                        string info = _line.Substring(dataBegin, i - dataBegin);
-                        if (info.StartsWith("//"))
-                        {
-                            // A comment so contains no useful data for the program
-                            break;
-                        }
-                        else
-                        {
-                            dataChunk.Add(info);
-                            dataBegin = i + 1;
-                            continue;
-                        }
-                    }
-                    if (i > 0 && !(insideApostropheQuotes || insideSpeechQuotes))
-                    {
-                        if (c == '{' && !char.IsWhiteSpace(_line[i - 1]))
-                        {
-                            dataChunk.Add(_line.Substring(dataBegin, i - dataBegin));
-                            dataChunk.Add("{");
-                            dataBegin = i + 1;
-                            if (i + 1 == _line.Length - 1)
-                            {
-                                break;
-                            }
-                        }
-                        else if (c == '}' && !char.IsWhiteSpace(_line[i - 1]))
-                        {
-                            dataChunk.Add(_line.Substring(dataBegin, i - dataBegin));
-                            dataChunk.Add("}");
-                            dataBegin = i + 1;
-                            if (i + 1 == _line.Length - 1)
-                            {
-                                break;
-                            }
-                        }
-                        else if (c == '=' && !char.IsWhiteSpace(_line[i - 1]))
-                        {
-                            dataChunk.Add(_line.Substring(dataBegin, i - dataBegin));
-                            dataChunk.Add("=");
-                            dataBegin = i + 1;
-                            if (i + 1 == _line.Length - 1)
-                            {
-                                break;
-                            }
-                        }
-                        else if (_line[i - 1] == '{' && !char.IsWhiteSpace(c))
-                        {
-                            if (dataChunk.Last() != "{")
-                            {
-                                dataChunk.Add("{");
-                            }
-                        }
-                        else if (_line[i - 1] == '}' && !char.IsWhiteSpace(c))
-                        {
-                            if (dataChunk.Last() != "}")
-                            {
-                                dataChunk.Add("}");
-                            }
-                        }
-                        else if (_line[i - 1] == '=' && !char.IsWhiteSpace(c))
-                        {
-                            if (dataChunk.Last() != "=")
-                            {
-                                dataChunk.Add("=");
-                            }
-                        }
-                    }
-                    if (c == '\'')
-                    {
-                        insideApostropheQuotes = !insideApostropheQuotes;
-                    }
-                    else if (c == '\"')
-                    {
-                        insideSpeechQuotes = !insideSpeechQuotes;
-                    }
-                    if (i == _line.Length - 1)
-                    {
-                        dataChunk.Add(_line.Substring(dataBegin).TrimEnd());
-                    }
-                }
-                data.Add(dataChunk);
+                
+                data.Add(GetDataFromLine(line));
             }
             return data;
+        }
+
+        internal static List<string> GetDataFromLine(string line, bool removeComments = true, bool trimLine = true)
+        {
+            if (trimLine)
+            {
+                line = line.TrimStart();
+            }
+            List<string> dataChunk = new List<string>();
+            int dataBegin = 0;
+            bool insideApostropheQuotes = false;
+            bool insideSpeechQuotes = false;
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+                if (char.IsWhiteSpace(c))
+                {
+                    string info = line.Substring(dataBegin, i - dataBegin);
+                    if (info.StartsWith("//") && removeComments)
+                    {
+                        // A comment so contains no useful data for the program
+                        break;
+                    }
+                    else
+                    {
+                        dataChunk.Add(info);
+                        dataBegin = i + 1;
+                        continue;
+                    }
+                }
+                if (i > 0 && !(insideApostropheQuotes || insideSpeechQuotes))
+                {
+                    if (c == '{' && !char.IsWhiteSpace(line[i - 1]))
+                    {
+                        dataChunk.Add(line.Substring(dataBegin, i - dataBegin));
+                        dataChunk.Add("{");
+                        dataBegin = i + 1;
+                        if (i + 1 == line.Length - 1)
+                        {
+                            break;
+                        }
+                    }
+                    else if (c == '}' && !char.IsWhiteSpace(line[i - 1]))
+                    {
+                        dataChunk.Add(line.Substring(dataBegin, i - dataBegin));
+                        dataChunk.Add("}");
+                        dataBegin = i + 1;
+                        if (i + 1 == line.Length - 1)
+                        {
+                            break;
+                        }
+                    }
+                    else if (c == '=' && !char.IsWhiteSpace(line[i - 1]))
+                    {
+                        dataChunk.Add(line.Substring(dataBegin, i - dataBegin));
+                        dataChunk.Add("=");
+                        dataBegin = i + 1;
+                        if (i + 1 == line.Length - 1)
+                        {
+                            break;
+                        }
+                    }
+                    else if (line[i - 1] == '{' && !char.IsWhiteSpace(c))
+                    {
+                        if (dataChunk.Last() != "{")
+                        {
+                            dataChunk.Add("{");
+                        }
+                    }
+                    else if (line[i - 1] == '}' && !char.IsWhiteSpace(c))
+                    {
+                        if (dataChunk.Last() != "}")
+                        {
+                            dataChunk.Add("}");
+                        }
+                    }
+                    else if (line[i - 1] == '=' && !char.IsWhiteSpace(c))
+                    {
+                        if (dataChunk.Last() != "=")
+                        {
+                            dataChunk.Add("=");
+                        }
+                    }
+                }
+                if (c == '\'')
+                {
+                    insideApostropheQuotes = !insideApostropheQuotes;
+                }
+                else if (c == '\"')
+                {
+                    insideSpeechQuotes = !insideSpeechQuotes;
+                }
+                if (i == line.Length - 1)
+                {
+                    dataChunk.Add(line.Substring(dataBegin).TrimEnd());
+                }
+            }
+            return dataChunk;
         }
 
         internal static GBlock Decode(List<List<string>> data, int NestedLevel = -1)

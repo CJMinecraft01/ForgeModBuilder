@@ -287,6 +287,7 @@ namespace ForgeModBuilder.Managers
                 {
                     versionVariable.Value = project.MinecraftVersion + "-" + ForgeVersionManager.ForgeVersions[project.MinecraftVersion].First();
                 }
+                project.ForgeVersion = ForgeVersionManager.ForgeVersions[project.MinecraftVersion].First();
             }
             if (project.HasMCPMapping)
             {
@@ -328,6 +329,7 @@ namespace ForgeModBuilder.Managers
                                 {
                                     ClientManager.Output("Out of date mcp mapping, setting it to the latest snapshot!");
                                     file.SelectChild<GBlock>("minecraft").SelectChild<GVariable>("mappings").Value = "snapshot_" + latestSnapshotDateString;
+                                    project.MCPMapping = "snapshot_" + latestSnapshotDateString;
                                 }
                             }
                         }
@@ -337,6 +339,7 @@ namespace ForgeModBuilder.Managers
                 {
                     string latestSnapshotDateString = ForgeVersionManager.MCPVersions[project.MinecraftVersion]["snapshot"].First();
                     file.SelectChild<GBlock>("minecraft").SelectChild<GVariable>("mappings").Value = "snapshot_" + latestSnapshotDateString;
+                    project.MCPMapping = "snapshot_" + latestSnapshotDateString;
                 }
             }
             GradleWriter.WriteFile(project.Path + "build.gradle", file);
@@ -416,12 +419,12 @@ namespace ForgeModBuilder.Managers
         public string Name { get; set; }
         public string Path { get; private set; }
         public string MinecraftVersion { get; private set; }
-        public string ForgeVersion { get; private set; }
-        public string MCPMapping { get; private set; } = string.Empty;
+        public string ForgeVersion { get; set; }
+        public string MCPMapping { get; set; } = string.Empty;
         public bool HasMCPMapping { get; private set; }
-        public string ModVersion { get; private set; }
-        public string ModGroup { get; private set; }
-        public string ModArchivesBaseName { get; private set; }
+        public string ModVersion { get; set; }
+        public string ModGroup { get; set; }
+        public string ModArchivesBaseName { get; set; }
         public string GroupName { get; set; } = string.Empty;
 
         public Project(string name, string path)

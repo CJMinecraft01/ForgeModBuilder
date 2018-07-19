@@ -35,6 +35,9 @@ namespace ForgeModBuilder.Forms
             BuildProjectButton.Click += BuildProjectClick;
             buildToolStripMenuItem.Click += BuildProjectClick;
             buildToolStripMenuItem1.Click += BuildProjectClick;
+            UpdateProjectButton.Click += UpdateProjectClick;
+            updateToolStripMenuItem.Click += UpdateProjectClick;
+            updateToolStripMenuItem1.Click += UpdateProjectClick;
             NewProjectButton.Click += NewProjectClick;
             newToolStripMenuItem.Click += NewProjectClick;
             newToolStripMenuItem1.Click += NewProjectClick;
@@ -54,6 +57,18 @@ namespace ForgeModBuilder.Forms
             groupToolStripMenuItem1.Click += NewGroupClick;
             newGroupToolStripMenuItem.Click += NewGroupClick;
             newGroupToolStripMenuItem1.Click += NewGroupClick;
+            CommandEntryTextBox.GotFocus += CommandEntryTextBoxGotFocus;
+            CommandEntryTextBox.LostFocus += CommandEntryTextBoxLostFocus;
+        }
+
+        private void CommandEntryTextBoxGotFocus(object sender, EventArgs e)
+        {
+            this.AcceptButton = ExecuteCommandButton;
+        }
+
+        private void CommandEntryTextBoxLostFocus(object sender, EventArgs e)
+        {
+            this.AcceptButton = null;
         }
 
         private void ProjectsListViewKeyDown(object sender, KeyEventArgs e)
@@ -85,6 +100,11 @@ namespace ForgeModBuilder.Forms
             Process.Start(e.LinkText);
         }
 
+        private void UpdateProjectClick(object sender, EventArgs e)
+        {
+            ProjectManager.UpdateProject((Project)ProjectsListView.SelectedItems[0].Tag);
+        }
+
         private void OpenProjectClick(object sender, EventArgs e)
         {
             ProjectManager.OpenProject();
@@ -112,6 +132,16 @@ namespace ForgeModBuilder.Forms
                 removeToolStripMenuItem1.Enabled = true;
                 groupToolStripMenuItem.Enabled = true;
                 groupToolStripMenuItem1.Enabled = true;
+                BuildProjectButton.Enabled = true;
+                buildToolStripMenuItem.Enabled = true;
+                buildToolStripMenuItem1.Enabled = true;
+                UpdateProjectButton.Enabled = true;
+                updateToolStripMenuItem.Enabled = true;
+                updateToolStripMenuItem1.Enabled = true;
+                ConfigureProjectButton.Enabled = true;
+                configureToolStripMenuItem.Enabled = true;
+                configureToolStripMenuItem1.Enabled = true;
+                ExecuteCommandButton.Enabled = true;
                 // Use option to enable?
                 // ClientManager.Output("Switched current project to: " + ProjectManager.CurrentProject.Name);
             }
@@ -124,6 +154,16 @@ namespace ForgeModBuilder.Forms
                 removeToolStripMenuItem1.Enabled = false;
                 groupToolStripMenuItem.Enabled = false;
                 groupToolStripMenuItem1.Enabled = false;
+                BuildProjectButton.Enabled = false;
+                buildToolStripMenuItem.Enabled = false;
+                buildToolStripMenuItem1.Enabled = false;
+                UpdateProjectButton.Enabled = false;
+                updateToolStripMenuItem.Enabled = false;
+                updateToolStripMenuItem1.Enabled = false;
+                ConfigureProjectButton.Enabled = false;
+                configureToolStripMenuItem.Enabled = false;
+                configureToolStripMenuItem1.Enabled = false;
+                ExecuteCommandButton.Enabled = false;
             }
         }
 

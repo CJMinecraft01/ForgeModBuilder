@@ -255,7 +255,7 @@ namespace ForgeModBuilder.Managers
                 file.SelectChild<GVariable>("group").Value = newProjectForm.GroupTextBox.Text;
                 file.SelectChild<GVariable>("targetCompatibility").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
                 file.SelectChild<GVariable>("sourceCompatibility").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
-                
+
                 file.SelectChild<GBlock>("compileJava").SelectChild<GVariable>("sourceCompatibility").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
                 file.SelectChild<GBlock>("compileJava").SelectChild<GVariable>("targetCompatibility").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
 
@@ -268,6 +268,73 @@ namespace ForgeModBuilder.Managers
             client.DownloadFileAsync(new Uri(url), ParentDirectory.FullName + "\\temp.zip");
 
             return true;
+        }
+
+        public static void UpdateProject(Project project)
+        {
+            GBlock file = GradleParser.ReadFile(project.Path);
+            if (new Version(project.ForgeVersion).CompareTo(new Version(ForgeVersionManager.ForgeVersions[project.MinecraftVersion].First())) < 0)
+            {
+                // Out of date forge version
+                // Notify?
+                ClientManager.Output("Out of date forge version, setting it to the latest!");
+                GVariable versionVariable = file.SelectChild<GBlock>("minecraft").SelectChild<GVariable>("version");
+                if (new Version(project.MinecraftVersion).CompareTo(new Version("1.8")) < 0)
+                {
+                    versionVariable.Value = project.MinecraftVersion + "-" + ForgeVersionManager.ForgeVersions[project.MinecraftVersion].First() + "-" + project.MinecraftVersion;
+                }
+                else
+                {
+                    versionVariable.Value = project.MinecraftVersion + "-" + ForgeVersionManager.ForgeVersions[project.MinecraftVersion].First();
+                }
+            }
+            if (project.HasMCPMapping)
+            {
+                // Use option to choose whether they want the latest stable version or snapshot
+                // Will default to snapshot
+                if (project.MCPMapping.Contains("snapshot"))
+                {
+                    int year, month, day;
+                    if (int.TryParse(project.MCPMapping.Substring("snapshot_".Length, 4), out year) && int.TryParse(project.MCPMapping.Substring("snapshot_".Length + 4, 2), out month) && int.TryParse(project.MCPMapping.Substring("snapshot_".Length + 6, 2), out day))
+                    {
+                        DateTime projectSnapshotDate = new DateTime(year, month, day);
+                        string mcversion = project.MinecraftVersion;
+                        Version projectMC = new Version(project.MinecraftVersion);
+                        if (!ForgeVersionManager.MCPVersions.ContainsKey(mcversion))
+                        {
+                            foreach (string MinecraftVersion in ForgeVersionManager.MCPVersions.Keys)
+                            {
+                                Version version = new Version(MinecraftVersion);
+                                if (version.Minor == projectMC.Minor && version.Major == projectMC.Major)
+                                {
+                                    mcversion = MinecraftVersion;
+                                    break;
+                                }
+                            }
+                            // Skip
+                            goto WriteFile;
+                        }
+                        string latestSnapshotDateString = ForgeVersionManager.MCPVersions[mcversion]["snapshot"].First();
+                        if (int.TryParse(latestSnapshotDateString.Substring(0, 4), out year) && int.TryParse(latestSnapshotDateString.Substring(4, 2), out month) && int.TryParse(latestSnapshotDateString.Substring(6, 2), out day))
+                        {
+                            DateTime latestSnapshotDate = new DateTime(year, month, day);
+                            if (projectSnapshotDate.CompareTo(latestSnapshotDate) < 0)
+                            {
+                                ClientManager.Output("Out of date mcp mapping, setting it to the latest snapshot!");
+                                file.SelectChild<GBlock>("minecraft").SelectChild<GVariable>("mappings").Value = "snapshot_" + latestSnapshotDateString;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    string latestSnapshotDateString = ForgeVersionManager.MCPVersions[project.MinecraftVersion]["snapshot"].First();
+                    file.SelectChild<GBlock>("minecraft").SelectChild<GVariable>("mappings").Value = "snapshot_" + latestSnapshotDateString;
+                }
+            }
+        WriteFile:
+            Console.WriteLine(project.Path + " " + Directory.Exists(project.Path));
+            GradleWriter.WriteFile(project.Path, file);
         }
 
         public static Project GetProject(string Name, string Path)

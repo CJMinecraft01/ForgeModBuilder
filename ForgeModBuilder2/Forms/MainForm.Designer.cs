@@ -81,7 +81,7 @@ namespace ForgeModBuilder.Forms
             this.ConsoleTextBox = new System.Windows.Forms.RichTextBox();
             this.ConsoleBottomPanel = new System.Windows.Forms.Panel();
             this.ExecuteCommandButton = new System.Windows.Forms.Button();
-            this.CommandEntryTextBox = new System.Windows.Forms.TextBox();
+            this.CommandEntryTextBox = new System.Windows.Forms.ComboBox();
             this.TopPanel = new System.Windows.Forms.Panel();
             this.BuildProjectButton = new System.Windows.Forms.Button();
             this.OpenProjectButton = new System.Windows.Forms.Button();
@@ -140,50 +140,50 @@ namespace ForgeModBuilder.Forms
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newToolStripMenuItem.Text = "New";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open";
             // 
             // configureToolStripMenuItem
             // 
             this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
-            this.configureToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.configureToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.configureToolStripMenuItem.Text = "Configure";
             // 
             // updateToolStripMenuItem
             // 
             this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            this.updateToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.updateToolStripMenuItem.Text = "Update";
             // 
             // buildToolStripMenuItem
             // 
             this.buildToolStripMenuItem.Name = "buildToolStripMenuItem";
-            this.buildToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.buildToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.buildToolStripMenuItem.Text = "Build";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(124, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // renameToolStripMenuItem
             // 
             this.renameToolStripMenuItem.Enabled = false;
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.renameToolStripMenuItem.Text = "Rename";
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Enabled = false;
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             // 
             // groupToolStripMenuItem
@@ -192,7 +192,7 @@ namespace ForgeModBuilder.Forms
             this.newGroupToolStripMenuItem});
             this.groupToolStripMenuItem.Enabled = false;
             this.groupToolStripMenuItem.Name = "groupToolStripMenuItem";
-            this.groupToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.groupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.groupToolStripMenuItem.Text = "Group";
             // 
             // newGroupToolStripMenuItem
@@ -504,6 +504,7 @@ namespace ForgeModBuilder.Forms
             // 
             // ExecuteCommandButton
             // 
+            this.ExecuteCommandButton.Enabled = false;
             this.ExecuteCommandButton.Location = new System.Drawing.Point(379, 2);
             this.ExecuteCommandButton.Name = "ExecuteCommandButton";
             this.ExecuteCommandButton.Size = new System.Drawing.Size(75, 22);
@@ -515,7 +516,7 @@ namespace ForgeModBuilder.Forms
             // 
             this.CommandEntryTextBox.Location = new System.Drawing.Point(0, 3);
             this.CommandEntryTextBox.Name = "CommandEntryTextBox";
-            this.CommandEntryTextBox.Size = new System.Drawing.Size(373, 20);
+            this.CommandEntryTextBox.Size = new System.Drawing.Size(373, 21);
             this.CommandEntryTextBox.TabIndex = 0;
             // 
             // TopPanel
@@ -536,6 +537,7 @@ namespace ForgeModBuilder.Forms
             // 
             this.BuildProjectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BuildProjectButton.BackgroundImage")));
             this.BuildProjectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.BuildProjectButton.Enabled = false;
             this.BuildProjectButton.FlatAppearance.BorderSize = 0;
             this.BuildProjectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BuildProjectButton.Location = new System.Drawing.Point(192, 0);
@@ -562,6 +564,7 @@ namespace ForgeModBuilder.Forms
             // 
             this.ConfigureProjectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ConfigureProjectButton.BackgroundImage")));
             this.ConfigureProjectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.ConfigureProjectButton.Enabled = false;
             this.ConfigureProjectButton.FlatAppearance.BorderSize = 0;
             this.ConfigureProjectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ConfigureProjectButton.Location = new System.Drawing.Point(96, 0);
@@ -575,6 +578,7 @@ namespace ForgeModBuilder.Forms
             // 
             this.UpdateProjectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("UpdateProjectButton.BackgroundImage")));
             this.UpdateProjectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.UpdateProjectButton.Enabled = false;
             this.UpdateProjectButton.FlatAppearance.BorderSize = 0;
             this.UpdateProjectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.UpdateProjectButton.Location = new System.Drawing.Point(144, 0);
@@ -624,7 +628,6 @@ namespace ForgeModBuilder.Forms
             this.ConsoleTab.ResumeLayout(false);
             this.ConsoleTextBoxPanel.ResumeLayout(false);
             this.ConsoleBottomPanel.ResumeLayout(false);
-            this.ConsoleBottomPanel.PerformLayout();
             this.TopPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -648,7 +651,7 @@ namespace ForgeModBuilder.Forms
         private System.Windows.Forms.TabControl RightTabControl;
         private System.Windows.Forms.TabPage ConsoleTab;
         private System.Windows.Forms.Panel ConsoleBottomPanel;
-        public System.Windows.Forms.TextBox CommandEntryTextBox;
+        public System.Windows.Forms.ComboBox CommandEntryTextBox;
         public System.Windows.Forms.Panel TopPanel;
         public System.Windows.Forms.Button ConfigureProjectButton;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;

@@ -13,7 +13,7 @@ namespace ForgeModBuilder.Gradle
             return GetTab() + Name;
         }
 
-        protected string GetTab()
+        public string GetTab()
         {
             string tab = "";
             if (NestedLevel > 0)
@@ -122,7 +122,7 @@ namespace ForgeModBuilder.Gradle
             return null;
         }
 
-        public List<T> SelectChildren<T>() where T : GObject
+        public List<T> SelectChildren<T>(bool deep = false) where T : GObject
         {
             List<T> selectedChildren = new List<T>();
             foreach (GObject child in Children)
@@ -130,6 +130,10 @@ namespace ForgeModBuilder.Gradle
                 if (child is T)
                 {
                     selectedChildren.Add((T)child);
+                }
+                if (child is GBlock && deep)
+                {
+                    selectedChildren.AddRange(((GBlock)child).SelectChildren<T>(deep));
                 }
             }
             return selectedChildren;

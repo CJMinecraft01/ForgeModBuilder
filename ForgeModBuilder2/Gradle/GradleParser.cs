@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -295,6 +296,7 @@ namespace ForgeModBuilder.Gradle
             }
             else if (chunk.StartsWith("\'") && chunk.EndsWith("\'"))
             {
+                Console.WriteLine(chunk);
                 return chunk.Substring(1, chunk.Length - 2);
             }
             return null;

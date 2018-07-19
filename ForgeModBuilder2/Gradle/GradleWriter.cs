@@ -15,8 +15,8 @@ namespace ForgeModBuilder.Gradle
             // We should go through and read the file and check to see what has changed and only replace what has changed.
 
             GBlock originalFile = GradleParser.ReadFile(Path);
-            List<GVariable> originalVariables = originalFile.SelectChildren<GVariable>();
-            List<GVariable> newVariables = file.SelectChildren<GVariable>();
+            List<GVariable> originalVariables = originalFile.SelectChildren<GVariable>(true);
+            List<GVariable> newVariables = file.SelectChildren<GVariable>(true);
             List<GVariable> changedVariables = new List<GVariable>();
             foreach (GVariable originalVariable in originalVariables)
             {
@@ -34,8 +34,13 @@ namespace ForgeModBuilder.Gradle
                         break;
                     }
                 }
-
             }
+
+            originalVariables.ForEach(v => Console.WriteLine(v));
+            Console.WriteLine("=====");
+            newVariables.ForEach(v => Console.WriteLine(v));
+            Console.WriteLine("=====");
+            changedVariables.ForEach(v => Console.WriteLine(v));
 
             // We now need to overwrite the variables which were changed
             string[] lines = File.ReadAllLines(Path);
@@ -46,6 +51,7 @@ namespace ForgeModBuilder.Gradle
                 List<string> dataChunk = GradleParser.GetDataFromLine(line, false, false);
                 string newLine = "";
                 bool comment = false;
+                int numVariables = 0;
                 for (int i = 0; i < dataChunk.Count; i++)
                 {
                     string chunk = dataChunk[i];
@@ -61,12 +67,17 @@ namespace ForgeModBuilder.Gradle
                     }
                     else if (i < dataChunk.Count - 2 && dataChunk[i + 1] == "=")
                     {
+                        numVariables++;
                         string variableName = chunk;
                         bool neededToBeChanged = false;
                         for (int j = 0; j < changedVariables.Count; j++)
                         {
                             if (changedVariables[j].Name == variableName)
                             {
+                                if (numVariables > 1)
+                                {
+                                    newLine += "\n" + changedVariables[j].GetTab();
+                                }
                                 if (changedVariables[j].Value is string)
                                 {
                                     string variable = variableName + " = " + "\"" + changedVariables[j].Value + "\"";
@@ -78,7 +89,7 @@ namespace ForgeModBuilder.Gradle
                                     newLine += variable + " ";
                                 }
                                 neededToBeChanged = true;
-                                changedVariables.Remove(changedVariables[j]);
+                                changedVariables.RemoveAt(j);
                                 break;
                             }
                         }
@@ -96,7 +107,7 @@ namespace ForgeModBuilder.Gradle
                         newLine += chunk + " ";
                     }
                 }
-                newLines.Add(newLine);
+                newLines.Add(newLine.TrimEnd());
             }
 
             File.WriteAllLines(Path, newLines.ToArray());

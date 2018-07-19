@@ -253,10 +253,11 @@ namespace ForgeModBuilder.Managers
                 file.SelectChild<GVariable>("version").Value = newProjectForm.VersionTextBox.Text;
                 file.SelectChild<GVariable>("archivesBaseName").Value = newProjectForm.ArchivesBaseNameTextBox.Text;
                 file.SelectChild<GVariable>("group").Value = newProjectForm.GroupTextBox.Text;
-                file.SelectChild<GVariable>("sourceCompatibility").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
                 file.SelectChild<GVariable>("targetCompatibility").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
-                file.SelectChild<GBlock>("compileJava").SelectChild<GVariable>("sourceCompatibility").Value = "\"1." + newProjectForm.JavaVersionComboBox.Text + "\"";
-                file.SelectChild<GBlock>("compileJava").SelectChild<GVariable>("targetCompatibility").Value = "\"1." + newProjectForm.JavaVersionComboBox.Text + "\"";
+                file.SelectChild<GVariable>("sourceCompatibility").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
+                
+                file.SelectChild<GBlock>("compileJava").SelectChild<GVariable>("sourceCompatibility").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
+                file.SelectChild<GBlock>("compileJava").SelectChild<GVariable>("targetCompatibility").Value = "1." + newProjectForm.JavaVersionComboBox.Text;
 
                 GradleWriter.WriteFile(path + "\\build.gradle", file);
 
@@ -314,6 +315,7 @@ namespace ForgeModBuilder.Managers
                     ListViewItem item = new ListViewItem(project.ToArray());
                     item.Tag = project;
                     ForgeModBuilder.MainFormInstance.ProjectsListView.Items.Add(item);
+                    ForgeModBuilder.MainFormInstance.ProjectsListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
                 }
             }
             else

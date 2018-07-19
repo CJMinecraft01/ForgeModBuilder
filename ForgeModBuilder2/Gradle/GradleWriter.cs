@@ -36,12 +36,6 @@ namespace ForgeModBuilder.Gradle
                 }
             }
 
-            originalVariables.ForEach(v => Console.WriteLine(v));
-            Console.WriteLine("=====");
-            newVariables.ForEach(v => Console.WriteLine(v));
-            Console.WriteLine("=====");
-            changedVariables.ForEach(v => Console.WriteLine(v));
-
             // We now need to overwrite the variables which were changed
             string[] lines = File.ReadAllLines(Path);
             List<string> newLines = new List<string>();

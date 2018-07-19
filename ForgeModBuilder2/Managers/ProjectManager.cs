@@ -272,7 +272,7 @@ namespace ForgeModBuilder.Managers
 
         public static void UpdateProject(Project project)
         {
-            GBlock file = GradleParser.ReadFile(project.Path);
+            GBlock file = GradleParser.ReadFile(project.Path + "build.gradle");
             if (new Version(project.ForgeVersion).CompareTo(new Version(ForgeVersionManager.ForgeVersions[project.MinecraftVersion].First())) < 0)
             {
                 // Out of date forge version
@@ -300,6 +300,7 @@ namespace ForgeModBuilder.Managers
                         DateTime projectSnapshotDate = new DateTime(year, month, day);
                         string mcversion = project.MinecraftVersion;
                         Version projectMC = new Version(project.MinecraftVersion);
+                        bool foundCorrectMCVersion = false;
                         if (!ForgeVersionManager.MCPVersions.ContainsKey(mcversion))
                         {
                             foreach (string MinecraftVersion in ForgeVersionManager.MCPVersions.Keys)
@@ -308,20 +309,26 @@ namespace ForgeModBuilder.Managers
                                 if (version.Minor == projectMC.Minor && version.Major == projectMC.Major)
                                 {
                                     mcversion = MinecraftVersion;
+                                    foundCorrectMCVersion = true;
                                     break;
                                 }
                             }
-                            // Skip
-                            goto WriteFile;
                         }
-                        string latestSnapshotDateString = ForgeVersionManager.MCPVersions[mcversion]["snapshot"].First();
-                        if (int.TryParse(latestSnapshotDateString.Substring(0, 4), out year) && int.TryParse(latestSnapshotDateString.Substring(4, 2), out month) && int.TryParse(latestSnapshotDateString.Substring(6, 2), out day))
+                        else
                         {
-                            DateTime latestSnapshotDate = new DateTime(year, month, day);
-                            if (projectSnapshotDate.CompareTo(latestSnapshotDate) < 0)
+                            foundCorrectMCVersion = true;
+                        }
+                        if (foundCorrectMCVersion)
+                        {
+                            string latestSnapshotDateString = ForgeVersionManager.MCPVersions[mcversion]["snapshot"].First();
+                            if (int.TryParse(latestSnapshotDateString.Substring(0, 4), out year) && int.TryParse(latestSnapshotDateString.Substring(4, 2), out month) && int.TryParse(latestSnapshotDateString.Substring(6, 2), out day))
                             {
-                                ClientManager.Output("Out of date mcp mapping, setting it to the latest snapshot!");
-                                file.SelectChild<GBlock>("minecraft").SelectChild<GVariable>("mappings").Value = "snapshot_" + latestSnapshotDateString;
+                                DateTime latestSnapshotDate = new DateTime(year, month, day);
+                                if (projectSnapshotDate.CompareTo(latestSnapshotDate) < 0)
+                                {
+                                    ClientManager.Output("Out of date mcp mapping, setting it to the latest snapshot!");
+                                    file.SelectChild<GBlock>("minecraft").SelectChild<GVariable>("mappings").Value = "snapshot_" + latestSnapshotDateString;
+                                }
                             }
                         }
                     }
@@ -332,9 +339,7 @@ namespace ForgeModBuilder.Managers
                     file.SelectChild<GBlock>("minecraft").SelectChild<GVariable>("mappings").Value = "snapshot_" + latestSnapshotDateString;
                 }
             }
-        WriteFile:
-            Console.WriteLine(project.Path + " " + Directory.Exists(project.Path));
-            GradleWriter.WriteFile(project.Path, file);
+            GradleWriter.WriteFile(project.Path + "build.gradle", file);
         }
 
         public static Project GetProject(string Name, string Path)

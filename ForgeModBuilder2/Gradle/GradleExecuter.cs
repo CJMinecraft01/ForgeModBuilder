@@ -30,7 +30,7 @@ namespace ForgeModBuilder.Gradle
             }
             if (!CurrentlyExecuting)
             {
-                ClientManager.Output("Running gradle command: " + command);
+                Console.WriteLine("Running gradle command: " + command);
                 CurrentProcess = new Process();
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -72,7 +72,7 @@ namespace ForgeModBuilder.Gradle
             {
                 if (!UsingDelegate)
                 {
-                    ClientManager.Output(e.Data, true);
+                    Console.WriteLine(e.Data);
                 }
                 if (e.Data.Contains("BUILD SUCCESSFUL") || e.Data.Contains("BUILD FAILED"))
                 {
@@ -95,7 +95,7 @@ namespace ForgeModBuilder.Gradle
             }
             else
             {
-                ClientManager.Output("");
+                Console.WriteLine();
             }
         }
 

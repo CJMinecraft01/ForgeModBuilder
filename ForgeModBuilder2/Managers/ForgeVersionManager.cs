@@ -74,10 +74,19 @@ namespace ForgeModBuilder.Managers
 
         private static async Task<bool> UpdateLists(ProgressBarForm form)
         {
-            DownloadMCPVersionList(form);
-            DownloadMCVersionList(form);
-            DownloadRecommendedVersionList(form);
-            DownloadForgeVersionList(form);
+            try
+            {
+                DownloadMCPVersionList(form);
+                DownloadMCVersionList(form);
+                DownloadRecommendedVersionList(form);
+                DownloadForgeVersionList(form);
+                SaveVersions();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            
             return true;
         }
 
@@ -144,7 +153,7 @@ namespace ForgeModBuilder.Managers
                 }
                 JArray ForgeVersionsData = (JArray)data.SelectToken("md").SelectToken("versions");
 
-                if (OptionsManager.ForcedCreate || (string)ForgeVersionsData.First().SelectToken("version") != ForgeVersions[Version].First())
+                if (OptionsManager.ForcedCreate || !ForgeVersions.ContainsKey(Version) || (string)ForgeVersionsData.First().SelectToken("version") != ForgeVersions[Version].First())
                 {
                     List<string> BuildVersions = new List<string>();
                     foreach (JObject ForgeVersionObject in ForgeVersionsData)

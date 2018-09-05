@@ -19,6 +19,7 @@ namespace ForgeModBuilder.Forms
             SizeChanged += ResizeForm;
             Load += (sender, e) =>
             {
+                Console.WriteLine("Opened Window!");
                 ResizeForm(null, null);
             };
         }
@@ -59,6 +60,20 @@ namespace ForgeModBuilder.Forms
             newGroupToolStripMenuItem1.Click += NewGroupClick;
             CommandEntryTextBox.GotFocus += CommandEntryTextBoxGotFocus;
             CommandEntryTextBox.LostFocus += CommandEntryTextBoxLostFocus;
+            ConsoleTextBox.TextChanged += ConsoleTextBoxTextChanged;
+        }
+
+        private void ConsoleTextBoxTextChanged(object sender, EventArgs e)
+        {
+            for (int i = ConsoleTextBox.Lines.Length - 1; i >= 0; i--)
+            {
+                string line = ConsoleTextBox.Lines[i];
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+                    LastConsoleMessageLabel.Text = line;
+                    break;
+                }
+            }
         }
 
         private void CommandEntryTextBoxGotFocus(object sender, EventArgs e)

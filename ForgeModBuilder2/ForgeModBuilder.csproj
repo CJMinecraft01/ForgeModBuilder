@@ -103,6 +103,7 @@
     <Compile Include="Gradle\GradleParser.cs" />
     <Compile Include="Gradle\GradleWriter.cs" />
     <Compile Include="Managers\ClientManager.cs" />
+    <Compile Include="Managers\ConsoleManager.cs" />
     <Compile Include="Managers\ForgeVersionManager.cs" />
     <Compile Include="Managers\InstallationManager.cs" />
     <Compile Include="Managers\LanguageManager.cs" />

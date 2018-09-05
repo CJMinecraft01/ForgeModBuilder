@@ -277,7 +277,7 @@ namespace ForgeModBuilder.Managers
             {
                 // Out of date forge version
                 // Notify?
-                ClientManager.Output("Out of date forge version, setting it to the latest!");
+                Console.WriteLine("Out of date forge version, setting it to the latest!");
                 GVariable versionVariable = file.SelectChild<GBlock>("minecraft").SelectChild<GVariable>("version");
                 if (new Version(project.MinecraftVersion).CompareTo(new Version("1.8")) < 0)
                 {
@@ -327,7 +327,7 @@ namespace ForgeModBuilder.Managers
                                 DateTime latestSnapshotDate = new DateTime(year, month, day);
                                 if (projectSnapshotDate.CompareTo(latestSnapshotDate) < 0)
                                 {
-                                    ClientManager.Output("Out of date mcp mapping, setting it to the latest snapshot!");
+                                    Console.WriteLine("Out of date mcp mapping, setting it to the latest snapshot!");
                                     file.SelectChild<GBlock>("minecraft").SelectChild<GVariable>("mappings").Value = "snapshot_" + latestSnapshotDateString;
                                     project.MCPMapping = "snapshot_" + latestSnapshotDateString;
                                 }

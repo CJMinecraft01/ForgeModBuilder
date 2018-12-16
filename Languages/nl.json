@@ -1,0 +1,18 @@
+{
+	"﻿message_box.project.non_existant.title":"Ongeldig project!",
+	"message_box.project.non_existant.desc":"Het project dat u hebt gekozen bestaat niet meer!",
+	"message_box.update.title":"Er is een update beschikbaar!",
+	"message_box.update.desc":"Er is een nieuwe versie van de Forge Mod Builder beschikbaar, wilt u de update nu downloaden?",
+	"message_box.invalid_language.title":"Ongeldige taal",
+	"message_box.invalid_language.desc":"Selecteer een geldige taal!",
+	"form.update.label.title":"Forge Mod Builder bijwerken ...",
+	"form.update.label.task_details.updates":"Updates downloaden ...",
+	"form.update.label.task_details.version_syncing":"Versies synchroniseren ...",
+	"form.new_project_download.label.title":"Nieuw project maken ...",
+	"form.new_project_download.label.task_details":"Forge Source downloaden ...",
+	"form.main.title":"Forge Mod Builder",
+	"form.language_selection.title":"Taalselectie",
+	"form.language_selection.label.select_language":"Selecteer een taal",
+	"button.cancel":"Annuleren",
+	"button.ok":"OK"
+}

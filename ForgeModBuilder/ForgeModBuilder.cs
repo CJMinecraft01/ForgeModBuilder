@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.AccessControl;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -372,6 +373,13 @@ namespace ForgeModBuilder
                     {
                         if (checkVersion)
                         {
+                            if (line.Contains("minecraft 'net.minecraftforge:forge:"))
+                            {
+                                string version = line.Split(':')[2];
+                                version = version.Substring(0, version.Length - 1);
+                                mcVersion = version.Split('-')[0];
+                                forgeVersion = version.Split('-')[1];
+                            }
                             if (line.Contains("version") && line.Contains("="))
                             {
                                 string version = line.Split('\"')[1];
@@ -383,9 +391,17 @@ namespace ForgeModBuilder
                         {
                             checkVersion = true;
                         }
+                        if(line.Contains("dependencies {") && !checkVersion)
+                        {
+                            checkVersion = true;
+                        }
                         else if(line.Contains("}") && checkVersion)
                         {
                             checkVersion = false;
+                        }
+                        if(line.Contains("mappings channel: "))
+                        {
+                           mcpVersion = line.Split(':')[2].Substring(2).Split('-')[0];
                         }
                         if(line.Contains("mappings = "))
                         {

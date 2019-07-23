@@ -386,7 +386,7 @@ namespace ForgeModBuilder
                         }
                         if(downloadLinkNode != null)
                         {
-                            string DownloadLink = downloadLinkNode.Attributes["href"].Value.Substring("https://adfoc.us/serve/sitelinks/?id=271228&url=".Length); //Remove the adfocus link as it breaks the download - find the direct download link
+                            string DownloadLink = "https://files.minecraftforge.net" + downloadLinkNode.Attributes["href"].Value; //Remove the adfocus link as it breaks the download - find the direct download link
                             Console.WriteLine("Found download link: " + DownloadLink);
                             Program.INSTANCE.AddConsoleText("Found download link: " + DownloadLink);
                             FolderBrowserDialog fbd = new FolderBrowserDialog(); //Ask where they want to put the mod

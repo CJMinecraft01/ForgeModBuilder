@@ -1,8 +1,9 @@
 {
-	"name": "Forge Mod Builder - Doga Fixed It",
-	"version": "0.1.1.3",
+	"name": "Forge Mod Builder - Finally Fixed (for now)",
+	"version": "0.1.1.4",
 	"changelog": [
-		"=Fixed the Forge Mod Builder once again, many thanks to Dogatron03"
+		"=Fixed the Forge Mod Builder once again, many thanks to Dogatron03",
+		"=Slight tweaks to version fetching mechanism"
 	],
-	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.1.3/ForgeModBuilder-0.1.1.3.exe"
+	"download": "https://github.com/CJMinecraft01/ForgeModBuilder/releases/download/0.1.1.4/ForgeModBuilder-0.1.1.4.exe"
 }

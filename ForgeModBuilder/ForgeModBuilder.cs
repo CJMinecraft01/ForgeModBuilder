@@ -19,7 +19,7 @@ namespace ForgeModBuilder
 {
     public partial class FMB : Form
     {
-        public static string MCPVersionsUrl = "http://files.minecraftforge.net/maven/de/oceanlabs/mcp/versions.json";
+        public static string MCPVersionsUrl = "http://export.mcpbot.bspk.rs/versions.json";
 
         //The current project being used
         public Project CurrentProject;

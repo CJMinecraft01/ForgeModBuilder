@@ -14,6 +14,7 @@ using System.IO;
 using System.IO.Compression;
 using Newtonsoft.Json;
 using System.Collections;
+using Newtonsoft.Json.Linq;
 
 namespace ForgeModBuilder
 {
@@ -28,6 +29,9 @@ namespace ForgeModBuilder
 
         //The download URL for forge
         public static string ForgeDownloadsURL = "http://files.minecraftforge.net/maven/net/minecraftforge/forge/";
+        // The url for all Minecraft versions
+        public static string MinecraftVersionURL = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
+
         //Contains the latest minecraft version once synced
         public static string LatestMinecraftVersion = "";
         //Stores all of the minecraft and forge versions once synced
@@ -233,9 +237,23 @@ namespace ForgeModBuilder
                 List<string> MinecraftVersions = new List<string>();
                 //Create a nice looking progress bar to show how much has been got off the website
                 ProgressBarForm ProgressBar = ProgressBarForm.ShowProgressBar("Syncing Versions", "Syncing Versions", new Font(new FontFamily("Microsoft Sans Serif"), 16, FontStyle.Regular));
+                // Get the minecraft versions
+                dynamic minecraftVersionsData = JObject.Parse(new WebClient().DownloadString(MinecraftVersionURL));
+                // List<string> minecraftVersions = new List<string>(); // Store the versions which are releases. Some of these versions may not have a forge version
+                foreach (dynamic minecraftVersionData in minecraftVersionsData.versions)
+                {
+                    if (minecraftVersionData.type == "release")
+                        MinecraftVersions.Add((string)minecraftVersionData.id);
+                }
+                Console.WriteLine("Loaded minecraft versions from " + MinecraftVersionURL);
+                Program.INSTANCE.AddConsoleText("Loaded minecraft versions from " + MinecraftVersionURL);
+                LatestMinecraftVersion = MinecraftVersions[0];
+
                 //Create something which will access the website
                 HtmlWeb web = new HtmlWeb();
-                HtmlAgilityPack.HtmlDocument document = web.Load(ForgeDownloadsURL);
+                // HtmlAgilityPack.HtmlDocument document = web.Load(ForgeDownloadsURL);
+                HtmlAgilityPack.HtmlDocument document;
+                /*
                 LatestMinecraftVersion = document.DocumentNode.SelectSingleNode("//li[@class='elem-active']").InnerHtml; //Get the latest minecraft version
                 //MinecraftVersions.Add(LatestMinecraftVersion);
                 foreach (HtmlNode mcVersionNode in document.DocumentNode.SelectNodes("//li[@class='li-version-list']"))
@@ -254,11 +272,13 @@ namespace ForgeModBuilder
                         }
                     }
                 }
+                */
                 Version latestVersion = new Version(LatestMinecraftVersion);
                 Version mc;
                 foreach(string mcversion in MinecraftVersions.ToList())
                 {
-                    mc = new Version(mcversion.Contains("_") ? mcversion.Substring(0, mcversion.IndexOf("_") - 1) : mcversion);
+                    // mc = new Version(mcversion.Contains("_") ? mcversion.Substring(0, mcversion.IndexOf("_") - 1) : mcversion);
+                    mc = new Version(mcversion);
                     if(latestVersion.CompareTo(mc) < 0)
                     {
                         MinecraftVersions.Insert(MinecraftVersions.IndexOf(mcversion), LatestMinecraftVersion);
@@ -271,32 +291,41 @@ namespace ForgeModBuilder
                 {
                     MinecraftVersions.Insert(0, LatestMinecraftVersion);
                 }
-                Console.WriteLine("Loaded minecraft versions from " + ForgeDownloadsURL);
-                ForgeModBuilder.Program.INSTANCE.AddConsoleText("Loaded minecraft versions from " + ForgeDownloadsURL);
+
                 foreach (string mcversion in MinecraftVersions)
                 {
+                    Console.WriteLine(mcversion);
                     List<string> forgeVersions = new List<string>();
-                    document = web.Load(ForgeDownloadsURL + "index_" + mcversion + ".html");
-                    foreach (HtmlNode forgeVersionNode in document.DocumentNode.SelectNodes("//td[@class='download-version']"))
+                    try
                     {
-                        //Load each forge version for every minecraft version
-                        ProgressBar.ProgressBar.Value = (int)((document.DocumentNode.SelectNodes("//td[@class='download-version']").IndexOf(forgeVersionNode) + 1F) / document.DocumentNode.SelectNodes("//td[@class='download-version']").Count + (int)((MinecraftVersions.IndexOf(mcversion) + 1F) / MinecraftVersions.Count * 100)) - 1;
-                        forgeVersions.Add(Regex.Replace(forgeVersionNode.InnerHtml.Split('<')[0].Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty), @"\s+", "") + (forgeVersionNode.InnerHtml.Contains("fa promo-recommended") ? "★" : ""));
+                        document = web.Load(ForgeDownloadsURL + "index_" + mcversion + ".html");
+                        foreach (HtmlNode forgeVersionNode in document.DocumentNode.SelectNodes("//td[@class='download-version']"))
+                        {
+                            //Load each forge version for every minecraft version
+                            ProgressBar.ProgressBar.Value = (int)((document.DocumentNode.SelectNodes("//td[@class='download-version']").IndexOf(forgeVersionNode) + 1F) / document.DocumentNode.SelectNodes("//td[@class='download-version']").Count + (int)((MinecraftVersions.IndexOf(mcversion) + 1F) / MinecraftVersions.Count * 100)) - 1;
+                            forgeVersions.Add(Regex.Replace(forgeVersionNode.InnerHtml.Split('<')[0].Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty), @"\s+", "") + (forgeVersionNode.InnerHtml.Contains("fa promo-recommended") ? "★" : ""));
+                        }
+                        Console.WriteLine(forgeVersions);
+                        if (Versions.ContainsKey(mcversion))
+                        {
+                            Versions.Remove(mcversion);
+                        }
+                        Versions.Add(mcversion, forgeVersions);
+                        Console.WriteLine("Loaded forge versions from " + ForgeDownloadsURL + "index_" + mcversion + ".html");
+                        ForgeModBuilder.Program.INSTANCE.AddConsoleText("Loaded forge versions from " + ForgeDownloadsURL + "index_" + mcversion + ".html");
                     }
-                    if(Versions.ContainsKey(mcversion))
+                    catch (NullReferenceException e)
                     {
                         Versions.Remove(mcversion);
+                        continue;
                     }
-                    Versions.Add(mcversion, forgeVersions);
-                    Console.WriteLine("Loaded forge versions from " + ForgeDownloadsURL + "index_" + mcversion + ".html");
-                    ForgeModBuilder.Program.INSTANCE.AddConsoleText("Loaded forge versions from " + ForgeDownloadsURL + "index_" + mcversion + ".html");
                 }
                 ProgressBar.Close(); //Close the progress bar
             }
             catch(Exception e)
             {
-                Console.WriteLine("An error occurred:\n" + e.Message);
-                Program.INSTANCE.AddConsoleText("An error occurred:\n" + e.Message);
+                Console.WriteLine("An error occurred:\n" + e.ToString());
+                Program.INSTANCE.AddConsoleText("An error occurred:\n" + e.ToString());
             }
         }
 

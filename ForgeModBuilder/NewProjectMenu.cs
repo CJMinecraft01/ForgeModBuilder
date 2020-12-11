@@ -15,6 +15,7 @@ using System.IO.Compression;
 using Newtonsoft.Json;
 using System.Collections;
 using Newtonsoft.Json.Linq;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace ForgeModBuilder
 {
@@ -418,10 +419,13 @@ namespace ForgeModBuilder
                             string DownloadLink = downloadLinkNode.Attributes["href"].Value.Substring(48); //Remove the adfocus link as it breaks the download - find the direct download link
                             Console.WriteLine("Found download link: " + DownloadLink);
                             Program.INSTANCE.AddConsoleText("Found download link: " + DownloadLink);
-                            FolderBrowserDialog fbd = new FolderBrowserDialog(); //Ask where they want to put the mod
-                            if(fbd.ShowDialog() == DialogResult.OK)
+                            CommonOpenFileDialog dialog = new CommonOpenFileDialog(); //Ask where they want to put the mod
+
+                            dialog.IsFolderPicker = true;
+
+                            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                             {
-                                if (System.IO.Directory.EnumerateFileSystemEntries(fbd.SelectedPath).Any()) //Make sure the folder is empty
+                                if (System.IO.Directory.EnumerateFileSystemEntries(dialog.FileName).Any()) //Make sure the folder is empty
                                 {
                                     MessageBox.Show("The folder you selected has files in, please select another folder", "Invalid Folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     return;
@@ -429,7 +433,7 @@ namespace ForgeModBuilder
                                 ProgressBarForm form = ProgressBarForm.ShowProgressBar("Downloading Project Src", "Downloading Src", new Font(Font.FontFamily, 16, FontStyle.Regular));
                                 using (WebClient wc = new WebClient())
                                 {
-                                    string[] Directory = fbd.SelectedPath.Split('\\');
+                                    string[] Directory = dialog.FileName.Split('\\');
                                     Directory[Directory.Length - 1] = ""; //Get the folder above the chosen folder
                                     wc.DownloadProgressChanged += (sender, e) =>
                                     {
@@ -448,12 +452,12 @@ namespace ForgeModBuilder
                                             File.Delete(string.Join("\\", Directory) + "temp.zip"); //Delete the zip file
                                             return;
                                         }
-                                        ZipFile.ExtractToDirectory(string.Join("\\", Directory) + "temp.zip", fbd.SelectedPath); //Extract the file
-                                        Console.WriteLine("Extracting file to " + fbd.SelectedPath);
-                                        Program.INSTANCE.AddConsoleText("Extracting file to " + fbd.SelectedPath);
+                                        ZipFile.ExtractToDirectory(string.Join("\\", Directory) + "temp.zip", dialog.FileName); //Extract the file
+                                        Console.WriteLine("Extracting file to " + dialog.FileName);
+                                        Program.INSTANCE.AddConsoleText("Extracting file to " + dialog.FileName);
                                         File.Delete(string.Join("\\", Directory) + "temp.zip"); //Delete the zip file
-                                        SetupBuildFile(fbd.SelectedPath); //Setup the build.gradle file
-                                        Program.INSTANCE.OpenProject(fbd.SelectedPath); //Open the project
+                                        SetupBuildFile(dialog.FileName); //Setup the build.gradle file
+                                        Program.INSTANCE.OpenProject(dialog.FileName); //Open the project
                                         if (MessageBox.Show("Would you like to setup now?", "Setup now?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                                         {
                                             Program.INSTANCE.SetupProject(""); //Setup the project

@@ -447,13 +447,13 @@ public partial class NewProjectMenu : Form {
             string DownloadLink =
                 downloadLinkNode.Attributes["href"].Value.Substring(
                     48); // Remove the adfocus link as it breaks the download -
-                         // find the direct download link
+            // find the direct download link
             Console.WriteLine("Found download link: " + DownloadLink);
             Program.INSTANCE.AddConsoleText("Found download link: " +
                                             DownloadLink);
             CommonOpenFileDialog dialog =
                 new CommonOpenFileDialog(); // Ask where they want to put the
-                                            // mod
+            // mod
 
             dialog.IsFolderPicker = true;
 
@@ -505,7 +505,7 @@ public partial class NewProjectMenu : Form {
                   File.Delete(string.Join("\\", Directory) +
                               "temp.zip");         // Delete the zip file
                   SetupBuildFile(dialog.FileName); // Setup the build.gradle
-                                                   // file
+                  // file
                   Program.INSTANCE.OpenProject(
                       dialog.FileName); // Open the project
                   if (MessageBox.Show("Would you like to setup now?",
